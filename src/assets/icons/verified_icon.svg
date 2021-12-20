@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="19.87" height="24.706" viewBox="0 0 19.87 24.706">
+  <g id="verified_icon" data-name="verified icon" transform="translate(0.126 0.135)">
+    <g id="Layer_1" data-name="Layer 1" transform="translate(-0.024)">
+      <path id="Path_1017" data-name="Path 1017" d="M9.811,24.461l-.189-.094C-.428,19.535-.022,7.82-.022,7.694V3.643l.44-.031c.062,0,6.124-.408,9.045-3.3L9.811,0l.346.314c2.92,2.889,8.982,3.3,9.045,3.3l.439.031V7.726c0,.094.408,11.84-9.61,16.646Z" transform="translate(0.024)" fill="#0e399d" stroke="#6f73f1" stroke-width="0.2"/>
+      <path id="Path_1016" data-name="Path 1016" d="M82.591,69.414a2.321,2.321,0,1,0-2.784,2.275v3.383h-.551a.465.465,0,0,0,0,.928h.551v.463h-.551a.465.465,0,0,0,0,.928h.551v.3a.464.464,0,1,0,.927,0v-6A2.327,2.327,0,0,0,82.591,69.414Zm-.928,0a1.393,1.393,0,1,1-1.392-1.393A1.393,1.393,0,0,1,81.662,69.414Z" transform="translate(-70.584 -60.756)" fill="#fff" stroke="#fff" stroke-width="0.2"/>
+    </g>
+  </g>
+</svg>
