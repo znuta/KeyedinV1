@@ -11,6 +11,7 @@ import colors from 'src/config/colors';
 import {useSelector, useDispatch} from 'react-redux';
 import { setLoading, sendUserDetails } from 'src/redux/actions/AuthActions';
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { ScrollView } from 'react-native-gesture-handler';
 
 const PersonalDetailForm = props => {
   const {onChangeText, value, handleLocationAddress} = props;
@@ -216,7 +217,7 @@ const PersonalDetailForm = props => {
               />
             )}
           </View>
-
+          <ScrollView>
           <GooglePlacesAutocomplete
                       placeholder="Enter Location"
                       minLength={2}
@@ -240,6 +241,9 @@ const PersonalDetailForm = props => {
                       currentLocationLabel="Current location"
                       autoFocus={true}
                     />
+            
+        </ScrollView>
+          
 
           
         </Wrapper>

@@ -14,8 +14,8 @@ import {KeyboardAvoidingView} from 'react-native';
 import {BASEURL} from 'src/constants/Services';
 import Button from 'src/component/Button/index';
 
-import {Container} from 'src/screens/intro/Signup/styles';
-import styles from 'src/screens/intro/Signup/styles';
+import {Container, styles} from 'src/screens/intro/Signup/styles';
+// import styles from 'src/screens/intro/Signup/styles';
 import {useSelector, useDispatch} from 'react-redux';
 import {
   setLoading,

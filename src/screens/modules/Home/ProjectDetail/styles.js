@@ -9,6 +9,24 @@ const Container = styled.View`
   flex: 1;
 `;
 
+const ContentContainer = styled.ScrollView`
+  padding-vertical: ${hp('1%')};
+  background-color: #ebf1f2;
+  flex: 1;
+  padding-horizontal: ${wp('5%')};
+`;
+const InnerContentContainer = styled.View`
+  padding-vertical: ${hp('1%')};
+  background-color: #ffffff;
+  margin-vertical: ${hp('1%')};
+min-height: ${hp('10%')}
+  flex: 1;
+  padding-horizontal: ${wp('4%')};
+
+  border-radius: 10px;
+  ${'' /* align-items: center; */}
+`;
+
 const Wrapper = styled.View`
   flex: 1;
 `;
@@ -107,10 +125,9 @@ const ShadowBtn = styled.TouchableOpacity`
 `;
 
 const AvatarPlaceholder = styled.TouchableOpacity`
-  height: ${wp('30%')};
-  width: ${wp('30%')};
-  margin-top: ${hp('5%')};
-  border-radius: 50;
+  height: ${hp('15%')};
+  width: ${wp('10%')};
+  border-radius: ${(Layout.window.height * 0.2) / 2}px;
   background-color: white;
   align-items: center;
   justify-content: center;
@@ -131,11 +148,9 @@ const TakePhotoButton = styled.TouchableOpacity`
 
 const IDWrap = styled.View`
   margin-top: 15px;
-  height: ${hp('20%')}px;
+  height: ${Layout.window.height * 0.2}px;
   width: ${Layout.window.height * 0.2}px;
   width: 100%;
-  align-items: center;
-  justify-content: center;
 `;
 
 const IDVideo = styled.View`
@@ -169,9 +184,8 @@ const IDVideoPlaceholder = styled.View`
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: wp('6%'),
-    paddingTop: hp('6%'),
-    backgroundColor: 'white',
+    backgroundColor: colors.green,
+    paddingTop: hp('2%'),
   },
   container2: {
     flex: 1,
@@ -184,6 +198,11 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 30,
     paddingTop: 10,
     paddingHorizontal: 20,
+  },
+  paste_icon_style: {
+    fontSize: wp('5%'),
+    color: colors.grey,
+    marginHorizontal: wp('1%'),
   },
   contentWrapper2: {
     backgroundColor: 'white',
@@ -254,9 +273,8 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   actionBox: {
-    marginBottom: hp('1%'),
     alignItems: 'center',
-    marginTop: hp('1%'),
+    marginVertical: hp('3%'),
   },
   footText: {
     fontSize: wp('3.2%'),
@@ -371,8 +389,8 @@ const styles = StyleSheet.create({
   },
   header_wrapper2: {
     alignItems: 'center',
-    marginTop: hp('2%'),
-    marginBottom: hp('2%'),
+    // marginTop: hp('5%'),
+    // marginBottom: hp('2%'),
     backgroundColor: colors.green,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
@@ -475,6 +493,11 @@ const styles = StyleSheet.create({
     marginLeft: wp('2%'),
     color: colors.grey,
   },
+  button: {
+    width: wp('50%'),
+    borderRadius: 50,
+    paddingVertical: hp('1.5%'),
+  },
 });
 
 export {
@@ -502,4 +525,5 @@ export {
   InputLabel,
   InputGroup,
   TextAreaWrap,
+  InnerContentContainer,
 };

@@ -2,8 +2,8 @@ import React, {useState, useRef, useEffect} from 'react';
 import {View, TouchableOpacity, ScrollView} from 'react-native';
 import {KeyboardAwareView} from 'react-native-keyboard-aware-view';
 import {wp, hp, fonts, colors} from 'src/config/variables';
-import {Title, Subtitle} from 'src/screens/intro/Signup/styles';
-import styles from 'src/screens/intro/Signup/styles';
+import {Title, Subtitle, styles} from 'src/screens/intro/Signup/styles';
+// import {styles} from 'src/screens/intro/Signup/styles';otp
 import Button from 'src/component/Button/index';
 import {BASEURL} from 'src/constants/Services';
 import {CometChat} from '@cometchat-pro/react-native-chat';
@@ -28,7 +28,7 @@ const UserDetails = props => {
   const dispatch = useDispatch();
   const {auth} = useSelector(state => state);
   const [value, setValue] = useState({});
-  const {firstname, lastname, email, password, category,longitude, latitude, address_str } = value;
+  const {firstname, lastname, email, password, category,longitude = "0.0", latitude="0.0", address_str="ng" } = value;
   const onChangeText = (key, data) => {
     setValue({...value, [key]: data});
     
@@ -116,7 +116,7 @@ const UserDetails = props => {
         ]
       },
       address_str,
-      phone: auth.userData.phone,
+      phone: auth.userData.phone || "+234 8159 910 9387",
     };
 
    

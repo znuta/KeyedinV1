@@ -22,8 +22,8 @@ import {
   setLoading,
   sendExpert,
 } from 'src/redux/actions/AuthActions';
-import {Container} from 'src/screens/intro/Signup/styles';
-import styles from 'src/screens/intro/Signup/styles';
+import {Container, styles} from 'src/screens/intro/Signup/styles';
+// import styles from 'src/screens/intro/Signup/styles';
 import ExpertiseForm from 'src/screens/forms/ExpertiseForm';
 import axios from 'axios';
 

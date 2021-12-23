@@ -81,11 +81,10 @@ const PhoneNumber = props => {
           console.log("___RES__", res)
           const { data } = res
           
-        dispatch(setLoading(false));
-        if (res.status == 200) {
-          dispatch(sendOTPSuccess(data.phone));
+          dispatch(setLoading(false));
+          dispatch(sendOTPSuccess(phone));
           props.next();
-        } 
+       
       })
       .catch(error => {
         dispatch(setLoading(false));

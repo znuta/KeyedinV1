@@ -3,7 +3,7 @@ import {StatusBar, TouchableOpacity, Text} from 'react-native';
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 // import GetStarted from './GetStarted';
-// import Main from './main/Main';
+import Main from './main/Main';
 import AuthNav from './Intro/AuthNav';
 
 import {useSelector, useDispatch} from 'react-redux';
@@ -21,7 +21,7 @@ function Navigation() {
           gestureEnabled: false,
         }}>
         <Stack.Screen name="AuthNav" component={AuthNav} />
-        {/* <Stack.Screen name="Main" component={Main} /> */}
+        <Stack.Screen options={{ headerShown: false }} name="Main" component={Main} />
       </Stack.Navigator>
     </NavigationContainer>
   );

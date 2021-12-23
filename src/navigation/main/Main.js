@@ -7,17 +7,14 @@ import {
   sendUserDetails,
   saveAvatar,
   saveBalance
-} from "../../redux/actions/AuthActions";
-import * as Location from "expo-location";
-import { BASEURL } from "../../constants/Services";
-import { useNetInfo } from "@react-native-community/netinfo";
+} from "src/redux/actions/AuthActions";
+import { BASEURL } from "src/constants/Services";
 import {useSelector, useDispatch} from 'react-redux';
 
 
 const Main = (props) => {
   const dispatch = useDispatch();
   const {auth} = useSelector(state => state);
-  const netInfo = useNetInfo();
 
   
 

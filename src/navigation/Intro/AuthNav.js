@@ -6,7 +6,7 @@ import UserLogin from 'src/screens/intro/Login/UserLogin';
 import Auth from 'src/screens/intro/Signup';
 import Intro from 'src/screens/intro/Intro/Intro';
 import {useSelector, useDispatch} from 'react-redux';
-// import ForgotPassword from './ForgotPassword';
+import ForgotPassword from 'src/screens/intro/ForgotPassword';
 
 const Stack = createStackNavigator();
 function AuthNav(props) {
@@ -24,7 +24,7 @@ function AuthNav(props) {
           {/* <Stack.Screen name="GetStarted" component={GetStarted} /> */}
           <Stack.Screen name="UserLogin" component={UserLogin} />
           <Stack.Screen name="Auth" component={Auth} />
-          {/* <Stack.Screen name="ForgotPassword" component={ForgotPassword} /> */}
+          <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
         
     </Stack.Navigator>
 

@@ -1,7 +1,7 @@
 import React from 'react';
-import {StyleSheet, View, Modal} from 'react-native';
+import {StyleSheet, View, Modal, ActivityIndicator} from 'react-native';
 // import * as Progress from 'react-native-progress';
-import {ActivityIndicator} from 'react-native-paper';
+// import {ActivityIndicator} from 'react-native-paper';
 import Colors from '../constants/Colors';
 
 const Loader = props => {

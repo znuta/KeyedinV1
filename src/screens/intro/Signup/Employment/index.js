@@ -10,7 +10,7 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
 } from 'react-native';
-import styles from 'src/screens/intro/Signup/styles';
+import {styles} from 'src/screens/intro/Signup/styles';
 import Button from 'src/component/Button/index';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';

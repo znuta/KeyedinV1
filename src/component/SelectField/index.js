@@ -11,7 +11,8 @@ import {
 import styled from 'styled-components/native';
 import styles from './styles';
 import {colors, fonts, hp, wp} from '../../config/variables';
-import RNPickerSelect from 'react-native-picker-select';
+// import RNPickerSelect from 'react-native-picker-select';
+import { Picker as SelectPicker } from '@react-native-picker/picker';
 const SelectField = ({
   value = '',
   placeholder = '',
@@ -22,6 +23,7 @@ const SelectField = ({
   multiline = false,
   items = [],
   label,
+  ...otherProps
 }) => {
   return (
     <InputGroup>
@@ -31,7 +33,7 @@ const SelectField = ({
           styles.selectField,
           {borderWidth: 0, backgroundColor: '#f2f3f4'},
         ]}>
-        <RNPickerSelect
+        {/* <RNPickerSelect
           style={{
             color: colors.dark,
           }}
@@ -46,7 +48,18 @@ const SelectField = ({
             // }
           }}
           items={items}
-        />
+        /> */}
+        <SelectPicker
+          style={{ width: '100%' }}
+          onValueChange={(itemValue, itemIndex) =>
+            onChangeText(itemValue)
+          }
+          {...otherProps}
+        >
+          {
+           items.length && items.map(item=> <SelectPicker.Item label={item.label} value={item.value} />)
+          }
+        </SelectPicker>
       </TouchableOpacity>
     </InputGroup>
   );
@@ -86,6 +99,7 @@ const InputLabel = styled.Text`
   font-size: ${wp('3.5%')};
   font-weight: 700;
   color: ${colors.header};
+  margin-left: ${wp('4%')};
 `;
 
 export {TextAreaWrap, InputLabel, InputGroup, InputWrap};
