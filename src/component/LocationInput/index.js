@@ -27,23 +27,23 @@ const LocationInput = ({
     const autocomplete = {
         container: {
           flex: 1,
-          position: "absolute",
-          left: wp('7%'),
-          top: wp('3%'),
+          
           
         },
         textInputContainer: {
           flexDirection: "row",
+          zindex: 100000
         },
         textInput: {
           // backgroundColor: colors.green,
-          height: 25,
-          borderRadius: 5,
+          height: wp('12%'),
+          borderRadius: wp('50%'),
           paddingVertical: 5,
           paddingHorizontal: 10,
           fontSize: 15,
           flex: 1,
           backgroundColor: '#f2f3f4',
+          zindex: 100000
         },
         poweredContainer: {
           justifyContent: "flex-end",
@@ -51,11 +51,15 @@ const LocationInput = ({
           borderBottomRightRadius: 5,
           borderBottomLeftRadius: 5,
           borderColor: "#c8c7cc",
-            borderTopWidth: 0.5,
+          borderTopWidth: 0.5,
+          zindex: 100000
           
         },
         powered: {},
-        listView: {},
+      listView: {
+        height: 500,
+        zindex: 100000
+        },
         row: {
           backgroundColor: "#FFFFFF",
           padding: 13,
@@ -77,9 +81,8 @@ const LocationInput = ({
 
   return (
     <InputGroup style={[additionalStyle.inputGroup]}>
-      {label && <InputLabel>{label}</InputLabel>}
-      <InputField style={additionalStyle.inputField}>
-        {icon}
+       {label && <InputLabel>{label}</InputLabel>}
+    
         <GooglePlacesAutocomplete
             placeholder={placeholder}
             
@@ -104,8 +107,9 @@ const LocationInput = ({
               currentLocation={true}
               currentLocationLabel="Current location"
               autoFocus={true}
-            />
-      </InputField>
+      />
+     
+      
     </InputGroup>
   );
 };

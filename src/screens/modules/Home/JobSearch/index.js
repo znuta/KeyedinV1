@@ -45,6 +45,7 @@ import { debounce } from "debounce";
 import styles from './styles';
 import JobItem from 'src/component/JobItem';
 import LocationInput from 'src/component/LocationInput';
+import TextField from 'src/component/TextField';
 
 
 const mapStateToProps = state => ({
@@ -274,6 +275,10 @@ function JobSearch(props) {
     setFilter({...filters, address_str: description, longitude: lng, latitude: lat });
     
   };
+   useEffect(() => {
+   GetJobs() 
+    
+  }, []);
   
   const RefreshAllJobs = () => {
     setisFetching(true);
@@ -313,25 +318,11 @@ function JobSearch(props) {
         Authorization: 'Bearer' + ' ' + props.auth.token,
       },
       }).then(res => {
-      console.log("__Download___", res)
-        // props.setLoading(false);
-        
-        // //setData(res.data);
-        //setsData(res.data);
-        // setErrormessage(res.data);
-        // setisFetching(false);
-        // console.log("Check Now", Object.keys(props.auth));
-        //setCategoryList(categories);
-        // setData(
-        //   res.data.sort(function (a, b) {
-        //     return b.id - a.id;
-        //   }),
-        // );
-        // setsData(
-        //   res.data.sort(function (a, b) {
-        //     return b.id - a.id;
-        //   }),
-        // );
+        const {data} = res.data
+        console.log("__Download___", res)
+        props.setLoading(false);
+        setData(data);
+       
 
       })
       .catch(error => {
@@ -344,8 +335,8 @@ function JobSearch(props) {
   };
 
   const filterJobs = () => {
-    const {latitude="", longitude = "", priority="", skill=""} = filters
-    let uri = BASEURL + `/projects/find/longitude=${longitude}&latitude=${latitude}&priority=${priority}&skill=${skill}`;
+    const {latitude="", longitude = "", priority="", skill="", profession} = filters
+    let uri = BASEURL + `/projects/filter/longitude=${longitude}&latitude=${latitude}&priority=${priority}&skill_set=${skill}&profession=${profession}`;
     const data = {
       longitude: auth.userData.location.lng,
       latitude: auth.userData.location.lat
@@ -357,25 +348,11 @@ function JobSearch(props) {
         Authorization: 'Bearer' + ' ' + props.auth.token,
       },
     }).then(res => {
+      const {data} = res.data
+        console.log("__Download___", res)
         props.setLoading(false);
-
-      console.log("___USER___", res.data);
-      
-        //console.log(res.data..name);
-        //res.data.map((item) => categories.push(item.name));
-        // setErrormessage(res.data);
-        // setisFetching(false);
-        // console.log("Check Now", Object.keys(props.auth));
-        // setData(
-        //   res.data.sort(function (a, b) {
-        //     return b.id - a.id;
-        //   }),
-        // );
-        // setsData(
-        //   res.data.sort(function (a, b) {
-        //     return b.id - a.id;
-        //   }),
-        // );
+        setData(data);
+       
       })
       .catch(error => {
         console.log('Job Get Failed because', error.response);
@@ -405,13 +382,10 @@ function JobSearch(props) {
     })
      
       .then(res => {
-        console.log("___RES__", res)
-        setData([])
-        //props.setLoading(false);
-        // console.log(res.data);
-        //console.log(res.data..name);
-        //res.data.map((item) => categories.push(item.name));
-        // setData(res.data);
+        const {data} = res.data
+        console.log("__Download___", res)
+        props.setLoading(false);
+        setData(data);
       })
       
       .catch(error => {
@@ -444,7 +418,7 @@ function JobSearch(props) {
           style={{
             backgroundColor: colors.green,
             borderBottomLeftRadius: wp('8%'),
-            paddingVertical: hp('2%'),
+            paddingVertical: hp('4%'),
 
             borderBottomRightRadius: wp('8%'),
           }}>
@@ -743,29 +717,16 @@ function JobSearch(props) {
             placeholder={"Enter Location"}
           />
 
-          <SelectField
-            value={''}
-            label="Sort"
-            items={[
-              {label: 'Junior WAEC', value: 'Junior WAEC'},
-              {label: 'WAEC', value: 'WAEC'},
-              {label: 'B.Sc', value: 'Bachelor of Science'},
-              {label: 'Masters', value: 'Masters'},
-              {label: 'PhD', value: 'Doctor of Philosophy'},
-            ]}
-            onChangeText={itemValue => onChangeText('degree', itemValue)}
+          <TextField
+            placeholder={"Profession"}
+            label="Profession"
+            onChangeText={itemValue => onChangeText('profession', itemValue)}
           />
 
-          <SelectField
-            value={''}
+          <TextField
+            
             label="Skill"
-            items={[
-              {label: 'Junior WAEC', value: 'Junior WAEC'},
-              {label: 'WAEC', value: 'WAEC'},
-              {label: 'B.Sc', value: 'Bachelor of Science'},
-              {label: 'Masters', value: 'Masters'},
-              {label: 'PhD', value: 'Doctor of Philosophy'},
-            ]}
+            placeholder={"e.g Plumber, Architect, Vet Doctor "}
             onChangeText={itemValue => onChangeText('skill', itemValue)}
           />
 

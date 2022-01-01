@@ -1,6 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {height} from 'styled-system';
-import {colors, hp, wp} from '../../config/variables';
+import {colors, hp, wp} from 'src/config/variables';
 const styles = StyleSheet.create({
   container: {
     flex: 1,

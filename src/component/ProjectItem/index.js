@@ -11,17 +11,15 @@ import {
 } from 'react-native';
 import TimeAgo from 'react-native-timeago';
 import styled from 'styled-components';
-import {
-  Feather,
-} from '@expo/vector-icons';
+import Feather from 'react-native-vector-icons/Feather'
 import ReadMore from 'react-native-read-more-text';
 import {useNavigation} from '@react-navigation/native';
-import colors from '../../../config/colors';
-import {hp, wp} from '../../../config/variables';
+import colors from 'src/config/colors';
+import {hp, wp} from 'src/config/variables';
 
 const ProjectItem = props => {
     let item = props.item;
-
+const {onPress=()=>{}} = props
     const _renderTruncatedFooter = handlePress => {
         return (
           <Text
@@ -53,12 +51,7 @@ const ProjectItem = props => {
         // }}
       >
         <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('Proposal', {data: item, type: 'Home'});
-            // navigation.navigate('ProjectView', {
-            //   project: item,
-            // });
-          }}>
+          onPress={onPress}>
           <ProjectTitle>{item.title}</ProjectTitle>
 
           <Meta>
@@ -234,10 +227,10 @@ const ProjectItem = props => {
     min-height: 20%;
   
     shadow-color: #000;
-    shadow-offset: 2px;
+    shadow-offset: 1px;
     shadow-opacity: 0.1;
     shadow-radius: 5;
-    elevation: 10;
+    elevation: 2;
     margin-bottom: ${hp('2%')};
     padding-vertical: ${hp('2%')};
   `;

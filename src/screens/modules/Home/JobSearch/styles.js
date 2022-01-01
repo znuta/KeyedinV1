@@ -109,6 +109,7 @@ import {colors, hp, wp} from 'src/config/variables';
     textcontainer: {
       alignItems: 'center',
       justifyContent: 'center',
+      marginTop: hp('1%')
     },
     centeredView: {
       flex: 1,

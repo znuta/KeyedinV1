@@ -20,7 +20,7 @@ export const getAllConversations = (callback) => (dispatch) => {
     (conversationList) => {
       console.log("Conversations list received:", conversationList);
       dispatch(setConversations(conversationList));
-      callback();
+      callback(conversationList);
     },
     (error) => {
       console.log("Conversations list fetching failed with error:", error);

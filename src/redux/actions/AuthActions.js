@@ -16,6 +16,9 @@ import {
   TERMS_MODAL_ACTIVE,
   SET_EXPERT_DETAILS,
   LOGGED_IN,
+  SET_LOCATION,
+  SET_EDUCATION_DETAILS,
+  SET_EXPERIENCE_DETAILS,
 } from 'src/redux/action-types';
 import {BASEURL} from 'src/constants/Services';
 import {CometChat} from '@cometchat-pro/react-native-chat';
@@ -23,7 +26,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const getToken = async () => {
+ export const getToken = async () => {
   try {
     const token = await AsyncStorage.getItem("token")
     console.log("__TOKEN__", token)
@@ -143,12 +146,7 @@ const saveToken = token => {
 const saveSkill = data => {
   return { type: 'SAVE_SKILL', data }
 };
-const saveAvatar = path => {
-  return {
-    type: SAVE_AVATAR,
-    filepath: path,
-  };
-};
+
 
 const saveGovId = path => {
   return {
@@ -182,21 +180,21 @@ const doLogout = () => {
   };
 };
 
-const sendWorkDetails = data => {
+export const sendWorkDetails = data => {
   return {
-    type: 'API_WORK_DATA',
+    type: SET_EXPERIENCE_DETAILS,
     data: data,
   };
 };
-const sendEducationDetails = data => {
+export const sendEducationDetails = data => {
   return {
-    type: 'API_SCHOOL_DATA',
+    type: SET_EDUCATION_DETAILS,
     data: data,
   };
 };
 
 export const initUser = (token,id) => dispatch => {
-  let uri = BASEURL + `/users/profile/${id}`;
+  let uri = BASEURL + `/users/profile?user_id=${id}`;
   
   try {
     axios.get(uri, {
@@ -723,7 +721,7 @@ export const getAllCategories = () => dispatch => {
 };
 
 const GetExperience =  (id) => async  dispatch =>  {
-  let uri = BASEURL + `/profiles/employment/`;
+  let uri = BASEURL + `/profiles/employment?user_id=${id}`;
 const token = await getToken()
   //props.setLoading(true);
   axios.get(uri, {
@@ -736,10 +734,12 @@ const token = await getToken()
     
     .then(res => {
       console.log("___EMPLOYMENT__DETAILS___", res)
-      // props.sendWorkDetails(res.data);
+      const {data} = res.data
+     dispatch(sendWorkDetails(data.organizations));
       //console.log({ res });
     })
     .catch(error => {
+      console.log("___EMPLOYMENT__ERROR___", error.response)
       //props.setLoading(false);
     
     });
@@ -747,7 +747,7 @@ const token = await getToken()
 
 const GetExpertiseFromApi = (id) => async dispatch => {
   console.log("___ID__++", id)
-  let uri = BASEURL + `/profiles/expertise/`;
+  let uri = BASEURL + `/profiles/expertise?user_id=${id}`;
   const token = await getToken()
   //props.setLoading(true);
   axios.get(uri, {
@@ -777,7 +777,7 @@ const GetExpertiseFromApi = (id) => async dispatch => {
 };
 
 const GetEducation =  (id) => async dispatch => {
-  let uri = BASEURL + `/profiles/education/`;
+  let uri = BASEURL + `/profiles/education?user_id=${id}`;
   const token = await getToken()
   //props.setLoading(true);
   axios.get(uri, {
@@ -791,7 +791,7 @@ const GetEducation =  (id) => async dispatch => {
       const { data = {}} = res.data
       dispatch(sendEducationDetails(data.institutions));
       //props.sendUserDetails(inputs);
-      // props.sendEducationDetails(res.data);
+      // dispatch(sendEducationDetails(res.data));
      
       //props.saveAvatar(res.data.image);
       //setArtisanImg(res.data.image);
@@ -804,6 +804,11 @@ const GetEducation =  (id) => async dispatch => {
      
     });
 };
+const saveAvatar= path => async dispatch =>{
+      dispatch({
+        type: SAVE_AVATAR,
+        filepath: path,
+      })}
 
 export {
   saveSkill,
@@ -830,6 +835,7 @@ export {
   sendRate,
   newAccount,
   GetExperience,
+  setLocation,
 GetExpertiseFromApi,
 GetEducation
 };

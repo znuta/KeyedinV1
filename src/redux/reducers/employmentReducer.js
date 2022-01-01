@@ -24,8 +24,8 @@ const employmentReducer = (state = [], action) => {
     case "TOGGLE_COMPANY":
       return state.filter((todo) => todo.id != action.id);
 
-    case "API_WORK_DATA":
-      return action.data;
+    // case "API_WORK_DATA":
+    //   return action.data;
     default:
       return state;
   }

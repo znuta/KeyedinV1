@@ -20,6 +20,7 @@ import {
   SAVE_BALANCE,
   GET_ALL_JOBS,
   SET_ALL_CATEGORIES,
+  SET_EXPERIENCE_DETAILS,
 } from "../action-types";
 
 const INITIAL_STATE = {
@@ -150,6 +151,11 @@ const authReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         education: action.data,
+      };
+    case SET_EXPERIENCE_DETAILS:
+      return {
+        ...state,
+        experience: action.data,
       };
     case SET_LOADING:
       // console.log("Loading,...");

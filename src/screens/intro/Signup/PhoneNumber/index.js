@@ -26,7 +26,8 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {BASEURL} from 'src/constants/Services';
 import Loader from 'src/component/Loader';
 import colors from 'src/config/colors';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 
 import {
   setLoading,
@@ -86,7 +87,12 @@ const PhoneNumber = props => {
           props.next();
        
       })
-      .catch(error => {
+        .catch(error => {
+          Toast.show({
+            type: 'error',
+            text1: 'Registration failed',
+            text2: 'Error with Phone number'
+          });
         dispatch(setLoading(false));
         dispatch(sendOTPError(error));
       });
@@ -136,7 +142,7 @@ const PhoneNumber = props => {
                   Password (OTP) will be sent to you.
                 </Subtitle>
               </TitleWrap>
-
+              <Toast />
               <ContentWrap>
                 {/* <InputWrap> */}
                 <PhoneInput

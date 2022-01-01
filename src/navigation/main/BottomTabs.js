@@ -27,44 +27,52 @@ import Walletbtn from 'src/assets/icons/walletbtn.svg';
 import Walletbtnalt from 'src/assets/icons/walletbtnalt.svg';
 //import the screens
 import Home from 'src/screens/modules/Home';
-// import Projects from 'src/screens/modules/Projects/Projects';
-// import Settings from 'src/screens/modules/Settings/Settings';
-// import Proposals from 'src/screens/modules/Projects/ProposalsList';
-// import { ChatScreen } from "src/screens/modules/Messages/ChatScreen";
-// import ArtisanProfile from 'src/screens/modules/Profile/ArtisanProfile';
+import Projects from 'src/screens/modules/Projects';
+import CompletedProjectDetail from 'src/screens/modules/Projects/CompletedProjectDetail';
+import OngoingProjectDetail from 'src/screens/modules/Projects/OngoingProjectDetail';
+import JobOfferDetail from 'src/screens/modules/Projects/JobOfferDetail';
+import Settings from 'src/screens/modules/Settings';
+import Proposals from 'src/screens/modules/Proposal';
+import ProposalDetail from 'src/screens/modules/Proposal/ProposalDetail';
+import Insight from 'src/screens/modules/Insight';
+import { ChatScreen } from "src/screens/modules/Messages/ChatScreen";
+import { MainCallScreen } from "src/screens/modules/Messages/MainCallScreen";
+import ArtisanProfile from 'src/screens/modules/Profile/';
 // import Withdrawal from 'src/screens/modules/Wallet/Withdrawal';
-// import Wallet from 'src/screens/modules/Wallet';
+import Wallet from 'src/screens/modules/Wallet';
 import ProjectApply from 'src/screens/modules/Home/ProjectDetail';
-// import EditMyProfile from 'src/screens/modules/Settings/EditProfile';
+import EditMyProfile from 'src/screens/modules/EditProfile';
 
-// import EditEducation from 'src/screens/modules/Settings/EditEducation';
-// import EditExpertise from 'src/screens/modules/Settings/EditExpertise';
-// import EditEmployment from 'src/screens/modules/Settings/EditEmployment';
-// import EditUser from 'src/screens/modules/Settings/EditUser';
-// import Conversations from 'src/screens/modules/Messages/Conversations';
+import EditEducation from 'src/screens/modules/EditProfile/Education';
+import EditExpertise from 'src/screens/modules/EditProfile/Expertise';
+import EditEmployment from 'src/screens/modules/EditProfile/Experience';
+import EditUser from 'src/screens/modules/EditProfile/EditUser';
+import Conversations from 'src/screens/modules/Messages/Conversations';
 import {colors} from 'src/config/variables';
-// import { CallingScreen } from 'src/screens/modules/Messages/CallingScreen';
+import { CallingScreen } from 'src/screens/modules/Messages/CallingScreen';
 
 
 const Tab = createBottomTabNavigator();
 
-// function ProfileScreen() {
-//   return <ArtisanProfile style={{flex: 1}} />;
-// }
+function ProfileScreen() {
+  return <ArtisanProfile style={{flex: 1}} />;
+}
 
-// function EditProfileScreen() {
-//   return <EditMyProfile />;
-// }
+function EditProfileScreen() {
+  return <EditMyProfile />;
+}
 
-// function EditExpertiseScreen() {
-//   return <EditExpertise />;
-// }
+function EditExpertiseScreen() {
+  return <EditExpertise />;
+}
 
-// function SettingsScreen() {
-//   return <Settings />;
-// }
+function SettingsScreen() {
+  return <Settings />;
+}
 
-
+function InsightScreen() {
+  return <Insight />;
+}
 
 export function HomeTabs({navigation, route}) {
 
@@ -107,7 +115,7 @@ export function HomeTabs({navigation, route}) {
         style={{borderTopLeftRadius: 25}}
       />
 
-      {/* <Tab.Screen
+      <Tab.Screen
         name="Projects"
         component={Projects}
         options={{
@@ -117,6 +125,7 @@ export function HomeTabs({navigation, route}) {
             focused ? <Projectbtn /> : <Projectbtnalt />,
         }}
       />
+
       <Tab.Screen
         name="Proposals"
         component={Proposals}
@@ -126,8 +135,8 @@ export function HomeTabs({navigation, route}) {
             focused ? <Proposalbtn /> : <Proposalbtnalt />,
         }}
       />
-     
-      <Tab.Screen
+
+     <Tab.Screen
         name="Messages"
         component={Conversations}
         options={{
@@ -136,16 +145,18 @@ export function HomeTabs({navigation, route}) {
             focused ? <Messagebtn /> : <Messagebtnalt />,
         }}
       />
+
       <Tab.Screen
         name="Wallet"
         component={Wallet}
         options={{
           tabBarLabel: 'Wallet',
           tabBarIcon: ({color, size, focused}) =>
-           
+          
             focused ? <Walletbtn /> : <Walletbtnalt />,
         }}
-      /> */}
+      />
+
       
     </Tab.Navigator>
   );
@@ -162,17 +173,26 @@ const BottomTabComponent = reduxProps => {
     }}>
       <Stack.Screen options={{ headerShown: false }} name="Home" component={HomeTabs} />
       <Stack.Screen name="Proposal" component={ProjectApply} />
-      {/* <Stack.Screen name="Profile" component={ProfileScreen} />
-      <Stack.Screen name="Settings" component={SettingsScreen} />
+      <Stack.Screen name="ProposalDetail" component={ProposalDetail} />
+      <Stack.Screen name="CompletedProjectDetail" component={CompletedProjectDetail} />
+      <Stack.Screen name="OngoingProjectDetail" component={OngoingProjectDetail} />
+      <Stack.Screen name="JobOfferDetail" component={JobOfferDetail} />
+      <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
-      <Stack.Screen name="Withdrawal" component={Withdrawal} />
-      <Stack.Screen name="EditUser" component={EditUser} />
       <Stack.Screen name="EditExpertise" component={EditExpertiseScreen} />
+      <Stack.Screen name="Insight" component={InsightScreen} />
       <Stack.Screen name="EditEmployment" component={EditEmployment} />
       <Stack.Screen name="EditEducation" component={EditEducation} />
-
+      <Stack.Screen name="EditUser" component={EditUser} />
+      <Stack.Screen name="Settings" component={SettingsScreen} />
       <Stack.Screen name="ChatScreen" component={ChatScreen} />
-      <Stack.Screen name="CallingScreen" component={CallingScreen} /> */}
+      <Stack.Screen name="CallingScreen" component={CallingScreen} />
+      <Stack.Screen name="MainCallScreen" component={MainCallScreen} />
+      {/* 
+     
+      <Stack.Screen name="Withdrawal" component={Withdrawal} />
+      
+       */}
       
     </Stack.Navigator>
   );

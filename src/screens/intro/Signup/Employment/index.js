@@ -14,11 +14,10 @@ import {styles} from 'src/screens/intro/Signup/styles';
 import Button from 'src/component/Button/index';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-
 import {useNavigation} from '@react-navigation/native';
-
 import {BASEURL} from 'src/constants/Services';
-
+import DocumentPicker from 'react-native-document-picker'
+import {check, request, PERMISSIONS} from 'react-native-permissions';
 import {useSelector, useDispatch} from 'react-redux';
 import {
   setLoading,
@@ -27,6 +26,7 @@ import {
 import {wp, hp, fonts, colors} from 'src/config/variables';
 import EmploymentForm from 'src/screens/forms/EmploymentForm';
 import axios from 'axios';
+import Toast from 'react-native-toast-message';
 
 
 const Employment = props => {
@@ -47,8 +47,34 @@ const Employment = props => {
   const nextStep = () => {
     UploadEmploymentToApi()
 
-    
   };
+
+
+  const documentPicker = async (index) => {
+
+    try {
+        const result = await DocumentPicker.pick({
+        type: [DocumentPicker.types.allFiles],
+        })
+        
+      let name = result.name;
+      let uri = result.uri;
+      let lastIndexOf = uri.lastIndexOf(".");
+      let ext = uri.substr(lastIndexOf+1, uri.length-1);
+      var file = {
+          name: name,
+          uri: Platform.OS === 'android' ? result.uri : result.uri.replace("file://", ""),
+      };
+      onChangeText("portfolio", file, index)
+    } catch (err) {
+        if (DocumentPicker.isCancel(err)) {
+        // User cancelled the picker, exit any dialogs or menus and move on
+        } else {
+        throw err
+        }
+    }
+  
+  }
     
   const UploadEmploymentToApi = () => {
     let uri = BASEURL + '/profiles/employment';
@@ -73,6 +99,11 @@ const Employment = props => {
         navigation.navigate('Main');
       })
       .catch(error => {
+        Toast.show({
+          type: 'error',
+          text1: 'Employment Error ',
+          text2: 'Error with employment'
+        });
         dispatch(setLoading(false));
        
       });
@@ -102,8 +133,9 @@ const Employment = props => {
           behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
           style={{flex: 1}}>
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+          <Toast />
             { organizations.length ? organizations.map((value,index) => {
-              return <EmploymentForm value={value} onChangeText={(key, data) => { 
+              return <EmploymentForm value={value} documentPicker={documentPicker} onChangeText={(key, data) => { 
                 onChangeText(key, data,index)
                }} />
             }) : null}

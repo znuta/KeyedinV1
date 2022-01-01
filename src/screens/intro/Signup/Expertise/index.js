@@ -26,6 +26,7 @@ import {Container, styles} from 'src/screens/intro/Signup/styles';
 // import styles from 'src/screens/intro/Signup/styles';
 import ExpertiseForm from 'src/screens/forms/ExpertiseForm';
 import axios from 'axios';
+import Toast from 'react-native-toast-message';
 
 const Expertise = props => {
     const dispatch = useDispatch();
@@ -52,7 +53,7 @@ const Expertise = props => {
     const {bio, service_category, skills, experience_level, } = value;
     
     let data = {
-      user_id: auth.id,
+      user_id: auth.userData.id,
       role: 'artisan',
       bio: bio,
       category: service_category,
@@ -79,6 +80,11 @@ const Expertise = props => {
       })
       .catch(error => {
         console.log("___ERROR__", error.response)
+        Toast.show({
+          type: 'error',
+          text1: 'Expertise Error ',
+          text2: 'Error with expertise'
+        });
         dispatch(setLoading(false));
        
       });
@@ -124,7 +130,8 @@ const Expertise = props => {
             <ScrollView
             
               showsVerticalScrollIndicator={false}
-              style={{flex: 1}}>
+              style={{ flex: 1 }}>
+               <Toast />
               <ExpertiseForm value={value} onChangeText={onChangeText} />
               <View
                 style={{

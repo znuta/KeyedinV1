@@ -12,6 +12,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import { setLoading, sendUserDetails } from 'src/redux/actions/AuthActions';
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { ScrollView } from 'react-native-gesture-handler';
+import LocationInput from 'src/component/LocationInput';
 
 const PersonalDetailForm = props => {
   const {onChangeText, value, handleLocationAddress} = props;
@@ -218,29 +219,17 @@ const PersonalDetailForm = props => {
             )}
           </View>
           <ScrollView>
-          <GooglePlacesAutocomplete
-                      placeholder="Enter Location"
-                      minLength={2}
-                      autoFocus={false}
-                      returnKeyType={"default"}
-                      fetchDetails={true}
-                      listViewDisplayed={false}
-                      enablePoweredByContainer={true}
-                      styles={{ ...autocomplete }}
-                      onPress={(data, details = null) => {
-                        console.log("___LOCATION__", details)
-                        handleLocationAddress(data, details);
-                      }}
-                      fetchDetails={true}
-                      query={{
-                        key: "AIzaSyD2kRP3CxmIxUvxf_E2BFUeBgQlGsVsJY0",
-                        language: "en",
-                        // type: "geocode",
-                      }}
-                      currentLocation={true}
-                      currentLocationLabel="Current location"
-                      autoFocus={true}
-                    />
+          <LocationInput icon={
+            <MaterialIcons
+            name="location-pin"
+            size={20}
+            color={colors.medium}
+            style={{marginRight: 5}}
+            />}
+           
+            handleLocationAddress={handleLocationAddress}
+            placeholder={"Enter Location"}
+          />
             
         </ScrollView>
           

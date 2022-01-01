@@ -1,5 +1,7 @@
-import { SET_TRANSACTIONS } from "../action-types";
+import { SAVE_BALANCE, SET_TRANSACTIONS } from "../action-types";
 import { BASEURL } from "../../constants/Services";
+import axios from "axios";
+import { getToken } from "./AuthActions";
 
 
 const setTransactions = (transactions) => {
@@ -9,19 +11,20 @@ const setTransactions = (transactions) => {
   };
 };
 
-export const getAllTransactions = (token,callback) => (dispatch) => {
+export const getAllTransactions =  (callback) => async (dispatch) => {
+  const token = await getToken()
   console.log("Trying to get all user transactions...");
-  let uri = BASEURL + "/wallet/txn";
+  let uri = BASEURL + `/wallet/txn/${token}`;
 
   try {
-    fetch(uri, {
-      method: "GET",
+    axios.get(uri, {
+    
       headers: {
         "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
         Authorization: "Bearer " + token,
       },
     })
-      .then((res) => res.json())
+    
       .then((res) => {
         dispatch(setTransactions(res.data));
         callback();
@@ -36,3 +39,7 @@ export const getAllTransactions = (token,callback) => (dispatch) => {
   }
 };
 
+
+export const saveBalance = data => {
+  return { type: SAVE_BALANCE, data: data }
+}

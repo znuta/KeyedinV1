@@ -40,7 +40,7 @@ import {
 import styles from './style';
 import axios from 'axios';
 import TextField from 'src/component/TextField';
-
+import Toast from 'react-native-toast-message';
 const UserLogin = props => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -95,7 +95,8 @@ const UserLogin = props => {
       axios.post(uri, data).then(res => {
          console.log("LOGIN_DETAILS", res)
             dispatch(setLoading(false));
-           const {data = {}} = res.data
+        const { data = {} } = res.data
+        
             CometChat.getLoggedinUser().then(
               user => {
                 if(!user){
@@ -117,6 +118,11 @@ const UserLogin = props => {
           console.log("Something went wrong", error);
         }
             );
+            Toast.show({
+              type: 'success',
+              text1: 'Login Success',
+              text2: 'Welcome back 👋'
+            });
             dispatch(saveToken(data.token));
             dispatch(sendUserDetails(data))
             // dispatch(setIsAuthenticated(true));
@@ -126,7 +132,13 @@ const UserLogin = props => {
          
         })
         .catch(error => {
+          Toast.show({
+            type: 'error',
+            text1: 'Login failed',
+            text2: 'Error with credential'
+          });
           dispatch(setLoading(false));
+          
           console.log('Fetch Exception Caught...', error.response);
          
         });
@@ -190,7 +202,7 @@ const UserLogin = props => {
               style={styles.image}
             />
           </View>
-
+          <Toast />
           <TextField
               value={email}
               icon={<MaterialIcons

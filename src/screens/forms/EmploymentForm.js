@@ -25,7 +25,7 @@ import DataTimeField from 'src/component/DataTimeField';
 const Employment = props => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const {onChangeText, value} = props;
+  const {onChangeText, value, documentPicker=()=>{}} = props;
   const {jobDescription, jobLinks, employerName, jobRole, startDate, stopDate} =
     value;
   const {auth} = useSelector(state => state);
@@ -102,7 +102,7 @@ const Employment = props => {
 
       <TouchableOpacity
         style={{flexDirection: 'row', marginVertical: hp('1%')}}
-        onPress={_pickProfileVideo}>
+        onPress={documentPicker}>
         <View style={styles.circle}>
           <MaterialCommunityIcons name="plus" style={styles.white_plus} />
         </View>

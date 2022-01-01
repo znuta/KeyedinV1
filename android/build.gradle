@@ -23,9 +23,11 @@ allprojects {
     repositories {
         mavenCentral()
         mavenLocal()
+        jcenter()
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
             url("$rootDir/../node_modules/react-native/android")
+            //  url "https://dl.cloudsmith.io/public/cometchat/cometchat-pro-android/maven/"
         }
         maven {
             // Android JSC is installed from npm

@@ -130,6 +130,11 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
+//     compileOptions {
+//     sourceCompatibility JavaVersion.VERSION_1_8
+//     targetCompatibility JavaVersion.VERSION_1_8
+//   }
+
     defaultConfig {
         applicationId "com.keyedinv1"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -192,7 +197,8 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
-
+    // implementation 'com.cometchat:pro-android-chat-sdk:3.0.2'
+    // implementation 'com.cometchat:pro-android-calls-sdk:2.0.1'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {

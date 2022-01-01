@@ -24,6 +24,7 @@ import {
 import {wp, hp, fonts, colors} from 'src/config/variables';
 import EducationForm from 'src/screens/forms/EducationForm';
 import axios from 'axios';
+import Toast from 'react-native-toast-message';
 
 const Education = props => {
   const dispatch = useDispatch();
@@ -75,17 +76,20 @@ const Education = props => {
         'Content-Type': 'application/json;charset=utf-8',
         Authorization: 'Bearer' + ' ' + auth.token,
       },
-    })
-      
-      .then(res => {
+    }).then(res => {
        
         console.log('mert', res);
         dispatch(setLoading(false));
-        GetEducation();
-        
         props.next()
       })
       .catch(error => {
+
+        Toast.show({
+          type: 'error',
+          text1: 'Education Error ',
+          text2: 'Error with education'
+        });
+        console.log("__ERROR__", error.response)
         dispatch(setLoading(false));
        
       });
@@ -137,6 +141,7 @@ const Education = props => {
               style={{borderWidth: wp('0.1%'), borderColor: '#707070'}}
             />
             <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
+            <Toast />
             {educations && educations.length ? educations.map((value, index) => {
               return <EducationForm value={value} onChangeText={(key, data) => { 
                 onChangeText(key, data,index)
