@@ -19,7 +19,7 @@ import {useNavigation} from '@react-navigation/native';
 import {connect} from 'react-redux';
 import {getUserProjects} from 'src/redux/actions/ProjectsActions';
 import {BASEURL} from 'src/constants/Services';
-import {SET_ALL_PROJECTS} from 'src/redux/action-types';
+import {SET_ALL_PROJECTS, SET_LOADING} from 'src/redux/action-types';
 import colors from 'src/config/colors';
 import Empty from 'src/component/Empty';
 import {hp, wp} from 'src/config/variables';
@@ -45,166 +45,11 @@ const mapDispatchToProps = dispatch => {
 function ProjectsList(props) {
   const navigation = useNavigation();
   const [activeSegment, setActiveSegment] = useState(0);
-  const [proposals, setProposals] = useState([
-    {
-      user: {
-        first_name: 'Toyeeb',
-        last_name: 'Atunde',
-        avatar:
-          'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
-      },
-      employer: {
-        first_name: 'Toyeeb',
-        last_name: 'Atunde',
-        avatar:
-          'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
-      },
-
-      title: 'SoftWare Developer needed',
-      description:
-        'React Native SVG transformer allows you to import SVG files in your React Native project the same way that you would in a Web application when',
-      skillSet: ['Java', 'Robotic'],
-      location: 'Lagos',
-      created_at: '',
-      budget: 200,
-
-      offer_status: {
-        name: 'accepted',
-      },
-    },
-    {
-      user: {
-        first_name: 'Toyeeb',
-        last_name: 'Atunde',
-        avatar:
-          'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
-      },
-      employer: {
-        first_name: 'Toyeeb',
-        last_name: 'Atunde',
-        avatar:
-          'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
-      },
-
-      title: 'SoftWare Developer needed',
-      description:
-        'React Native SVG transformer allows you to import SVG files in your React Native project the same way that you would in a Web application when',
-      skillSet: ['Java', 'Robotic'],
-      location: 'Lagos',
-      created_at: '',
-      budget: 200,
-      offer_status: {
-        name: 'accepted',
-      },
-    },
-  ]);
-  const [projects, setProjects] = useState([
-    {
-      user: {
-        first_name: 'Toyeeb',
-        last_name: 'Atunde',
-        avatar:
-          'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
-      },
-      employer: {
-        avatar:
-          'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
-      },
-      job: {
-        title: 'SoftWare Developer needed',
-        description:
-          'React Native SVG transformer allows you to import SVG files in your React Native project the same way that you would in a Web application when',
-        skillSet: ['Java', 'Robotic'],
-        location: 'Lagos',
-        created_at: '',
-        budget: 200,
-      },
-      offer_status: {
-        name: 'accepted',
-      },
-    },
-  ]);
+  const [proposals, setProposals] = useState([]);
+  const [projects, setProjects] = useState([]);
   const [isFetching, setisFetching] = useState(false);
-  const [jobOngoing, setJobOngoing] = useState([
-    {
-      user: {
-        first_name: 'Toyeeb',
-        last_name: 'Atunde',
-        avatar:
-          'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
-      },
-      employer: {
-        first_name: 'Toyeeb',
-        last_name: 'Atunde',
-        avatar:
-          'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
-      },
-
-      title: 'SoftWare Developer needed',
-      description:
-        'React Native SVG transformer allows you to import SVG files in your React Native project the same way that you would in a Web application when',
-      skillSet: ['Java', 'Robotic'],
-      location: 'Lagos',
-      created_at: '',
-      budget: 200,
-
-      offer_status: {
-        name: 'accepted',
-      },
-    },
-    {
-      user: {
-        first_name: 'Toyeeb',
-        last_name: 'Atunde',
-        avatar:
-          'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
-      },
-      employer: {
-        first_name: 'Toyeeb',
-        last_name: 'Atunde',
-        avatar:
-          'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
-      },
-
-      title: 'SoftWare Developer needed',
-      description:
-        'React Native SVG transformer allows you to import SVG files in your React Native project the same way that you would in a Web application when',
-      skillSet: ['Java', 'Robotic'],
-      location: 'Lagos',
-      created_at: '',
-      budget: 200,
-      offer_status: {
-        name: 'accepted',
-      },
-    },
-  ]);
-  const [jobCompleted, setjobCompleted] = useState([
-    {
-      user: {
-        first_name: 'Toyeeb',
-        last_name: 'Atunde',
-        avatar:
-          'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
-      },
-      employer: {
-        first_name: 'Toyeeb',
-        last_name: 'Atunde',
-        avatar:
-          'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
-      },
-
-      title: 'SoftWare Developer needed',
-      description:
-        'React Native SVG transformer allows you to import SVG files in your React Native project the same way that you would in a Web application when',
-      skillSet: ['Java', 'Robotic'],
-      location: 'Lagos',
-      created_at: '',
-      budget: 200,
-      offer_status: {
-        name: 'accepted',
-      },
-    },
-  ]);
+  const [jobOngoing, setJobOngoing] = useState([]);
+  const [jobCompleted, setjobCompleted] = useState([]);
 
   useEffect(() => {
     const {auth, projects} = props;
@@ -235,7 +80,8 @@ function ProjectsList(props) {
   };
 
   const GetJobOffers = () => {
-    let uri = BASEURL + `/projects/status?status="open"&user_id=${props.auth.userData.id}`;
+    props.setLoading(true);
+    let uri = BASEURL + `/projects/status?status=open&user_id=${props.auth.userData.id}`;
 
     axios.get(uri, {
      
@@ -250,17 +96,17 @@ function ProjectsList(props) {
         const {data=[]} = res.data
         setisFetching(false);
             setProposals(data);
-          
+            props.setLoading(false);
       }).catch(error => {
-        //props.setLoading(false);
+        props.setLoading(false);
         setisFetching(false);
       
       });
   };
 
   const GetOngoingJobs = async () => {
-    
-    let uri = BASEURL + `/projects/status?status="ongoing"&user_id=${props.auth.userData.id}`;
+    props.setLoading(true);
+    let uri = BASEURL + `/projects/status?status=ongoing&user_id=${props.auth.userData.id}`;
      axios.get(uri, {
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
@@ -272,18 +118,18 @@ function ProjectsList(props) {
         setisFetching(false);
         const {data=[]} = res.data
           setJobOngoing(data);
-       
+          props.setLoading(false);
       })
       .catch(error => {
-        //props.setLoading(false);
+        props.setLoading(false);
         setisFetching(false);
        
       });
   };
 
   const GetCompletedJobs = async () => {
-    
-    let uri = BASEURL + `/projects/status?status="completed"&user_id=${props.auth.userData.id}`;
+    props.setLoading(true);
+    let uri = BASEURL + `/projects/status?status=completed&user_id=${props.auth.userData.id}`;
    axios.get(uri, {
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
@@ -293,10 +139,11 @@ function ProjectsList(props) {
     const {data=[]} = res.data
         console.log('what i am', res.data);
         setisFetching(false);
-            setjobCompleted(data);
+     setjobCompleted(data);
+     props.setLoading(false);
       }) .catch(error => {
         console.log('mase', error);
-        //props.setLoading(false);
+        props.setLoading(false);
         setisFetching(false);
        
       });

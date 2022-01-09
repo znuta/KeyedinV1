@@ -19,7 +19,7 @@ import {useNavigation} from '@react-navigation/native';
 import {connect, useDispatch, useSelector} from 'react-redux';
 import {getUserProjects} from 'src/redux/actions/ProjectsActions';
 import {BASEURL} from 'src/constants/Services';
-import {SET_ALL_PROJECTS} from 'src/redux/action-types';
+import {SET_ALL_PROJECTS, SET_LOADING} from 'src/redux/action-types';
 import {colors, hp, wp} from 'src/config/variables';
 import Empty from 'src/component/Empty';
 import { styles, InnerContentContainer } from './styles';
@@ -46,87 +46,7 @@ function ProposalsList(props) {
     const navigation = useNavigation();
     const dispatch = useDispatch()
   const [isProposal, setIsProposal] = useState(true);
-  const [proposals, setProposals] = useState([
-    {
-      user: {
-        first_name: 'Toyeeb',
-        last_name: 'Atunde',
-        avatar:
-          'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
-      },
-      employer: {
-        first_name: 'Toyeeb',
-        last_name: 'Atunde',
-        avatar:
-          'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
-      },
-      job: {
-        title: 'SoftWare Developer needed',
-        description:
-          'React Native SVG transformer allows you to import SVG files in your React Native project the same way that you would in a Web application when',
-        skillSet: [{skillSet: 'Java'}, {skillSet: 'Robotic'}],
-        location: 'Lagos',
-        created_at: '',
-        budget: 200,
-      },
-      offer_status: {
-        name: 'accepted',
-      },
-    },
-
-    {
-      user: {
-        first_name: 'Toyeeb',
-        last_name: 'Atunde',
-        avatar:
-          'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
-      },
-      employer: {
-        first_name: 'Toyeeb',
-        last_name: 'Atunde',
-        avatar:
-          'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
-      },
-      job: {
-        title: 'SoftWare Developer needed',
-        description:
-          'React Native SVG transformer allows you to import SVG files in your React Native project the same way that you would in a Web application when',
-        skillSet: [{skillSet: 'Java'}, {skillSet: 'Robotic'}],
-        location: 'Lagos',
-        created_at: '',
-        budget: 200,
-      },
-      offer_status: {
-        name: 'accepted',
-      },
-    },
-    {
-      user: {
-        first_name: 'Toyeeb',
-        last_name: 'Atunde',
-        avatar:
-          'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
-      },
-      employer: {
-        first_name: 'Toyeeb',
-        last_name: 'Atunde',
-        avatar:
-          'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
-      },
-      job: {
-        title: 'SoftWare Developer needed',
-        description:
-          'React Native SVG transformer allows you to import SVG files in your React Native project the same way that you would in a Web application when',
-        skillSet: [{skillSet: 'Java'}, {skillSet: 'Robotic'}],
-        location: 'Lagos',
-        created_at: '',
-        budget: 200,
-      },
-      offer_status: {
-        name: 'accepted',
-      },
-    },
-  ]);
+  const [proposals, setProposals] = useState([]);
   const [isFetching, setisFetching] = useState(false);
   const [defaultImage, setDefaultImage] = useState(
     'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
@@ -143,6 +63,7 @@ function ProposalsList(props) {
   };
  
   const GetProposals = () => {
+    props.setLoading(true);
     let uri = BASEURL + `/proposals/artisan/${props.auth.userData.id}`;
 
     axios.get(uri, {
@@ -151,11 +72,12 @@ function ProposalsList(props) {
         Authorization: 'Bearer' + ' ' + props.auth.token,
       },
     }).then(res => {
-      console.log('what i am looking forsa', res.data);
+      console.log("__PROPOSAL__", res)
       const {data} = res.data
-        setProposals(data);
+      setProposals(data);
+      props.setLoading(false);
       }).catch(error => {
-        //props.setLoading(false);
+        props.setLoading(false);
         console.log(error);
         setisFetching(false);
      
@@ -200,7 +122,9 @@ function ProposalsList(props) {
   //   );
   // };
 
-  const ProposalItem = ({item, index}) => {
+  const ProposalItem = ({ item, index }) => {
+    var num = parseFloat(item.bid_amount);
+  var amountToReceived = num - (num * .20);
       return (
         <TouchableOpacity onPress={()=>navigation.navigate("ProposalDetail", {data: item, type: 'Home'})}>
       <ProjectCard>
@@ -208,14 +132,14 @@ function ProposalsList(props) {
           <ProposalImage style={{borderRadius: 50}}>
             <Image
               source={{
-                uri: item.employer.avatar ?? defaultImage,
+                uri: item.avatar || defaultImage,
               }}
               style={{...StyleSheet.absoluteFill, borderRadius: 50}}
             />
           </ProposalImage>
 
           <ProposalBody>
-            <ProposalTitle>{item.job.title ?? 'Nothing'}</ProposalTitle>
+            <ProposalTitle>{item.name ?? 'Nothing'}</ProposalTitle>
 
             <View
               style={{
@@ -228,7 +152,7 @@ function ProposalsList(props) {
                 renderTruncatedFooter={_renderTruncatedFooter}
                 renderRevealedFooter={_renderRevealedFooter}>
                 <DescriptionText style={{flex: 1}}>
-                  {item.job.description}
+                  {item.cover_letter}
                 </DescriptionText>
               </ReadMore>
             </View>
@@ -250,7 +174,7 @@ function ProposalsList(props) {
               color: colors.green,
               fontWeight: '700',
             }}>
-            {item.job.location}
+            {item.city}
           </Text>
 
           <Text
@@ -269,7 +193,7 @@ function ProposalsList(props) {
               fontWeight: '300',
             }}>
             {' '}
-            N38,000
+            {amountToReceived||"N38,000"}
           </Text>
         </View>
     </ProjectCard>

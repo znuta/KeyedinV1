@@ -14,7 +14,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import TimeAgo from 'react-native-timeago';
 
 const JobItem = ({ item, index, onPress = ()=>{} }) => {
-
+const defaultImage = 'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80'
   const _renderTruncatedFooter = handlePress => {
     return <View style={{marginBottom: hp('0.5%')}}></View>;
   };
@@ -59,7 +59,7 @@ const JobItem = ({ item, index, onPress = ()=>{} }) => {
                 marginRight: 10,
               }}>
               <Image
-                source={{uri: item.user.avatar ?? defaultImage}}
+                source={{uri: item.avatar || defaultImage}}
                 style={{width: wp('12%'), height: wp('12%'), borderRadius: 50}}
               />
             </View>
@@ -71,7 +71,7 @@ const JobItem = ({ item, index, onPress = ()=>{} }) => {
                 numberOfLines={1}
                 renderTruncatedFooter={_renderTruncatedFooter}
                 renderRevealedFooter={_renderRevealedFooter}>
-                <SectionTitle>{item.title}</SectionTitle>
+                <SectionTitle>{item.name}</SectionTitle>
               </ReadMore>
               <View>
                 <View
@@ -126,7 +126,7 @@ const JobItem = ({ item, index, onPress = ()=>{} }) => {
                 width: '75%',
                 flex: 1,
               }}>
-              {item.skills.length > 2 ? (
+              {item.skill_set.length > 2 ? (
                 <>
                   
                   <SkillBadge>
@@ -136,7 +136,7 @@ const JobItem = ({ item, index, onPress = ()=>{} }) => {
                         fontWeight: '700',
                         color: colors.green,
                       }}>
-                      {item.skills[0]}
+                      {item.skill_set[0]}
                     </Text>
                   </SkillBadge>
                   <SkillBadge>
@@ -146,16 +146,16 @@ const JobItem = ({ item, index, onPress = ()=>{} }) => {
                         fontWeight: '700',
                         color: colors.green,
                       }}>
-                      {item.skills[1]}
+                      {item.skill_set[1]}
                     </Text>
                   </SkillBadge>
                   <Text style={{color: colors.medium, fontSize: wp('3%')}}>
                     {' '}
-                    + {item.skills.length - 1}
+                    + {item.skill_set.length - 1}
                   </Text>
                 </>
               ) : (
-                item.skills.map((skill, index) => (
+                item.skill_set.map((skill, index) => (
                   <SkillBadge key={index.toString()}>
                     <Text
                       style={{
@@ -186,7 +186,7 @@ const JobItem = ({ item, index, onPress = ()=>{} }) => {
                   color: colors.green,
                   fontWeight: '700',
                 }}>
-                {item.state}
+                {item.city}
               </Text>
               <Text> </Text>
               <TimeAgo
@@ -196,8 +196,8 @@ const JobItem = ({ item, index, onPress = ()=>{} }) => {
                   marginLeft: 'auto',
                   marginRight: wp('1.5%'),
                 }}
-                dateFrom={item.created_at}
-                dateTo={new Date()}
+               
+                dateTo={item.createdAt}
               />
             
             </View>

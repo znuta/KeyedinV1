@@ -33,6 +33,16 @@ import ListItemSeparator from 'src/component/ListItemSeparator';
 import DocumentPicker from 'react-native-document-picker'
 import moment from 'moment';
 import axios from 'axios';
+import Toast from 'react-native-toast-message';
+import {
+  setFirstLaunch,
+  setLoading,
+  saveToken,
+  completeRegistration,
+  sendUserDetails,
+  // setIsAuthenticated
+  
+} from 'src/redux/actions/AuthActions';
 
 const ProjectApply = props => {
   const navigation = useNavigation();
@@ -137,10 +147,13 @@ const {params = {}} = props.route
 
 
   const sendProposal = () => {
+    dispatch(setLoading(true));
     let uri = BASEURL + '/proposals/add';
     const data = {
       artisan_id: auth.userData.id,
-      protisan_id: item.user.id,
+      protisan_id: item.user_id,
+      project_id: item.id,
+      role: 'artisan',
       ...value
     };
     axios.post(uri,data, {
@@ -152,19 +165,21 @@ const {params = {}} = props.route
       .then(res => {
        
         Toast.show({
-          text: 'Offer Accepted',
+          text1: 'Proposal Submited',
           buttonText: 'Continue',
           type: 'success',
         });
-        console.log('here3');
+        dispatch(setLoading(false));
+        console.log('here3',res);
       })
       .catch(error => {
         console.log(error);
         Toast.show({
-          text: 'Could not send',
+          text1: 'Could not send ',
           buttonText: 'okay',
-          type: 'warning',
+          type: 'error',
         });
+        dispatch(setLoading(false));
       });
   };
 
@@ -221,9 +236,10 @@ const {params = {}} = props.route
           borderBottomRightRadius: wp('8%'),
         }}
       />
+      <Toast/>
       <ContentContainer containerStyle={{flex: 1}}>
         <TitleSection>
-          <Title>{item.title}</Title>
+          <Title>{item.name}</Title>
         </TitleSection>
         <Row style={{marginHorizontal: wp('4%'), alignItems: 'center'}}>
           <MaterialIcons style={styles.paste_icon_style} name="content-paste" />
@@ -383,7 +399,7 @@ const {params = {}} = props.route
           <WebView
             style={{flex: 1, minHeight: hp('40%')}}
             source={{
-              uri: `https://www.google.com/maps/@${item.location && item.location.longitude},${item.location && item.location.latitude}z`,
+              uri: `https://www.google.com/maps/@${item.location && item.location.coordinates[1]},${item.location && item.location.coordinates[0]}z`,
             }}
           />
         </InnerContentContainer>
@@ -578,15 +594,18 @@ const {params = {}} = props.route
 
         <View style={styles.actionBox}>
           <Button
-            text="Send a Proposal"
+            text={isSendProposal?"Send Proposal":"Send a Proposal"}
             type="primary"
             additionalStyle={{
               button: styles.button,
               text: {fontSize: wp('3.5%')},
             }}
             onPress={() => {
-              setSendProposal(true);
+              isSendProposal ?
               sendProposal()
+                :
+              setSendProposal(true);
+              
             }}
           />
         </View>
