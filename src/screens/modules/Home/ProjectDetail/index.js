@@ -94,36 +94,7 @@ const {params = {}} = props.route
           
 }
 
-  const GetJobs = () => {
-    let uri = BASEURL + `/projects/${auth.userData.location.lat}`;
-    
-    let data = {
-      longitude: auth.userData.location.lng,
-      latitude: auth.userData.location.lat
-      
-      //distance: "1",
-    };
-    props.setLoading(true);
-    axios.get(uri, 
-      {
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8',
-        Authorization: 'Bearer' + ' ' + props.auth.token,
-      },
-      }).then(res => {
-          console.log("__Download___", res)
-          setisFetching(false);
-        props.setLoading(false);
-        
-      })
-      .catch(error => {
-        setisFetching(false);
-        props.setLoading(false);
-        console.log('Job Get Failed because', error.response);
-       
-      });
-  };
-
+ 
 
   const BackButton = () => {
     return (
