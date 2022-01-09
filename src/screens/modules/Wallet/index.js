@@ -8,6 +8,7 @@ import {
   Easing,
   ScrollView,
   RefreshControl,
+  FlatList,
   Image,
   Text,
 } from 'react-native';
@@ -36,7 +37,11 @@ function Wallet(props) {
   const refRBSheet = useRef();
   const refDepositeSheet = useRef();
   const dispatch = useDispatch()
-  const {auth, wallet} = useSelector(state=>state)
+  const { auth, wallet } = useSelector(state => state)
+  const [refreshing, setRefreshing] = useState(false);
+  const [transactionHistory, setTransactionHistory] = useState([{},{}]);
+  const [balance, setBalance] = useState(0);
+  const rotateValue = new Animated.Value(0);
   useEffect(() => {
     StatusBar.setHidden(false);
     setBalance(auth.wallet_balance);
@@ -48,9 +53,8 @@ function Wallet(props) {
     setBalance(auth.wallet_balance);
    
   }, [auth.wallet_balance]);
+  
 
-  const [balance, setBalance] = useState(0);
-  const rotateValue = new Animated.Value(0);
 
   Animated.loop(
     Animated.timing(rotateValue, {
@@ -95,16 +99,46 @@ function Wallet(props) {
       });
   };
 
-  const [refreshing, setRefreshing] = useState(false);
+  const GetPaymentHistory = () => {
+    let uri = BASEURL + `/wallets/history/${auth.userData.id}`;
+
+    dispatch(setLoading(true));
+    axios.get(uri, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+        Authorization: 'Bearer' + ' ' + auth.token,
+      },
+    })
+     
+      .then(res => {
+       const {data} = res.data
+        console.log("___WALLET__History__",res);
+        setTransactionHistory(data)
+      
+        setRefreshing(false);
+        dispatch(setLoading(false));
+        
+      })
+     
+      .catch(error => {
+        console.log("___ERROR__WALLET__", error.response)
+        dispatch(setLoading(false));
+        
+      });
+  };
+
+
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     GetBalance();
+    GetPaymentHistory()
   }, []);
 
   useEffect(() => {
     setRefreshing(true);
     GetBalance();
+    GetPaymentHistory()
   }, []);
 
   return (
@@ -159,7 +193,7 @@ function Wallet(props) {
             onPress={() => {
               //navigation.openDrawer();
 
-              navigation.navigate('Settings');
+              navigation.navigate('Payment');
             }}>
             {/* <Feather name="menu" size={24} color="white" /> */}
             <SettingsBtn />
@@ -310,16 +344,32 @@ function Wallet(props) {
           subTitle={"Your recent wallet transactions show up here"}
         /> */}
 
-        <TransactionsWrap showsVerticalScrollIndicator={false}>
+        <TransactionsWrap >
+          {/* <Transaction />
           <Transaction />
           <Transaction />
           <Transaction />
-          <Transaction />
-          <Transaction />
+          <Transaction /> */}
           {/* <TransactionsLink onPress={() => navigation.navigate('Transactions')}>
             <TransactionsLinkTitle>All Transactions</TransactionsLinkTitle>
             <Entypo name="chevron-right" size={16} color="black" />
           </TransactionsLink> */}
+           <FlatList
+          data={transactionHistory}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{paddingBottom: 80}}
+          style={{flex: 1, paddingTop: 10}}
+          renderItem={({item, index}) =>  <Transaction item={item} />}
+          keyExtractor={(item, index) => index.toString()}
+          onRefresh={() => onRefresh()}
+          refreshing={refreshing}
+          ListEmptyComponent={
+            <Empty
+              title={'No Transaction'}
+              subTitle={' You have no transaction yet !!'}
+            />
+          }
+        />
         </TransactionsWrap>
 
         <RBSheet
@@ -477,7 +527,7 @@ const SearchIcon = styled.TouchableOpacity`
   justify-content: center;
 `;
 
-const TransactionsWrap = styled.ScrollView`
+const TransactionsWrap = styled.View`
   margin-top: 25px;
   flex: 1;
 `;

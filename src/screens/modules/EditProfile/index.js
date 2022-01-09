@@ -16,7 +16,8 @@ import styled from 'styled-components';
 import Colors from 'src/constants/Colors';
 import {colors} from 'src/config/variables';
 import Feather from 'react-native-vector-icons/Feather'
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import DocumentPicker from 'react-native-document-picker'
 import {useNavigation} from '@react-navigation/native';
 import {Header} from 'react-native-elements';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -77,50 +78,87 @@ const dispatch = useDispatch()
   }, []);
 
 
-  const UploadAvatarToApi = text => {
-    let uri = BASEURL + '/media/upload-avatar';
+  const UploadAvatarToApi = payload => {
 
-    let data = {
-      image: text,
-    };
+    let path = "avatar" 
+    const {type} = payload
+    if (!type.includes("image")) {
+     path = "video"
+    }
+    let uri = BASEURL + `/media/upload/image/${auth.userData.id}`;
+    const data = new FormData();
+    data.append("files", payload);
+
     dispatch(setLoading(true));
-    axios.post(uri, data,{
+    axios.post(uri, data, {
+      
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
         Authorization: 'Bearer' + ' ' + auth.token,
       },
+
     }).then(res => {
-       
+      console.log("___AVATAR__RES__", res)
+      dispatch(setLoading(false));
+     
       })
       .catch(error => {
+        console.log("___AVATAR__Error__",error.response)
         dispatch(setLoading(false));
         
       });
    
   };
 
+  const _pickAvatar3 = async () => {
+
+    try {
+        const result = await DocumentPicker.pick({
+        type: [DocumentPicker.types.images],
+        })
+        console.log("___IMAGE___", result)
+      let name = result[0].name;
+      let uri = result[0].uri;
+      let lastIndexOf = uri.lastIndexOf(".");
+      let ext = uri.substr(lastIndexOf+1, uri.length-1);
+      var file = {
+          name: name,
+          uri: Platform.OS === 'android' ? result[0].uri : result[0].uri.replace("file://", ""),
+      };
+
+      setAvatar(result[0])
+        dispatch(saveAvatar(uri));
+        UploadAvatarToApi(result[0]);
+      
+    } catch (err) {
+        if (DocumentPicker.isCancel(err)) {
+        // User cancelled the picker, exit any dialogs or menus and move on
+        } else {
+        throw err
+        }
+    }
+  
+  }
+
   const _pickAvatar = async () => {
     console.log('Open Image Picker');
     
     try {
         let result = await launchImageLibrary({
-            mediaType: 'image',
+            mediaType: 'mixed',
             //allowsEditing: true,
             aspect: [4, 3],
             quality: 0.4,
             //allowsMultipleSelection: false,
-            base64: true,
+            includeBase64: true,
           });
         if (!result.cancelled) {
             console.log("___IMAGE___", result)
-            const {uri, type, base64} = result.assets[0]
-       setAvatar(result.assets[0])
+          const { uri, type, base64, fileName, fileSize, width, height } = result.assets[0]
+          const file = {uri, type, base64,name:fileName , size:fileSize, width, height }
+       setAvatar(file)
         dispatch(saveAvatar(uri));
-        UploadAvatarToApi(
-          `data:${type}/${
-            uri.split('.')[uri.split('.').length - 1]
-          };base64,${base64}`,
-        );
+        UploadAvatarToApi(file);
       }
       //console.log(result);
     } catch (E) {

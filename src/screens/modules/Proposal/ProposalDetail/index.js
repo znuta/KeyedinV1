@@ -33,6 +33,16 @@ import ListItemSeparator from 'src/component/ListItemSeparator';
 import DocumentPicker from 'react-native-document-picker'
 import moment from 'moment';
 import axios from 'axios';
+import Toast from 'react-native-toast-message';
+import {
+  setFirstLaunch,
+  setLoading,
+  saveToken,
+  completeRegistration,
+  sendUserDetails,
+  // setIsAuthenticated
+  
+} from 'src/redux/actions/AuthActions';
 
 const ProjectApply = props => {
   const navigation = useNavigation();
@@ -45,12 +55,17 @@ const ProjectApply = props => {
   const [defaultImage, setDefaultImage] = useState(
     'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
   );
+  const [value, setValue] = useState({...item});
+  const onChangeText = (key, data) => {
+    setValue({...value, [key]: data});
+  };
 const {params = {}} = props.route
   useEffect(() => {
     if (params) {
       console.log(params);
       setItem(params.data);
-      
+      setValue({...value, ...params.data});
+      console.log("___PARAAM+++",params)
     }
   }, [params]);
 
@@ -84,37 +99,7 @@ const {params = {}} = props.route
           
 }
 
-  const GetJobs = () => {
-    let uri = BASEURL + `/projects/${auth.userData.location.lat}`;
-    
-    let data = {
-      longitude: auth.userData.location.lng,
-      latitude: auth.userData.location.lat
-      
-      //distance: "1",
-    };
-    props.setLoading(true);
-    axios.get(uri, 
-      {
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8',
-        Authorization: 'Bearer' + ' ' + props.auth.token,
-      },
-      }).then(res => {
-          console.log("__Download___", res)
-          setisFetching(false);
-        props.setLoading(false);
-        
-      })
-      .catch(error => {
-        setisFetching(false);
-        props.setLoading(false);
-        console.log('Job Get Failed because', error.response);
-       
-      });
-  };
-
-
+ 
   const BackButton = () => {
     return (
       <TouchableOpacity
@@ -136,14 +121,11 @@ const {params = {}} = props.route
  
 
 
-  const sendProposal = () => {
-    let uri = BASEURL + '/proposals/add';
-    const data = {
-      artisan_id: auth.userData.id,
-      protisan_id: item.user.id,
-      ...value
-    };
-    axios.post(uri,data, {
+  const cancelProposal = () => {
+    dispatch(setLoading(true));
+    let uri = BASEURL + `/proposals/${item.id}`;
+   
+    axios.delete(uri, {
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
         Authorization: 'Bearer' + ' ' + auth.token,
@@ -152,19 +134,22 @@ const {params = {}} = props.route
       .then(res => {
        
         Toast.show({
-          text: 'Offer Accepted',
+          text1: 'Proposal Canceled',
           buttonText: 'Continue',
           type: 'success',
         });
-        console.log('here3');
+        dispatch(setLoading(false));
+        console.log('here3', res);
+        navigation.goBack()
       })
       .catch(error => {
         console.log(error);
         Toast.show({
-          text: 'Could not send',
+          text1: 'Could not cancel proposal',
           buttonText: 'okay',
-          type: 'warning',
+          type: 'error',
         });
+        dispatch(setLoading(false));
       });
   };
 
@@ -189,10 +174,7 @@ const {params = {}} = props.route
     );
   };
 
-  const [value, setValue] = useState({...item});
-  const onChangeText = (key, data) => {
-    setValue({...value, [key]: data});
-  };
+  
   const { due_date = new Date(), bid_amount = '', cover_letter = '' } = value;
   var num = parseFloat(bid_amount);
   var amountToReceived = num - (num * .20);
@@ -221,6 +203,7 @@ const {params = {}} = props.route
           borderBottomRightRadius: wp('8%'),
         }}
       />
+      <Toast/>
       <ContentContainer containerStyle={{flex: 1}}>
         <TitleSection>
           <Title>{item.title}</Title>
@@ -578,15 +561,15 @@ const {params = {}} = props.route
 
         <View style={styles.actionBox}>
           <Button
-            text="CancelProposal"
+            text="Cancel Proposal"
             type="primary"
             additionalStyle={{
               button: styles.button,
               text: {fontSize: wp('3.5%')},
             }}
             onPress={() => {
-              setSendProposal(true);
-              sendProposal()
+           
+              cancelProposal()
             }}
           />
         </View>

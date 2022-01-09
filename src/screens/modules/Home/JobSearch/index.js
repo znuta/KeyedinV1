@@ -85,120 +85,7 @@ function JobSearch(props) {
   const [searchFocused, setSearchFocused] = useState(false);
   const [isSwitchOn, setIsSwitchOn] = useState(false);
   const {auth, expert} = useSelector(state => state);
-  const [Data, setData] = useState([
-    {
-      user: {
-        avatar:
-          'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
-      },
-      title: 'SoftWare Developer needed',
-      description:
-        'React Native SVG transformer allows you to import SVG files in your React Native project the same way that you would in a Web application when',
-      skills: [ 'Java', 'Robotic'],
-      location: { longitude: '0.0', latitude: '0.0' },
-       address_str: 'No. 19 Nile Crescent, Sun City, Galadimawa, Abuja',
-      state: "Lagos",
-      created_at: '',
-    },
-    {
-      user: {
-        avatar:
-          'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
-      },
-      title: 'Back-End Developer Urgently Needed',
-      description:
-        'React Native SVG transformer allows you to import SVG files in your React Native project the same way that you would in a Web application when',
-      skills: [ 'Java', 'Robotic'],
-      location: { longitude: '0.0', latitude: '0.0' },
-       address_str: 'No. 19 Nile Crescent, Sun City, Galadimawa, Abuja',
-      state: "Lagos",
-      created_at: '',
-    },
-    {
-      user: {
-        avatar:
-          'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
-      },
-      title: 'Back-End Developer Urgently Needed',
-      description:
-        'React Native SVG transformer allows you to import SVG files in your React Native project the same way that you would in a Web application when',
-        skills: [ 'Java', 'Robotic'],
-      location: { longitude: '0.0', latitude: '0.0' },
-       address_str: 'No. 19 Nile Crescent, Sun City, Galadimawa, Abuja',
-      state: "Lagos",
-      created_at: '',
-    },
-    {
-      user: {
-        avatar:
-          'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
-      },
-      title: 'Back-End Developer Urgently Needed',
-      description:
-        'React Native SVG transformer allows you to import SVG files in your React Native project the same way that you would in a Web application when',
-        skills: [ 'Java', 'Robotic'],
-        location: { longitude: '0.0', latitude: '0.0' },
-         address_str: 'No. 19 Nile Crescent, Sun City, Galadimawa, Abuja',
-      state: "Lagos",
-      created_at: '',
-    },
-    {
-      user: {
-        avatar:
-          'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
-      },
-      title: 'Back-End Developer Urgently Needed',
-      description:
-        'React Native SVG transformer allows you to import SVG files in your React Native project the same way that you would in a Web application when',
-        skills: [ 'Java', 'Robotic'],
-        location: { longitude: '0.0', latitude: '0.0' },
-         address_str: 'No. 19 Nile Crescent, Sun City, Galadimawa, Abuja',
-      state: "Lagos",
-      created_at: '',
-    },
-    {
-      user: {
-        avatar:
-          'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
-      },
-      title: 'Back-End Developer Urgently Needed',
-      description:
-        'React Native SVG transformer allows you to import SVG files in your React Native project the same way that you would in a Web application when',
-        skills: [ 'Java', 'Robotic'],
-        location: { longitude: '0.0', latitude: '0.0' },
-         address_str: 'No. 19 Nile Crescent, Sun City, Galadimawa, Abuja',
-      state: "Lagos",
-      created_at: '',
-    },
-    {
-      user: {
-        avatar:
-          'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
-      },
-      title: 'Back-End Developer Urgently Needed',
-      description:
-        'React Native SVG transformer allows you to import SVG files in your React Native project the same way that you would in a Web application when',
-        skills: [ 'Java', 'Robotic'],
-        location: { longitude: '0.0', latitude: '0.0' },
-        address_str: 'No. 19 Nile Crescent, Sun City, Galadimawa, Abuja',
-        state: "Lagos",
-      created_at: '',
-    },
-    {
-      user: {
-        avatar:
-          'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
-      },
-      title: 'Back-End Developer Urgently Needed',
-      description:
-        'React Native SVG transformer allows you to import SVG files in your React Native project the same way that you would in a Web application when',
-      skills: [ 'Java', 'Robotic'],
-      location: { longitude: '0.0', latitude: '0.0' },
-      address_str: 'No. 19 Nile Crescent, Sun City, Galadimawa, Abuja',
-      state: "Lagos",
-      created_at: '',
-    },
-  ]);
+  const [Data, setData] = useState([]);
   const [sData, setsData] = useState([]);
   const [filterResult, setFilterResult] = useState(null);
   const [show, setShow] = useState(false);
@@ -302,14 +189,10 @@ function JobSearch(props) {
   };
 
   const GetJobs = () => {
-    let uri = BASEURL + `/projects/find/${auth.userData.location.lng}/${auth.userData.location.lat}`;
-    
-    let data = {
-      longitude: auth.userData.location.lng,
-      latitude: auth.userData.location.lat
-      
-      //distance: "1",
-    };
+    const longitude = auth.userData.location.coordinates[0] === null ?"0.0": auth.userData.location.coordinates[0]
+    const latitude = auth.userData.location.coordinates[1] === null ? "0.0": auth.userData.location.coordinates[1]
+    let uri = BASEURL + `/projects/location/find?longitude=${longitude}&latitude=${latitude}`;
+    console.log("__Download___URL", uri)
     props.setLoading(true);
     axios.get(uri, 
       {

@@ -95,7 +95,8 @@ function EditExpertise(props) {
     let uri = BASEURL + `/profiles/expertise/${auth.userData.id}`;
     const { skills = "" } = value 
     
-   const data = {...value,skills: Array.isArray(skills)? skills : skills.split(","), user_id: auth.userData.id}
+    const data = { bio: value.bio, category: value.category, role: value.role, level_of_experience: value.level_of_experience, skills: Array.isArray(skills) ? skills : skills.split(","), user_id: auth.userData.id }
+    console.log("____EXPERT_Data_", data)
         axios.put(uri,data,{
         headers: {
             'Content-Type': 'application/json;charset=utf-8',

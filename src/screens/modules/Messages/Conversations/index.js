@@ -85,13 +85,13 @@ function Conversations(props) {
     }
   ]);
 
-  // useEffect(() => {
-  //   dispatch(getAllConversations((response) => {
-  //     console.log("___CONVERSTION__", response)
-  //     setFilterResult(response)
-  //     setRefreshing(false)
-  //   }));
-  // }, []);
+  useEffect(() => {
+    dispatch(getAllConversations((response) => {
+      console.log("___CONVERSTION__", response)
+      setFilterResult(response)
+      setRefreshing(false)
+    }));
+  }, []);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -119,6 +119,7 @@ function Conversations(props) {
 
   
   const MessageItem = ({ conversation }) => {
+    console.log("__CONVERSATION____",conversation)
     let peerId = conversation.conversationWith.uid;
     let peerName = conversation.conversationWith.name;
     return (
@@ -157,10 +158,10 @@ function Conversations(props) {
               />
             </Text>
             </View>
-            <Text style={styles.messageHeader}>
+            {/* <Text style={styles.messageHeader}>
                 {conversation.lastMessage.header.substr(0, 67) +
                   (conversation.lastMessage.header.length > 67 ? "..." : "")}
-              </Text>
+              </Text> */}
           <View style={styles.messageBodyRow}>
             {conversation.lastMessage.category === "message" ? (
               <Text style={styles.messageBody}>

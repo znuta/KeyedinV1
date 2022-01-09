@@ -120,7 +120,7 @@ export class ChatScreen extends Component {
     this._handleRefresh = this._handleRefresh.bind(this);
     this.getLoggedInUser();
   }
-
+ 
   componentWillMount() {
     this.props.navigation.setParams({ initiateCall: this.initiateCall });
     this.props.navigation.setParams({ navigation: this.props.navigation });
@@ -135,7 +135,7 @@ export class ChatScreen extends Component {
     // this.messagesRequest = new CometChat.MessagesRequestBuilder().setLimit(limit).setUID(uid).build();
     // console.log(this.messagesRequest);
     this.receiveMessages();
-    this.fetchMessages();
+    
     this.messagelist;
     this.addUserListner();
     this.addCallListner();
@@ -202,7 +202,10 @@ export class ChatScreen extends Component {
     });
     // console.log(this.props.route.params);
   }
-
+  componentDidMount() {
+    console.log("ARTISAN___MESSAGE++++", { uid: this.state.uid, })
+  this.fetchMessages();
+}
   toggleModal = () => {
     this.setState({ isModalVisible: !this.state.isModalVisible });
   };
@@ -551,7 +554,7 @@ export class ChatScreen extends Component {
         <View
           style={{
             flexDirection: "row",
-            marginVertical: hp('3%'),
+           
             // backgroundColor: "yellow",
             justifyContent: "flex-end",
             width: "70%",
@@ -560,8 +563,9 @@ export class ChatScreen extends Component {
           <View
             style={[
               styles.selfBaloon,
-              { backgroundColor: colors.white },
-              { alignSelf: "flex-end" },
+              { backgroundColor: colors.white,alignSelf: "flex-end", },
+             
+              
             ]}
           >
             <Text style={[styles.item, { color: colors.black}]}>
@@ -585,13 +589,14 @@ export class ChatScreen extends Component {
             justifyContent: "flex-start",
             width: "70%",
            
+           
           }}
         >
           <View
             style={[
               styles.balloon,
-              { backgroundColor: colors.white },
-              { alignSelf: "flex-start" },
+              { backgroundColor: colors.white,alignSelf: "flex-start" },
+              
             ]}
           >
             <Text style={[styles.item, { color: colors.black }]}>
@@ -606,7 +611,7 @@ export class ChatScreen extends Component {
   renderItem = ({ item }) => {
     let isMyMess, isRead, isDelivered;
     isMyMess = false;
-    if (item.receiverId === "oo") {
+    if (item.receiverId === this.state.uid) {
       //this.state.uid
       // if (item.receiverId === uid) {
       isMyMess = true;
@@ -708,7 +713,7 @@ export class ChatScreen extends Component {
         <MaterialCommunityIcons
           style={[{ alignSelf: "flex-end" }]}
           name="check-all"
-          size={15}
+          size={wp('3%')}
           color="#2196f3"
         />
       );
@@ -717,7 +722,7 @@ export class ChatScreen extends Component {
         <MaterialCommunityIcons
           style={[{ alignSelf: "flex-end" }]}
           name="check-all"
-          size={15}
+          size={wp('3%')}
           color={Colors.mutedText}
         />
       );
@@ -726,7 +731,7 @@ export class ChatScreen extends Component {
         <MaterialCommunityIcons
           style={[{ alignSelf: "flex-end" }]}
           name="check"
-          size={15}
+          size={wp('3%')}
           color="#000"
         />
       );
@@ -1040,12 +1045,13 @@ export class ChatScreen extends Component {
         <Header
         placement="center"
           leftComponent={
-          
+          <View>
             <TouchableOpacity
             style={{
             justifyContent: "flex-end",
             alignItems: "center", 
-            padding: 8,           
+                padding: 8,    
+            
             }}
               onPress={() => {
               this.props.navigation.goBack()
@@ -1058,7 +1064,7 @@ export class ChatScreen extends Component {
                     style={{ opacity: 0.8,  }}
                   />
               </TouchableOpacity>
-              
+              </View>
               }
         
           rightComponent={ rightComponent}
@@ -1336,7 +1342,7 @@ export class ChatScreen extends Component {
           txtMessage: "",
           messages: [...prevState.messages, message],
         }));
-       
+        // console.log("message__ARRAY__", this.state.messages[0].e);
       },
       (error) => {
         console.log("Message sending failed with error:", error);
@@ -1427,6 +1433,7 @@ export class ChatScreen extends Component {
               lastMessage.receiverType
             );
           }
+          console.log("____MESSAGES__VALUE___", mess)
           this.setState({
             messages: [...mess, ...this.state.messages],
             refreshing: false,
@@ -1481,8 +1488,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   item: {
-    padding: 10,
-    fontSize: 15,
+    
+    fontSize: wp('3%'),
     flexWrap: "wrap",
   },
   itemRight: {
@@ -1494,18 +1501,21 @@ const styles = StyleSheet.create({
   balloon: {
     alignSelf: "baseline",
     paddingHorizontal: 5,
-    paddingTop: 5,
-    paddingBottom: 5,
+    paddingVertical: wp('3%'),
+    paddingHorizontal: wp('3%'),
+    minWidth: wp('20%'),
     borderRadius: 15,
-    borderTopLeftRadius: 0
+    borderTopLeftRadius: 0,
+    marginTop: hp('0.5%')
   },
   selfBaloon: {
     alignSelf: "baseline",
-    paddingHorizontal: 5,
-    paddingTop: 5,
-    paddingBottom: 5,
     borderRadius: 15,
-    borderTopRightRadius: 0
+    borderTopRightRadius: 0,
+    paddingVertical: wp('1.5%'),
+    paddingHorizontal: wp('3.5%'),
+    minWidth: wp('20%'),
+    marginBottom: hp('0.5%')
   },
   row: {
     padding: 5,

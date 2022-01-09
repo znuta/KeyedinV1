@@ -57,16 +57,24 @@ const {first_name, last_name, username, email, phone, address_str,} = value
     let uri = BASEURL + `/users/profile/${auth.userData.id}`;
 const {longitude="", latitude= ""} = value
     let data = {
-      ...value,
+      first_name: value.first_name,
+      last_name: value.last_name,
+      email: value.email,
+      role: value.role,
+      phone: value.phone,
+      username: value.username,
+      avatar: value.avatar,
+      address_str: value.address_str,
+      country: value.country,
       location: {
         coordinates: [
           longitude, latitude
         ]
       },
       
-      type: 'Artisan',
+      type: 'Protisan',
     };
-    
+    console.log("___DATA_Payload__", data)
    dispatch(setLoading(true));
     axios.put(uri,data, {
       headers: {
@@ -77,7 +85,7 @@ const {longitude="", latitude= ""} = value
       .then(res => {
 
         const { user = {} } = res.data
-        console.log("___DATA_RES__", res)
+        console.log("___DATA_RES__6", res)
         dispatch(sendUserDetails(user))
        dispatch(setLoading(false));
         //setImchange(!imchange);
@@ -85,7 +93,7 @@ const {longitude="", latitude= ""} = value
        
       })
       .catch(error => {
-        console.log("__ERROR_",error);
+        console.log("__ERROR_USER",error.response);
        dispatch(setLoading(false));
        
       });

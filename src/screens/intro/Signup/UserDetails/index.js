@@ -98,7 +98,7 @@ const UserDetails = props => {
     let uri = BASEURL + '/auth/register';
     dispatch(setLoading(true));
     //const apikey = "73dc1cb067c39b8b3026859320a668770e064e2c";
-    const apikey = '223614e460f0027b4da41708242c532752903cfe';
+    const apikey = 'b68cf77ff29b7ceb92944466e64d3d6e4ed256d6';
 
     //console.log(auth);
     let data = {

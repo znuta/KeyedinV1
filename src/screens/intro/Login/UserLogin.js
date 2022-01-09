@@ -81,7 +81,7 @@ const UserLogin = props => {
     let uri = BASEURL + '/auth/login';
   
     //const apikey = "73dc1cb067c39b8b3026859320a668770e064e2c";
-    const apikey = '5e959793b4e2f97732be357f2c96e4204a4fb7a9';
+    const apikey = 'b68cf77ff29b7ceb92944466e64d3d6e4ed256d6';
     let data = {
       email: email,
       password: password,
@@ -96,13 +96,34 @@ const UserLogin = props => {
          console.log("LOGIN_DETAILS", res)
             dispatch(setLoading(false));
         const { data = {} } = res.data
+        const {
+          first_name = '',
+          last_name = '',
+          id = '',
+        } = data;
+        let fullname = first_name + ' ' + last_name;
+        let uid = id;
+        var user = new CometChat.User(uid.toString());
+        user.setName(fullname);
+        CometChat.createUser(user, apikey).then(
+          user => {
+            console.log('Chat account created: ', user);
+            dispatch(setLoading(false));
+            AsyncStorage.setItem("token", data.token)
+            props.next();
+          },
+          error => {
+            console.log('Error creating chat account: ', error.response);
+            dispatch(setLoading(false));
+          },
+        );
         
             CometChat.getLoggedinUser().then(
               user => {
                 if(!user){
             CometChat.login(
               data.id,
-              '223614e460f0027b4da41708242c532752903cfe',
+              apikey,
             ).then(
               user => {
                 console.log('Chat login successful: ', {user});

@@ -250,7 +250,7 @@ function ArtisanProfile(props) {
 
 
   const GetProfile = () => {
-    let uri = BASEURL + `/users/profile?user_id=${auth.userData.id}`;
+    let uri = BASEURL + `/users/profile/${auth.userData.id}`;
     axios.get(uri, {
      
       headers: {
@@ -1208,7 +1208,7 @@ function ArtisanProfile(props) {
         title={artisan.name}
         titleStyle={styles.titleStyle}
         backgroundImage={{
-          uri: defaultImg, //auth.avatar,
+          uri:  defaultImg, //auth.avatar,
           //artisanImg,
         }}
         backgroundImageScale={1.2}
