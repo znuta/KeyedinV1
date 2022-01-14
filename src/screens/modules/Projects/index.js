@@ -81,7 +81,7 @@ function ProjectsList(props) {
 
   const GetJobOffers = () => {
     props.setLoading(true);
-    let uri = BASEURL + `/projects/status?status=open&user_id=${props.auth.userData.id}`;
+    let uri = BASEURL + `/projects/all/status?status=open&user_id=${props.auth.userData.id}`;
 
     axios.get(uri, {
      
@@ -92,7 +92,7 @@ function ProjectsList(props) {
     })
       
       .then(res => {
-        console.log('what i am looking forsa', res.data);
+        console.log('___JOB__OFFERS___++', res.data);
         const {data=[]} = res.data
         setisFetching(false);
             setProposals(data);
@@ -106,7 +106,8 @@ function ProjectsList(props) {
 
   const GetOngoingJobs = async () => {
     props.setLoading(true);
-    let uri = BASEURL + `/projects/status?status=ongoing&user_id=${props.auth.userData.id}`;
+    let uri = BASEURL + `/projects/all/status?user_id=${props.auth.userData.id}&status=ongoing`;
+    console.log('___ID++++', props.auth.userData.id);
      axios.get(uri, {
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
@@ -120,7 +121,8 @@ function ProjectsList(props) {
           setJobOngoing(data);
           props.setLoading(false);
       })
-      .catch(error => {
+       .catch(error => {
+        console.log('ERRROR__ONGOING___', error.response);
         props.setLoading(false);
         setisFetching(false);
        
@@ -129,7 +131,7 @@ function ProjectsList(props) {
 
   const GetCompletedJobs = async () => {
     props.setLoading(true);
-    let uri = BASEURL + `/projects/status?status=completed&user_id=${props.auth.userData.id}`;
+    let uri = BASEURL + `/projects/all/status?status=completed&user_id=${props.auth.userData.id}`;
    axios.get(uri, {
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
