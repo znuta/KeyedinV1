@@ -27,7 +27,7 @@
  import thunk from 'redux-thunk';
  import {CometChat} from '@cometchat-pro/react-native-chat';
  
- let appID = '19658675131b85ab';
+ let appID = '2008518ba66d45e4';
  let region = 'us';
  let appSetting = new CometChat.AppSettingsBuilder()
    .subscribePresenceForAllUsers()
