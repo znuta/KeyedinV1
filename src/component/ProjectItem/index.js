@@ -52,7 +52,7 @@ const {onPress=()=>{}} = props
       >
         <TouchableOpacity
           onPress={onPress}>
-          <ProjectTitle>{item.title}</ProjectTitle>
+          <ProjectTitle>{item.name}</ProjectTitle>
 
           <Meta>
             <DeadlineWrap>
@@ -74,7 +74,7 @@ const {onPress=()=>{}} = props
                 }}>
                 {/* Due Tomorrow */}
                 {/* {item.endDate} */}
-                Due <TimeAgo time={item.endDate} />
+                Due <TimeAgo time={new Date(item.end_date)} />
                 {/* If deadline has passed, mark 'project as closed', set 'status to archived' and set deadline to 'Expired'  */}
               </Text>
             </DeadlineWrap>
@@ -247,7 +247,7 @@ const {onPress=()=>{}} = props
   `;
   
   const StatusWrap = styled.View`
-    flex: 1;
+    
     flex-direction: row;
     align-items: center;
   `;

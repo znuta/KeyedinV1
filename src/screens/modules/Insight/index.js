@@ -28,7 +28,7 @@ import {colors, hp, wp} from 'src/config/variables';
 import Empty from 'src/component/Empty';
 import { styles, InnerContentContainer } from './styles';
 import axios from 'axios';
-import ProjectItem from 'src/component/ProjectItem';
+import ReviewItem from 'src/component/ReviewItem';
 
 const mapStateToProps = state => {
   const {auth, proposals, demo} = state;
@@ -176,12 +176,20 @@ function Insight(props) {
         {activeSegment == 1 ? (
           <>
             <FlatList
-            data={[]}
+            data={[{
+              user:{
+                first_name: "Toyeeb",
+                last_name: "Atunde",
+                avatar: defaultImage
+              },
+              rating:3,
+              comment: `Hello protisan, I am currently looking for someone to fix my refrigerator today and I would be happy to`
+            }]}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{paddingBottom: 80}}
-            style={{flex: 1}}
+            style={{flex: 1, paddingHorizontal:wp('3%')}}
             renderItem={({item, index}) => {
-              return <ProjectItem item={item} />;
+              return <ReviewItem item={item} />;
             }}
             keyExtractor={(item, index) => index.toString()}
            
@@ -212,8 +220,8 @@ function Insight(props) {
             refreshing={isFetching}
             ListEmptyComponent={
               <Empty
-                title={'No Ongoing Jobs'}
-                subTitle={'Ongoing Jobs show up here'}
+                title={'No Schedule Yet'}
+                subTitle={'Schedule show up here'}
               />
             }
            
@@ -341,7 +349,7 @@ function Insight(props) {
       <MyReviews/>
       <Wrapper>
         <View style={{flex: 1}}>
-          {activeSegment == 0 ? <ProjectsWrap>
+          {activeSegment === 0 ? <ProjectsWrap style={{flex: 1}}>
             <FlatList
             data={[]}
             showsVerticalScrollIndicator={false}
@@ -355,8 +363,8 @@ function Insight(props) {
             refreshing={isFetching}
             ListEmptyComponent={
               <Empty
-                title={'No Ongoing Jobs'}
-                subTitle={'Ongoing Jobs show up here'}
+                title={'No Earnings'}
+                subTitle={'Earnings show up here'}
               />
             }
            

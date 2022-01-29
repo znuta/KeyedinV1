@@ -12,6 +12,8 @@ import {
   StatusBar,
   Platform,
   SafeAreaView,
+  ScrollView,
+  ImageBackground,
 } from 'react-native';
 import styled from 'styled-components';
 
@@ -53,6 +55,7 @@ import {
   saveAvatar,
   GetExpertiseFromApi,
 } from 'src/redux/actions/AuthActions';
+import ReviewItem from 'src/component/ReviewItem';
 
 
 const SCREEN_HEIGHT = Layout.window.height;
@@ -86,12 +89,12 @@ function ArtisanProfile(props) {
   const [preimage, setPreimage] = useState({});
   const [imchange, setImchange] = useState(true);
   const [expertises, setExpertises] = useState({});
-  const [videoUrl, setvideoUrl] = useState('');
+  const [videoUrl, setvideoUrl] = useState('https://www.youtube.com/watch?v=5f7hpKr3LKQ');
   const [rating, setRating] = useState({});
   const [jobInsight, setJobInsight] = useState({});
   const [average_rating, setAverage_rating] = useState('');
   const [quality, setQuality] = useState('');
-  const [reviewsd, setReviewsd] = useState([]);
+  const [reviews, setReviews] = useState([]);
   const [view, setView] = useState({});
   const { auth  } = useSelector(state => state);
   const {expertise = {}} = auth
@@ -153,7 +156,7 @@ function ArtisanProfile(props) {
     let {saveAvatar} = props;
     // const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
     let status = null
-    if (Platform.OS === 'ios' && status === 'active') {
+    if (Platform.OS === 'ios' ) {
       const permission = await request(PERMISSIONS.IOS.CAMERA)
       status = permission.status
 
@@ -162,9 +165,7 @@ function ArtisanProfile(props) {
       status = permission.status
     }
    
-    if (status != 'granted') {
-      alert('You did not grant KeyedIn the permission');
-    } else {
+   
       try {
         let result = await launchImageLibrary({
           mediaType: 'video',
@@ -172,7 +173,8 @@ function ArtisanProfile(props) {
           aspect: [4, 3],
           quality: 0.4,
           //allowsMultipleSelection: false,
-          base64: true,
+         
+          includeBase64: true
         });
         if (!result.cancelled) {
           console.log('duration');
@@ -190,11 +192,11 @@ function ArtisanProfile(props) {
       } catch (E) {
         console.log(E);
       }
-    }
+    
   };
 
   const UploadVideoApi = item => {
-    let uri = BASEURL + `/media/user/${auth.userData.id}`;
+    let uri = BASEURL + `/media/user/media/${auth.userData.id}`;
     setVideoVisible(false);
 
     //const { status } = await Permissions.askAsync(Permissio);
@@ -347,7 +349,7 @@ function ArtisanProfile(props) {
   };
 
   const GetArtisanReview = () => {
-    let uri = BASEURL + '/artisan/reviews';
+    let uri = BASEURL + `/ratings/${auth.userData.id}`;
 
     setLoading(true);
     axios.get(uri, {
@@ -356,12 +358,13 @@ function ArtisanProfile(props) {
         Authorization: 'Bearer' + ' ' + auth.token,
       },
     }).then(res => {
-        console.log('Look here again', res);
-        if (res && res.data.length) {
-          setReviewsd(res.data);
-        }
+        console.log('__GET_REVIEWS__RES', res);
+        const {data=[]} = res.data
+          setReviews(data);
+
       })
       .catch(error => {
+        console.log('__GET_REVIEWS__ERROR', error);
         setLoading(false);
       });
   };
@@ -507,8 +510,8 @@ function ArtisanProfile(props) {
   var CANCEL_INDEX = 2;
 
   const renderNavBar = () => (
-    <View style={styles.navContainer}>
-      <View style={styles.statusBar} />
+    
+    
       <View style={styles.navBar}>
         <TouchableOpacity
           style={styles.iconLeft}
@@ -517,7 +520,7 @@ function ArtisanProfile(props) {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.iconRight}
-          //onPress={_pickAvatar}
+          onPress={_pickProfileVideo}
         >
           <View
             style={{
@@ -527,13 +530,15 @@ function ArtisanProfile(props) {
               borderRadius: 12,
              
             }}>
-            {/* <Text style={{ fontWeight: "700", color: colors.medium }}>
-              Edit Profile Picture
-            </Text> */}
+             <MaterialCommunityIcons
+                      name='camera'
+                      size={32}
+                      color="white"
+                    />
           </View>
         </TouchableOpacity>
       </View>
-    </View>
+    
   );
 
   const _handleTextReady = () => {
@@ -580,13 +585,25 @@ function ArtisanProfile(props) {
             />
           </RatingImage>
           <RatingBody>
+          <View style={{marginVertical: hp('2%'), width: '50%'}}>
+                      <StarRating
+                        disabled={true}
+                        maxStars={5}
+                        rating={
+                         !item.rating ? 0
+                            : parseInt(Number(item.rating))
+                        }
+                        // emptyStar={"star-o"}
+                        fullStar={require('src/assets/icons/gold_key.png')}
+                        halfStar={require('src/assets/icons/gray_key.png')}
+                        emptyStar={require('src/assets/icons/gray_key.png')}
+                        fullStarColor={'#FFFFFF'}
+                        emptyStarColor={'#FFFFFF'}
+                        starSize={wp('5%')}
+                      />
+                    </View>
             <RatingTitle>{`${item.user.first_name} ${item.user.last_name}`}</RatingTitle>
             <RatingComment>Comment: {item.comment ?? 'Good'}</RatingComment>
-            <RatingComment>Rating: {item.rating}</RatingComment>
-            {/* <StarsWrap>
-              <AntDesign name="star" size={20} color="#F7B24B" />
-              <RatingCount>{item.stars}/5</RatingCount>
-            </StarsWrap> */}
           </RatingBody>
         </RatingWrap>
       </View>
@@ -801,7 +818,7 @@ function ArtisanProfile(props) {
 
   const Tab1 = () => {
     return (
-      <Animatable.View style={styles.tabContent} animation="fadeInLeft">
+      <ScrollView style={styles.tabContent} animation="fadeInLeft">
         <View>
           <Text style={{color: colors.medium, fontWeight: '700'}}>Bio</Text>
           {/* <ListItemSeparator style={{ backgroundColor: Colors.secondary }} /> */}
@@ -995,7 +1012,7 @@ function ArtisanProfile(props) {
             </View>
           </RatingsContainer>
         </View>
-      </Animatable.View>
+      </ScrollView>
     );
   };
 
@@ -1005,12 +1022,12 @@ function ArtisanProfile(props) {
       <Animatable.View style={styles.tabContent} animation="fadeInLeft">
         {/* <Review /> */}
         <FlatList
-          data={reviewsd}
-          scrollEnabled={false}
+          data={reviews}
+         
           // style={{marginTop: -10}}
-          // renderItem={({item}) => _renderGalleryImage}
-          renderItem={({item, index}) => _renderReviewItem({item, index})}
+          renderItem={({item, index}) =>   <ReviewItem item={item} />}
           keyExtractor={(item, index) => index.toString()}
+          showsVerticalScrollIndicator={false}
           ListEmptyComponent={
             <Empty title="No reviews" subTitle="No employer has reviewed you" />
           }
@@ -1022,36 +1039,79 @@ function ArtisanProfile(props) {
   const Tab3 = () => {
     return (
       <Animatable.View style={{paddingTop: 0}} animation="fadeInLeft">
-        <View>
-          {/* <GalleryWrapper> */}
-          {console.log({props})}
-          {/* <FlatList
-            data={galleryItems}
-            scrollEnabled={false}
-            style={{marginTop: -10}}
-            renderItem={({item}) => _renderGalleryImage}
+       <TouchableOpacity
+                  onPress={_pickPortfolio}
+                  style={{
+                    width: '32%',
+                    height: 100,
+                    backgroundColor: 'transparent',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexDirection: 'row',
+                    marginHorizontal: 2,
+                    position: 'absolute',
+                    bottom: 10,
+                    right: 10,
+                    zIndex: 1000
+                  }}>
+                  <MaterialCommunityIcons name="camera" style={{color: colors.green, fontSize: wp('8%')}} />
+                </TouchableOpacity>
+         
+          <FlatList
+            data={[{
+              id: "3",
+              portfolio: defaultImg
+            },{
+              id: "4",
+              portfolio: defaultImg
+            },{
+              id: "5",
+              portfolio: defaultImg
+            },{
+              id: "6",
+              portfolio: defaultImg
+            },{
+              id: "7",
+              portfolio: defaultImg
+            },{
+              id: "5",
+              portfolio: defaultImg
+            },{
+              id: "5",
+              portfolio: defaultImg
+            },{
+              id: "5",
+              portfolio: defaultImg
+            }]}
+           
+            style={{ width: wp('100%'), marginTop: hp('3%')}}
+            renderItem={({item}) => <PortfolioView  item={item} />}
             numColumns={3}
             // "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4"
-            keyExtractor={(item, index) => index.toString()}
-          /> */}
+            // keyExtractor={(item, index) => index.toString()}
+            ListEmptyComponent={
+              <Empty title="No reviews" subTitle="No employer has reviewed you" />
+            }
+          />
 
-          {/* </GalleryWrapper> */}
-        </View>
+         
+        
       </Animatable.View>
     );
   };
 
-  const PortfolioView = () => {
-    try {
+  const PortfolioView = ({item}) => {
+ 
       return (
-        <>
-          {portfolio.map((item, index) => (
+        
             <TouchableOpacity
               key={item.id}
               style={{
-                width: '32%',
+                width: wp('32%'),
+                height: hp('20%'),
                 marginBottom: 5,
                 marginHorizontal: 2,
+                // backgroundColor: 'green'
               }}
               onPress={() => {
                 setModalVisible(true);
@@ -1059,18 +1119,18 @@ function ArtisanProfile(props) {
                 //GalleryModal(item);
                 //setActiveGallery(index);
               }}>
-              {/* <Text style={{}}>ssfsdf</Text> */}
+             
               <Image
                 source={{uri: item.portfolio}}
-                style={{width: '100%', height: 100, borderRadius: 0}}
+                resizeMode='contain'
+                style={{ borderRadius: 0, borderWidth: 2,  width: wp('32%'),
+                height: hp('20%'),}}
               />
+             
             </TouchableOpacity>
-          ))}
-        </>
+           
       );
-    } catch (error) {
-      return <></>;
-    }
+   
   };
 
   const renderContent = () => {
@@ -1162,34 +1222,9 @@ function ArtisanProfile(props) {
               <Tab2 />
             </TabContent>
             <TabContent tab="Portfolio" view={view}>
-              <Animatable.View
-                animation="fadeInLeft"
-                style={{
-                  flexWrap: 'wrap',
-                  flexDirection: 'row',
-                  width: '100%',
-                  justifyContent: 'flex-start',
-                  marginTop: 5,
-                }}>
-                <PortfolioView />
-
-                <TouchableOpacity
-                  onPress={_pickPortfolio}
-                  style={{
-                    width: '32%',
-                    height: 100,
-                    backgroundColor: colors.disabled,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexDirection: 'row',
-                    marginHorizontal: 2,
-                  }}>
-                  <Feather name="camera" size={25} />
-                </TouchableOpacity>
-               
-              </Animatable.View>
              
-              <Tab3 />
+                <Tab3 />
+               
             </TabContent>
           </Tabs>
         </Wrapper>
@@ -1200,7 +1235,7 @@ function ArtisanProfile(props) {
   return (
     <View style={styles.container}>
       {/* <StatusBar hidden={false} /> */}
-      <ReactNativeParallaxHeader
+      {/* <ReactNativeParallaxHeader
         headerMinHeight={HEADER_HEIGHT}
         headerMaxHeight={250}
         extraScrollHeight={20}
@@ -1223,7 +1258,36 @@ function ArtisanProfile(props) {
           onScrollBeginDrag: () => console.log('onScrollBeginDrag'),
           onScrollEndDrag: () => console.log('onScrollEndDrag'),
         }}
-      />
+      /> */}
+<View style={{height: hp('30%')}}>
+  {renderNavBar()}
+            {videoUrl === '' ? (
+              
+                  <Video
+                    source={{
+                      uri: videoUrl,
+                    }}
+                    ref={(ref) => {
+                    console.log("__REF__", ref)
+                    }} 
+                    style={{height: hp('30%'), }}
+                    shouldPlay
+                    resizeMode={'contain'}
+                    rate={1.0}
+                  />
+                 
+                ) : (
+                  <ImageBackground source={{
+                    uri: defaultImg
+                  }} style={{height: hp('30%')}}>
+
+                  </ImageBackground>
+                )}
+       </View>
+      <View style={{flex:1}}>
+      {renderContent()}
+      </View>
+      
       {auth.loading && <Loader />}
       <GalleryModal />
       <GalleryVideoModal />
@@ -1292,12 +1356,14 @@ const styles = StyleSheet.create({
     // backgroundColor: "#00000030",
   },
   navBar: {
-    height: NAV_BAR_HEIGHT,
+    position: 'absolute',
+    top: hp('4%'),
+    zIndex: 10000,
+   width: wp('100%'),
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
     backgroundColor: 'transparent',
-    // backgroundColor: "#00000030",
     paddingHorizontal: 10,
   },
   titleStyle: {
@@ -1419,12 +1485,12 @@ const RatingsContainer = styled.View`
   width: 100%;
   left: 0px;
   ${'' /* flex: 1; */}
-  ${'' /* height: ${Layout.window.height * 0.9 }px; */}
   padding-vertical: 40px;
   padding-start: 30px;
   background-color: #083e9e;
   display: flex;
   margin-top: 30px;
+  margin-bottom: 30px;
   border-radius: 10px;
 `;
 

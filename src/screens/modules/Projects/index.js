@@ -52,13 +52,11 @@ function ProjectsList(props) {
   const [jobCompleted, setjobCompleted] = useState([]);
 
   useEffect(() => {
-    const {auth, projects} = props;
     (async () => {
     GetJobOffers();
     GetOngoingJobs();
     GetCompletedJobs();
-    props.getUserProjects(auth.token);
-    setProjects(projects.projects);
+    
     })();
   }, []);
 
@@ -84,17 +82,14 @@ function ProjectsList(props) {
     let uri = BASEURL + `/projects/all/status?status=open&user_id=${props.auth.userData.id}`;
 
     axios.get(uri, {
-     
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
         Authorization: 'Bearer' + ' ' + props.auth.token,
       },
-    })
-      
-      .then(res => {
-        console.log('what i am looking forsa', res.data);
+    }).then(res => {
+        console.log('___JOB__OFFERS__', res.data);
         const {data=[]} = res.data
-        setisFetching(false);
+         setisFetching(false);
             setProposals(data);
             props.setLoading(false);
       }).catch(error => {
@@ -106,7 +101,7 @@ function ProjectsList(props) {
 
   const GetOngoingJobs = async () => {
     props.setLoading(true);
-    let uri = BASEURL + `/projects/all/status?status=ongoing&user_id=${props.auth.userData.id}`;
+    let uri = BASEURL + `/projects/all/status?user_id=${props.auth.userData.id}&status=ongoing`;
      axios.get(uri, {
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
@@ -114,13 +109,14 @@ function ProjectsList(props) {
       },
     })
       .then(res => {
-        console.log('ongoing', res.data);
+        console.log('__ONGOING___', res.data);
         setisFetching(false);
         const {data=[]} = res.data
           setJobOngoing(data);
           props.setLoading(false);
       })
       .catch(error => {
+        console.log('__ONGOING_ERROR__', error);
         props.setLoading(false);
         setisFetching(false);
        
@@ -137,7 +133,7 @@ function ProjectsList(props) {
       },
    }).then(res => {
     const {data=[]} = res.data
-        console.log('what i am', res.data);
+        console.log('__COMPLETED_JOB', res.data);
         setisFetching(false);
      setjobCompleted(data);
      props.setLoading(false);

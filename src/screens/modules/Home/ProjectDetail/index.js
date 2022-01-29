@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
   FlatList,
+  ImageBackground
 } from 'react-native';
 import styled from 'styled-components';
 import {Header, Icon, Divider} from 'react-native-elements';
@@ -43,6 +44,9 @@ import {
   // setIsAuthenticated
   
 } from 'src/redux/actions/AuthActions';
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import {check, request, PERMISSIONS} from 'react-native-permissions';
+import RNLocation from 'react-native-location';
 
 const ProjectApply = props => {
   const navigation = useNavigation();
@@ -55,6 +59,13 @@ const ProjectApply = props => {
   const [defaultImage, setDefaultImage] = useState(
     'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
   );
+  const [cordinate, setCordinate] = useState({
+    longitude: 7.385256,
+    latitude: 9.1322927,
+    longitudeDelta: 0.05,
+    latitudeDelta: 0.05,
+  });
+  const [Permission, setPermission] = useState(null);
 const {params = {}} = props.route
   useEffect(() => {
     if (params) {
@@ -63,6 +74,16 @@ const {params = {}} = props.route
       
     }
   }, [params]);
+
+  const mapRef = useRef();
+
+  useEffect(() => {
+    if (mapRef.current) {
+      mapRef.current.fitToSuppliedMarkers([item.id]);
+    }
+  }, [item]);
+
+ 
 
     const documentPicker = async () => {
 
@@ -223,7 +244,7 @@ const {params = {}} = props.route
             <ProposalImage style={{}}>
               <Image
                 source={{
-                  uri: item && item.user ? item.user.avatar : defaultImage,
+                  uri: item && item.avatar ? item.avatar : defaultImage,
                 }}
                 style={{...StyleSheet.absoluteFill, borderRadius: 50}}
               />
@@ -323,7 +344,7 @@ const {params = {}} = props.route
                     <ProposalImage style={{}}>
                       <Image
                         source={{
-                          uri: item,
+                          uri: item.uri,
                         }}
                         style={{...StyleSheet.absoluteFill, borderRadius: 8}}
                       />
@@ -367,12 +388,80 @@ const {params = {}} = props.route
         </InnerContentContainer>
 
         <InnerContentContainer>
-          <WebView
-            style={{flex: 1, minHeight: hp('40%')}}
-            source={{
-              uri: `https://www.google.com/maps/@${item.location && item.location.coordinates[1]},${item.location && item.location.coordinates[0]}z`,
+        <MapView
+        ref={mapRef}
+        provider={PROVIDER_GOOGLE}
+        style={{ flex: 1, height: hp('30%') }}
+        initialRegion={{
+          latitude: item.location && item.location.coordinates[1],
+          longitude: item.location && item.location.coordinates[0],
+          longitudeDelta: 0.05,
+         latitudeDelta: 0.05,
+        }}
+        region={{
+          latitude: item.location && item.location.coordinates[1],
+          longitude: item.location && item.location.coordinates[0],
+          longitudeDelta: 0.05,
+          latitudeDelta: 0.05,
+        }}
+        zoomEnabled={true}
+        showsUserLocation={true}
+        initialPosition={{
+          latitude: item.location && item.location.coordinates[1],
+          longitude: item.location && item.location.coordinates[0],
+          longitudeDelta: 0.05,
+          latitudeDelta: 0.05,
+        }}
+        minZoomLevel={2}>
+        
+          <Marker
+            onSelect={ ()=>{}}
+            style={{width: 400, height: 400}}
+            identifier={item.id}
+            id={item.id}
+            draggable={false}
+            coordinate={{
+              latitude: item.location && item.location.coordinates[1],
+              longitude: item.location && item.location.coordinates[0],
+              longitudeDelta: 0.05,
+              latitudeDelta: 0.05,
             }}
-          />
+            image={require('src/assets/marker.png')}
+          >
+           
+            <ImageBackground
+              source={require('src/assets/mark.png')}
+              style={{
+                width: 50,
+                height: 50,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Image
+                source={{ uri: item && item.avatar ? item.avatar : defaultImage,}}
+                style={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: 10,
+                  marginBottom: 10,
+                  borderWidth: 1.5,
+                  borderColor: '#fff',
+                  shadowColor: '#7F5DF0',
+                  shadowOffset: {
+                    width: 0,
+                    height: 10,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 3.5,
+                  elevation: 5,
+                }}
+              />
+            </ImageBackground>
+          </Marker>
+       
+      </MapView>
         </InnerContentContainer>
 
         <InnerContentContainer>

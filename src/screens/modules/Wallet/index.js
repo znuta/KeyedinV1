@@ -31,9 +31,12 @@ import Deposite from './deposite'
 import axios from 'axios';
 import { saveBalance } from 'src/redux/actions/WalletActions';
 import { setLoading } from 'src/redux/actions/AuthActions';
+import Transfer from './Transfer';
+// import  AddCard from './AddCard/AddCard';
 
 function Wallet(props) {
   const navigation = useNavigation();
+  const refTransferRBSheet = useRef();
   const refRBSheet = useRef();
   const refDepositeSheet = useRef();
   const dispatch = useDispatch()
@@ -284,17 +287,17 @@ function Wallet(props) {
           <WalletActions>
             <WalletAction
               onPress={() => {
-                navigation.navigate('Withdrawal');
+                refTransferRBSheet.current.open();
               }}>
               <WalletActionIcon>
-                <Feather
-                  name="filter"
+                <MaterialCommunityIcons
+                  name="bank-transfer"
                   size={20}
                   color="white"
                   style={{ opacity: 0.8 }}
                 />
               </WalletActionIcon>
-              <WalletActionLabel>Filter</WalletActionLabel>
+              <WalletActionLabel>Transfer</WalletActionLabel>
             </WalletAction>
             <WalletAction
               onPress={() => {
@@ -397,6 +400,30 @@ function Wallet(props) {
         </RBSheet>
 
         <RBSheet
+          ref={refTransferRBSheet}
+          height={hp('70%')}
+          animationType="slide"
+          closeOnDragDown={true}
+          closeOnPressMask={true}
+          customStyles={{
+            container: {
+              borderTopLeftRadius: 20,
+              borderTopRightRadius: 20,
+            },
+            wrapper: {
+              // backgroundColor: 'transparent',
+              borderTopLeftRadius: 10,
+            },
+            draggableIcon: {
+              backgroundColor: 'lightgrey',
+              width: '30%',
+              height: '11%',
+            },
+          }}>
+          <Transfer />
+        </RBSheet>
+
+        <RBSheet
           ref={refDepositeSheet}
           height={hp('70%')}
           animationType="slide"
@@ -417,7 +444,7 @@ function Wallet(props) {
               height: '11%',
             },
           }}>
-          <Deposite />
+          <Deposite refDepositeSheet={refDepositeSheet} />
         </RBSheet>
       </ContentContainer>
     </Container>

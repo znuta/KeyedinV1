@@ -85,12 +85,12 @@ const dispatch = useDispatch()
     if (!type.includes("image")) {
      path = "video"
     }
-    let uri = BASEURL + `/media/upload/image/${auth.userData.id}`;
+    let uri = BASEURL + `/media/user/media/${auth.userData.id}`;
     const data = new FormData();
     data.append("files", payload);
 
     dispatch(setLoading(true));
-    axios.post(uri, data, {
+    axios.post(uri, payload, {
       
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
@@ -153,9 +153,10 @@ const dispatch = useDispatch()
             includeBase64: true,
           });
         if (!result.cancelled) {
-            console.log("___IMAGE___", result)
+           
           const { uri, type, base64, fileName, fileSize, width, height } = result.assets[0]
           const file = {uri, type, base64,name:fileName , size:fileSize, width, height }
+          console.log("___IMAGE___", file)
        setAvatar(file)
         dispatch(saveAvatar(uri));
         UploadAvatarToApi(file);

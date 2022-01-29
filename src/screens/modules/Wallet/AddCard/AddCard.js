@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
   CreditCardInput,
@@ -10,14 +10,28 @@ import {
 import Visa from "src/assets/icons/visa.svg";
 import CheckMark from "src/assets/icons/checkmark1.svg";
 import MasterCard from "src/assets/icons/mc_symbol.svg";
-
+import {SetupPayment, ChargeCard} from 'src/redux/actions/payment/addCard/cardSetup'
 import KButton from "src/component/Buttons";
+import { useDispatch, useSelector } from "react-redux";
 
 const AddCard = (props) => {
-  const [cardReady, setCardReady] = useState(false);
+  const [value, setValue] = useState({});
+  const [paymentResponse, setPaymentResponse] = useState({});
+const dispatch = useDispatch()
+const {auth} = useSelector(state=>state)
+  const _onChange = (k, v) => setValue({...value, [k]: v});
 
-  const _onChange = (form) => setCardReady(form.valid);
+  useEffect(()=>{
+    console.log("___paymentResponse__", paymentResponse)
+    dispatch(ChargeCard({card_id: paymentResponse.payment_ref, user_id: auth.userData.id,amount:paymentResponse.amount},
+      (res,err)=>{
+      console.log("___RE___NEW__CARD__", res)
+      console.log("___RE___NEW__CARD__", err)
 
+       })
+         
+       )
+  },[paymentResponse])
   return (
     <Container>
       <Wrapper>
@@ -52,11 +66,17 @@ const AddCard = (props) => {
 
       <Wrapper style={{ marginTop: 30 }}>
         <KButton
+          onPress={() => {
+            dispatch(SetupPayment(value, (value) => {
+              console.log("_____OOOO____",value)
+             setPaymentResponse(value)
+            }))
+          }}
           text="Add Card"
           textColor="white"
           backgroundColor="#083E9E"
           textTransform="uppercase"
-          disabled={!cardReady}
+         
         />
       </Wrapper>
     </Container>

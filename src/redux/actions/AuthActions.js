@@ -720,8 +720,32 @@ export const getAllCategories = () => dispatch => {
   }
 };
 
+
+export const getUser = async (id,callback) => {
+  let uri = BASEURL + `/users/profile/${id}`;
+  const token = await getToken()
+  axios.get(uri, {
+   
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+      Authorization: 'Bearer' + ' ' + token,
+    },
+  }).then(res => {
+      //GetPortfolio();
+      console.log("__USER__", res)
+      const { data = {} } = res.data
+     callback(data)
+     
+    })
+    .catch(error => {
+      //setLoading(false);
+      console.log('Profile__ERROR__', error);
+     
+    });
+};
+
 const GetExperience =  (id) => async  dispatch =>  {
-  let uri = BASEURL + `/profiles/employment?user_id=${id}`;
+  let uri = BASEURL + `/profiles/employment/${id}`;
 const token = await getToken()
   //props.setLoading(true);
   axios.get(uri, {
@@ -747,7 +771,7 @@ const token = await getToken()
 
 const GetExpertiseFromApi = (id) => async dispatch => {
   console.log("___ID__++", id)
-  let uri = BASEURL + `/profiles/expertise?user_id=${id}`;
+  let uri = BASEURL + `/profiles/expertise/${id}`;
   const token = await getToken()
   //props.setLoading(true);
   axios.get(uri, {
@@ -758,8 +782,8 @@ const GetExpertiseFromApi = (id) => async dispatch => {
   }).then(res => {
       console.log('__RES_EXPERTISE__', res);
     
-    const {data = []} = res.data
-    dispatch(sendExpert(data[1]))
+    const {data = {}} = res.data
+    dispatch(sendExpert(data))
     
     // setValue({ ...data[1] })
     // setBio({ ...data[1] });
@@ -777,7 +801,7 @@ const GetExpertiseFromApi = (id) => async dispatch => {
 };
 
 const GetEducation =  (id) => async dispatch => {
-  let uri = BASEURL + `/profiles/education?user_id=${id}`;
+  let uri = BASEURL + `/profiles/education/${id}`;
   const token = await getToken()
   //props.setLoading(true);
   axios.get(uri, {
@@ -804,6 +828,81 @@ const GetEducation =  (id) => async dispatch => {
      
     });
 };
+
+
+
+const GetArtisanExperience = async (id, callback) =>   {
+  let uri = BASEURL + `/profiles/employment/${id}`;
+const token = await getToken()
+  //props.setLoading(true);
+  axios.get(uri, {
+   
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+      Authorization: 'Bearer' + ' ' + token,
+    },
+  })
+    
+    .then(res => {
+      console.log("___EMPLOYMENT__DETAILS___", res)
+      const { data } = res.data
+      callback(data.organizations)
+    
+      //console.log({ res });
+    })
+    .catch(error => {
+      console.log("___EMPLOYMENT__ERROR___", error.response)
+      //props.setLoading(false);
+    
+    });
+};
+
+const getArtisanExpertise = async(id, callback) => {
+  console.log("___ID__++", id)
+  let uri = BASEURL + `/profiles/expertise/${id}`;
+  const token = await getToken()
+  //props.setLoading(true);
+  axios.get(uri, {
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+      Authorization: 'Bearer' + ' ' + token,
+    },
+  }).then(res => {
+
+    console.log('__RES_EXPERTISE__', res);
+    const { data = {} } = res.data
+    callback(data)
+  
+    })
+    .catch(error => {
+      console.log("___ERROR__EX@", error.response)
+     
+    });
+};
+
+const getArtisanEducation = async (id, callback) => async dispatch => {
+  console.log("___ID+++", id)
+  let uri = BASEURL + `/profiles/education/${id}`;
+  const token = await getToken()
+  //props.setLoading(true);
+  axios.get(uri, {
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+      Authorization: 'Bearer' + ' ' + token,
+    },
+  })
+    .then(res => {
+      
+      const { data = {} } = res.data
+      callback(data.institutions)
+     
+      
+    })
+    .catch(error => {
+      console.log("__USER_EDUCATION_ERROR_",error);
+     
+    });
+};
 const saveAvatar= path => async dispatch =>{
       dispatch({
         type: SAVE_AVATAR,
@@ -811,6 +910,9 @@ const saveAvatar= path => async dispatch =>{
       })}
 
 export {
+  GetArtisanExperience,
+getArtisanExpertise,
+getArtisanEducation,
   saveSkill,
   sendOTP,
   sendOTPSuccess,

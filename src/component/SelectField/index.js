@@ -14,7 +14,7 @@ import {colors, fonts, hp, wp} from '../../config/variables';
 // import RNPickerSelect from 'react-native-picker-select';
 import { Picker as SelectPicker } from '@react-native-picker/picker';
 const SelectField = ({
-  value = '',
+  value='',
   placeholder = '',
   icon,
   onChangeText = () => {},
@@ -28,11 +28,7 @@ const SelectField = ({
   return (
     <InputGroup>
       {label && <InputLabel>{label}</InputLabel>}
-      <TouchableOpacity
-        style={[
-          styles.selectField,
-          {borderWidth: 0, backgroundColor: '#f2f3f4'},
-        ]}>
+      
         {/* <RNPickerSelect
           style={{
             color: colors.dark,
@@ -50,17 +46,23 @@ const SelectField = ({
           items={items}
         /> */}
         <SelectPicker
-          style={{ width: '100%' }}
-          onValueChange={(itemValue, itemIndex) =>
+          style={[
+             styles.selectField,
+            {borderWidth: 0, backgroundColor: '#f2f3f4', width: '100%', overflow: 'hidden', borderRadius: 100},
+          ]}
+          selectedValue={value}
+          onValueChange={(itemValue, itemIndex) => {
+           
             onChangeText(itemValue)
-          }
+          }}
           {...otherProps}
-        >
+      >
+        <SelectPicker.Item label={`Select ${label}`}  />
           {
            items.length && items.map(item=> <SelectPicker.Item label={item.label} value={item.value} />)
           }
         </SelectPicker>
-      </TouchableOpacity>
+      
     </InputGroup>
   );
 };

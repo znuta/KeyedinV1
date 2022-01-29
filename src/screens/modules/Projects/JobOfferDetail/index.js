@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect,useRef} from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
   FlatList,
+  ImageBackground,
 } from 'react-native';
 import styled from 'styled-components';
 import {Header, Icon, Divider} from 'react-native-elements';
@@ -33,10 +34,12 @@ import ListItemSeparator from 'src/component/ListItemSeparator';
 import DocumentPicker from 'react-native-document-picker'
 import moment from 'moment';
 import axios from 'axios';
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 
 const JobOfferDetail = props => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const mapRef = useRef();
   const {auth} = useSelector(state => state);
   const [item, setItem] = useState({});
   const [type, setType] = useState('');
@@ -53,6 +56,12 @@ const {params = {}} = props.route
       
     }
   }, [params]);
+
+    useEffect(() => {
+      if (mapRef.current) {
+        mapRef.current.fitToSuppliedMarkers([item.id]);
+      }
+    }, [item]);
 
     const documentPicker = async () => {
 
@@ -136,8 +145,40 @@ const {params = {}} = props.route
  
 
 
-  const sendProposal = () => {
+  const acceptOffer = () => {
     let uri = BASEURL + '/proposals/add';
+    const data = {
+      artisan_id: auth.userData.id,
+      protisan_id: item.user.id,
+      ...value
+    };
+    axios.post(uri,data, {
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+        Authorization: 'Bearer' + ' ' + auth.token,
+      },
+    })
+      .then(res => {
+       
+        Toast.show({
+          text: 'Offer Accepted',
+          buttonText: 'Continue',
+          type: 'success',
+        });
+        console.log('here3');
+      })
+      .catch(error => {
+        console.log(error);
+        Toast.show({
+          text: 'Could not send',
+          buttonText: 'okay',
+          type: 'warning',
+        });
+      });
+  };
+
+  const rejectOffer = () => {
+    let uri = BASEURL + '/job-offers/add';
     const data = {
       artisan_id: auth.userData.id,
       protisan_id: item.user.id,
@@ -223,7 +264,7 @@ const {params = {}} = props.route
       />
       <ContentContainer containerStyle={{flex: 1}}>
         <TitleSection>
-          <Title>{item.title}</Title>
+          <Title>{item.name}</Title>
         </TitleSection>
         <Row style={{marginHorizontal: wp('4%'), alignItems: 'center'}}>
           <MaterialIcons style={styles.paste_icon_style} name="content-paste" />
@@ -233,10 +274,12 @@ const {params = {}} = props.route
         <InnerContentContainer>
           {/* <Sectiontitle>Description :</Sectiontitle> */}
           <ProposalWrap>
-            <ProposalImage style={{}}>
+            <ProposalImage onPress={()=>{
+              navigation.navigate('ProtisanProfile', {id: item.user_id})
+            }} style={{}}>
               <Image
                 source={{
-                  uri: item && item.user ? item.user.avatar : defaultImage,
+                  uri: item && item.avatar ? item.avatar : defaultImage,
                 }}
                 style={{...StyleSheet.absoluteFill, borderRadius: 50}}
               />
@@ -336,7 +379,7 @@ const {params = {}} = props.route
                     <ProposalImage style={{}}>
                       <Image
                         source={{
-                          uri: item,
+                          uri: item.uri,
                         }}
                         style={{...StyleSheet.absoluteFill, borderRadius: 8}}
                       />
@@ -380,12 +423,80 @@ const {params = {}} = props.route
         </InnerContentContainer>
 
         <InnerContentContainer>
-          <WebView
-            style={{flex: 1, minHeight: hp('40%')}}
-            source={{
-              uri: `https://www.google.com/maps/@${item.location && item.location.longitude},${item.location && item.location.latitude}z`,
+        <MapView
+        ref={mapRef}
+        provider={PROVIDER_GOOGLE}
+        style={{ flex: 1, height: hp('30%') }}
+        initialRegion={{
+          latitude: item.location && item.location.coordinates[1],
+          longitude: item.location && item.location.coordinates[0],
+          longitudeDelta: 0.05,
+         latitudeDelta: 0.05,
+        }}
+        region={{
+          latitude: item.location && item.location.coordinates[1],
+          longitude: item.location && item.location.coordinates[0],
+          longitudeDelta: 0.05,
+          latitudeDelta: 0.05,
+        }}
+        zoomEnabled={true}
+        showsUserLocation={true}
+        initialPosition={{
+          latitude: item.location && item.location.coordinates[1],
+          longitude: item.location && item.location.coordinates[0],
+          longitudeDelta: 0.05,
+          latitudeDelta: 0.05,
+        }}
+        minZoomLevel={2}>
+        
+          <Marker
+            onSelect={ ()=>{}}
+            style={{width: 400, height: 400}}
+            identifier={item.id}
+            id={item.id}
+            draggable={false}
+            coordinate={{
+              latitude: item.location && item.location.coordinates[1],
+              longitude: item.location && item.location.coordinates[0],
+              longitudeDelta: 0.05,
+              latitudeDelta: 0.05,
             }}
-          />
+            image={require('src/assets/marker.png')}
+          >
+           
+            <ImageBackground
+              source={require('src/assets/mark.png')}
+              style={{
+                width: 50,
+                height: 50,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Image
+                source={{ uri: item && item.avatar ? item.avatar : defaultImage,}}
+                style={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: 10,
+                  marginBottom: 10,
+                  borderWidth: 1.5,
+                  borderColor: '#fff',
+                  shadowColor: '#7F5DF0',
+                  shadowOffset: {
+                    width: 0,
+                    height: 10,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 3.5,
+                  elevation: 5,
+                }}
+              />
+            </ImageBackground>
+          </Marker>
+       
+      </MapView>
         </InnerContentContainer>
 
         <InnerContentContainer>
@@ -420,73 +531,11 @@ const {params = {}} = props.route
             </View>
           </View>
 
-          {/* {type == 'Home' && (
-            <CTAWrap>
-              <CTAButton
-                onPress={() => {
-                  navigation.navigate('Send Proposal', {
-                    item: item,
-                    from: 'Home',
-                    //image: artisan.image_url,
-                  });
-                }}>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontWeight: '600',
-                  }}>
-                  Send Proposal
-                </Text>
-              </CTAButton>
-              <CTAButton
-                style={{backgroundColor: Colors.primary + 15}}
-                onPress={() => _handleRejectProposal()}>
-                <Text
-                  style={{
-                    color: Colors.primary,
-                    fontWeight: '600',
-                  }}>
-                  Decline Job
-                </Text>
-              </CTAButton>
-            </CTAWrap>
-          )}
-          {type == 'Offer' && (
-            <CTAWrap>
-              <CTAButton
-                onPress={() => {
-                  _handleAcceptance(items.id);
-                  console.log('accept', items.id);
-                  // navigation.navigate("Send Proposal", {
-                  //   item:item
-                  //   //image: artisan.image_url,
-                  // });
-                }}>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontWeight: '600',
-                  }}>
-                  Accept Offer
-                </Text>
-              </CTAButton>
-              <CTAButton
-                style={{backgroundColor: Colors.primary + 15}}
-                onPress={() => _handleReject(item.id)}>
-                <Text
-                  style={{
-                    color: Colors.primary,
-                    fontWeight: '600',
-                  }}>
-                  Decline Offer
-                </Text>
-              </CTAButton>
-            </CTAWrap>
-          )} */}
+          
         </InnerContentContainer>
 
         
-          <View style={styles.actionBox}>
+          {/* <View style={styles.actionBox}>
             <View
               style={{
                 borderRadius: 12,
@@ -573,42 +622,10 @@ const {params = {}} = props.route
                 {amountToReceived||"N38,000"}
               </DescriptionText>
             </View>
-          </View>
+          </View> */}
         
 
         <View style={styles.actionBox}>
-
-          {/* {type == 'Home' && (
-            <CTAWrap>
-              <CTAButton
-                onPress={() => {
-                  navigation.navigate('Send Proposal', {
-                    item: item,
-                    from: 'Home',
-                    //image: artisan.image_url,
-                  });
-                }}>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontWeight: '600',
-                  }}>
-                  Send Proposal
-                </Text>
-              </CTAButton>
-              <CTAButton
-                style={{backgroundColor: Colors.primary + 15}}
-                onPress={() => _handleRejectProposal()}>
-                <Text
-                  style={{
-                    color: Colors.primary,
-                    fontWeight: '600',
-                  }}>
-                  Decline Job
-                </Text>
-              </CTAButton>
-            </CTAWrap>
-          )} */}
           
             <CTAWrap>
               <CTAButton
@@ -641,18 +658,6 @@ const {params = {}} = props.route
               </CTAButton>
             </CTAWrap>
         
-          {/* <Button
-            text="CancelProposal"
-            type="primary"
-            additionalStyle={{
-              button: styles.button,
-              text: {fontSize: wp('3.5%')},
-            }}
-            onPress={() => {
-              setSendProposal(true);
-              sendProposal()
-            }}
-          /> */}
         </View>
       </ContentContainer>
     </Container>
@@ -828,7 +833,7 @@ const ProposalWrap = styled.View`
   margin-vertical: ${hp('1%')};
 `;
 
-const ProposalImage = styled.View`
+const ProposalImage = styled.TouchableOpacity`
   height: ${wp('14%')};
   width: ${wp('14%')};
   background-color: #e2e0de;

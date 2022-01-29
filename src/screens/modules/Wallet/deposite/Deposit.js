@@ -14,7 +14,7 @@ import Button from 'src/component/Button';
 import styled from 'styled-components/native';
 
 const {width} = Dimensions.get('window');
-const Deposit = ({setstep}) => {
+const Deposit = ({setstep, onChangeText=()=>{}}) => {
   return (
     <View style={styles.walletContainer}>
       <Text style={styles.walletHeader}> Deposit Amount</Text>
@@ -42,6 +42,9 @@ const Deposit = ({setstep}) => {
             placeholder="Amount"
             style={[styles.inputField]}
             keyboardType="phone-pad"
+            onChangeText={(v) => {
+              onChangeText("amount",v)
+            }}
           />
         </InputField>
       </View>

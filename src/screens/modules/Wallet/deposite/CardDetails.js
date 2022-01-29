@@ -17,7 +17,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 
 const {width} = Dimensions.get('window');
-const CardDetails = ({setstep}) => {
+const CardDetails = ({setstep, _onChange=()=>{}}) => {
   return (
     <View style={styles.walletContainer}>
       <Text style={styles.walletHeader}>Enter Card Details</Text>
@@ -47,6 +47,9 @@ const CardDetails = ({setstep}) => {
             placeholder="Card Number"
             style={[styles.inputField]}
             keyboardType="phone-pad"
+            onChangeText={(v) => {
+              _onChange("cardNumber",v)
+            }}
           />
         </InputField>
       </View>
@@ -68,6 +71,9 @@ const CardDetails = ({setstep}) => {
               placeholder="Expiry Date"
               style={[styles.inputField]}
               keyboardType="phone-pad"
+              onChangeText={(v) => {
+                _onChange("expiry",v)
+              }}
             />
           </InputField>
         </View>
@@ -80,6 +86,9 @@ const CardDetails = ({setstep}) => {
               placeholder="CVV"
               style={[styles.inputField]}
               keyboardType="phone-pad"
+              onChangeText={(v) => {
+                _onChange("cvv",v)
+              }}
             />
           </InputField>
         </View>

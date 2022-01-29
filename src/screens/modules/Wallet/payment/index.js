@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState, useRef } from 'react';
+import React, { useState,useEffect, useRef } from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,6 +10,7 @@ import {
   TextInput,
   Dimensions,
   Image,
+  FlatList,
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather'
 import { colors, hp, wp } from 'src/config/variables';
@@ -25,14 +26,73 @@ import Flutterwave from 'src/assets/illustrations/Flutterwave.svg';
 import { Switch } from 'react-native-elements';
 import CardDetails from '../deposite/CardDetails';
 import RBSheet from 'react-native-raw-bottom-sheet';
+import { useDispatch, useSelector } from "react-redux";
+import { AddPaymentApi, ChargeCard, GetCards, SetupPayment } from 'src/redux/actions/payment/addCard/cardSetup';
+import { setLoading } from 'src/redux/actions/AuthActions';
+import { BASEURL } from 'src/constants/Services';
+import axios from 'axios';
+import Empty from 'src/component/Empty';
+import PaymentCard from 'src/component/PaymentCard';
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const mock = [];
 
 const Payment = props => {
   const navigation = useNavigation();
+  const {auth} = useSelector(state=>state)
   const [checked, setchecked] = useState(false);
+  const [cards, setCards] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
   const refDepositeSheet = useRef();
+  const [value, setValue] = useState({});
+  const [paymentResponse, setPaymentResponse] = useState({});
+  const dispatch = useDispatch()
+  const _onChange = (k, v) => setValue({ ...value, [k]: v });
+
+  useEffect(()=>{
+    console.log("___paymentResponse__", {card_id: paymentResponse.reference, user_id: auth.userData.id,amount:50/100})
+    // dispatch(ChargeCard({card_id: paymentResponse.payment_ref, user_id: auth.userData.id,amount:50/100},
+    //     (res,err)=>{
+    //     console.log("___RE___NEW__CARD__", res)
+    //     console.log("___RE___NEW__CARD__", err)
+
+    //     })
+         
+    //    )
+    if (paymentResponse) {
+     
+    }
+      
+  },[paymentResponse])
+  
+  
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true)
+    dispatch(GetCards((res,err)=>{
+      if (err !== null) console.log("___ERROR__Card__His", err)
+
+      if (res !== null){ 
+        const {data} = res.data
+        setCards(data)};
+
+      }));
+   
+  }, []);
+  
+
+  useEffect(()=>{
+    dispatch(GetCards((res,err)=>{
+      if (err !== null) console.log("___ERROR__Card__HIis", err)
+
+      if (res !== null){ 
+        const {data} = res.data
+        setCards(data)};
+
+      }));
+  },[])
+
+  
   const { back, next } = props;
   const BackButton = () => {
     return (
@@ -65,7 +125,8 @@ const Payment = props => {
       <View
         style={{
           display: 'flex',
-          //  justifyContent: 'space-between',
+          flex: 1,
+          //   justifyContent: 'center',
           alignItems: 'center',
           //  paddingHorizontal: wp('8%'),
           marginTop: -20,
@@ -91,6 +152,7 @@ const Payment = props => {
             marginVertical: 10,
             display: 'flex',
             width: '90%',
+
           }}
         />
         <TouchableOpacity>
@@ -106,6 +168,7 @@ const Payment = props => {
             style={{ width: 150, height: 90, resizeMode: 'contain' }}
           />
         </TouchableOpacity>
+        
         <View style={{ width: '90%' }}>
           <Text style={{ fontWeight: 'bold' }}>saved cards</Text>
         </View>
@@ -118,6 +181,27 @@ const Payment = props => {
             width: '90%',
           }}
         />
+
+      <CardsWrap >
+          
+          <FlatList
+         data={[{},{}]}
+         showsVerticalScrollIndicator={false}
+         contentContainerStyle={{paddingBottom: 80}}
+         style={{flex: 1, paddingTop: 10}}
+         renderItem={({item, index}) =>  <PaymentCard item={item} />}
+         keyExtractor={(item, index) => index.toString()}
+         onRefresh={() => onRefresh()}
+         refreshing={refreshing}
+         ListEmptyComponent={
+           <Empty
+             title={'No Card'}
+             subTitle={' You have no card yet !!'}
+           />
+         }
+       />
+
+       </CardsWrap>
 
         <TouchableOpacity
           onPress={() => {
@@ -187,7 +271,19 @@ const Payment = props => {
             height: '11%',
           },
         }}>
-        <CardDetails />
+        <CardDetails _onChange={_onChange} setstep={() => {
+          dispatch(SetupPayment(value, (ref) => {
+            dispatch(AddPaymentApi(ref,
+              (res,err)=>{
+              if (err !== null) console.log("ADD_NEW_CAD", err)
+      
+              if (res !== null) navigation.navigate('Home');
+      
+              })
+              )
+              setPaymentResponse(ref)
+          }))
+        }}  />
       </RBSheet>
     </View>
   );
@@ -195,28 +291,11 @@ const Payment = props => {
 
 export default Payment;
 
-const InputField = styled.View`
-  width: 70%;
-  background-color: #f2f3f4;
-  border-top-right-radius: 50;
-  border-bottom-right-radius: 50;
-  flex-direction: row;
-  padding-horizontal: ${wp('3%')};
-  height: ${wp('12%')};
-  align-items: center;
-  margin-bottom: ${wp('3%')};
-`;
-
-const BudgetField = styled.View`
-  width: 88%;
-  background-color: #f2f3f4;
-  border-top-right-radius: 50;
-  border-bottom-right-radius: 50;
-  flex-direction: row;
-  padding-horizontal: ${wp('3%')};
-  height: ${wp('12%')};
-  align-items: center;
-  margin-bottom: ${wp('3%')};
+const CardsWrap = styled.View`
+  margin-top: 25px;
+  flex: 1;
+  width: ${wp('100%')};
+  padding-horizontal: ${wp('5%')}
 `;
 const styles = StyleSheet.create({
   nairaStyle: {

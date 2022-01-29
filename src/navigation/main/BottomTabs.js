@@ -37,7 +37,9 @@ import ProposalDetail from 'src/screens/modules/Proposal/ProposalDetail';
 import Insight from 'src/screens/modules/Insight';
 import { ChatScreen } from "src/screens/modules/Messages/ChatScreen";
 import { MainCallScreen } from "src/screens/modules/Messages/MainCallScreen";
-import ArtisanProfile from 'src/screens/modules/Profile/';
+import Profile from 'src/screens/modules/Profile/';
+import ProtisanProfile from 'src/screens/modules/ProtisanProfile';
+import Payment from 'src/screens/modules/Wallet/payment';
 // import Withdrawal from 'src/screens/modules/Wallet/Withdrawal';
 import Wallet from 'src/screens/modules/Wallet';
 import ProjectApply from 'src/screens/modules/Home/ProjectDetail';
@@ -55,7 +57,7 @@ import { CallingScreen } from 'src/screens/modules/Messages/CallingScreen';
 const Tab = createBottomTabNavigator();
 
 function ProfileScreen() {
-  return <ArtisanProfile style={{flex: 1}} />;
+  return <Profile style={{flex: 1}} />;
 }
 
 function EditProfileScreen() {
@@ -178,6 +180,8 @@ const BottomTabComponent = reduxProps => {
       <Stack.Screen name="OngoingProjectDetail" component={OngoingProjectDetail} />
       <Stack.Screen name="JobOfferDetail" component={JobOfferDetail} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen name="Payment" component={Payment} />
+      <Stack.Screen name="ProtisanProfile" component={ProtisanProfile} />
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
       <Stack.Screen name="EditExpertise" component={EditExpertiseScreen} />
       <Stack.Screen name="Insight" component={InsightScreen} />

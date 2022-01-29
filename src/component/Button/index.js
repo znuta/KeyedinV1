@@ -10,14 +10,15 @@ import {
 
 import styles, { typeStyle } from './styles';
 
-const Button = props => {
-  const {
-    text,
-    icon,
-    onPress = () => { },
-    additionalStyle = {},
-    type = 'primary',
-  } = props;
+const Button = ({
+  text,
+  icon,
+  onPress = () => { },
+  additionalStyle = {},
+  type = 'primary',
+  ...props
+}) => {
+  
   return (
     <TouchableOpacity
       {...props}

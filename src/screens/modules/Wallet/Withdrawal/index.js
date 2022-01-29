@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -12,9 +12,39 @@ import {wp, fonts, colors, hp} from 'src/config/variables';
 import TextField from 'src/component/TextField';
 import Button from 'src/component/Button';
 import styled from 'styled-components/native';
+import { GetNigerianBank, validateAccountNumber } from 'src/redux/actions/payment/addCard/cardSetup';
+import { useDispatch } from 'react-redux';
+import SelectField from 'src/component/SelectField';
 
 const {width} = Dimensions.get('window');
 const Deposit = ({setstep}) => {
+  const dispatch = useDispatch()
+  const [banks, setBanks] = useState([])
+  const [values, setValues] = useState({"bank": {}})
+  const [bankItems, setBankItems] = useState([])
+  const {bank, account_number, amount} = values
+  const onChangeText = (key, value) => {
+   
+    setValues({...values, [key]: value})
+    
+  };
+  useEffect(()=>{
+    dispatch(GetNigerianBank((res,error)=>{
+      if (res !==null) {
+        const {data} = res.data
+        setBanks(data)
+        const bankSelections = []
+        data.forEach(item => {
+          bankSelections.push({label: item.name, value: item})
+        });
+        setBankItems(bankSelections)
+        console.log("___RES__NIGERIAN_BANK",res)
+      }else{
+        console.log("___ERROR__NIGERIAN_BANK",error)
+      }
+
+    }))
+  },[])
   return (
     <View style={styles.walletContainer}>
       <Text style={styles.walletHeader}> Withdrawal Amount</Text>
@@ -37,13 +67,16 @@ const Deposit = ({setstep}) => {
         <View style={styles.nairaStyle}>
           <Text style={{fontWeight: 'bold', fontSize: wp('7%')}}>N</Text>
         </View>
-        <InputField>
+        <InputField >
           <TextInput
+          value={amount}
             placeholder="Amount"
+            onChangeText={value => onChangeText('amount', value)}
             style={[styles.inputField]}
             keyboardType="phone-pad"
           />
         </InputField>
+       
       </View>
       <Text
         style={{
@@ -55,7 +88,21 @@ const Deposit = ({setstep}) => {
         }}>
         Min. deposit amount of NGN 500
       </Text>
-
+      <View style={{width: wp('80%')}}>
+      <TextField
+        value={account_number}
+        onChangeText={value => onChangeText('account_number', value)}
+        placeholder="Account Number e.g 0124707068"
+        keyboardType="phone-pad"
+      />
+      </View>
+      {bankItems.length ? <View style={{width: wp('80%')}}>
+      <SelectField value={bank}
+        label="Select Bank"
+        items={[...bankItems]}
+        onChangeText={itemValue => onChangeText('bank', itemValue)} />
+      </View>: null}
+      
       <View style={{marginTop: wp(15)}}>
         {/* <TouchableOpacity onPress={setstep} style={styles.buttonStyle}>
           <Text
@@ -64,7 +111,18 @@ const Deposit = ({setstep}) => {
           </Text>
         </TouchableOpacity> */}
         <Button
-          onPress={setstep}
+          onPress={()=>{
+            dispatch(validateAccountNumber(values,(res,error)=>{
+              if (res !==null) {
+                const {data} = res.data
+               
+                console.log("___RES__Valid",res)
+              }else{
+                console.log("___ERROR__Valid_BANK",error)
+              }
+        
+            }))
+          }}
           text="Proceed"
           type="primary"
           additionalStyle={{

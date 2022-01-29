@@ -14,7 +14,7 @@ const DataTimeField = ({
   date = new Date(),
   setDate = () => {},
   additionalStyle = {},
-  editable = true,
+  disabled = false,
   multiline = false,
   label,
 }) => {
@@ -32,7 +32,7 @@ const DataTimeField = ({
             mode="date"
             placeholder="select date"
             format="YYYY-MM-DD"
-           
+            disabled={disabled}
             //maxDate="31-12-2049"
             confirmBtnText="Confirm"
             cancelBtnText="Cancel"

@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     height: wp('11%'),
     paddingHorizontal: wp('3%'),
     marginVertical: hp('1%'),
-    alignItems: 'center',
+   
     justifyContent: 'center',
   },
 

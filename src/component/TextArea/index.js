@@ -32,7 +32,7 @@ const TextArea = ({
           value={value}
           editable={editable}
           numberOfLines={Platform.OS === 'ios' ? null : 2}
-          multiline={multiline}
+          multiline={true}
           style={[styles.textArea]}
         />
       </TextAreaWrap>
