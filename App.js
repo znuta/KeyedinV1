@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
- import React, {useState} from 'react';
+ import React, {useState, useEffect} from 'react';
  import {
    SafeAreaView,
    ScrollView,
@@ -26,7 +26,9 @@
  import {PersistGate} from 'redux-persist/es/integration/react';
  import thunk from 'redux-thunk';
  import {CometChat} from '@cometchat-pro/react-native-chat';
- 
+ import messaging from '@react-native-firebase/messaging';
+import axios from 'axios';
+
  let appID = '2008518ba66d45e4';
  let region = 'us';
  let appSetting = new CometChat.AppSettingsBuilder()
@@ -70,6 +72,30 @@
    const [statusBarTransition, setStatusBarTransition] = useState(
      TRANSITIONS[0],
    );
+
+   const sendFcmToken = async () => {
+    try {
+      await messaging().registerDeviceForRemoteMessages();
+      const token = await messaging().getToken();
+
+      await axios.post('http://192.168.28.232:3000/register', {token});
+    } catch (err) {
+      //Do nothing
+      console.log(err.response.data);
+      return;
+    }
+  };
+
+  useEffect(() => {
+    // sendFcmToken();
+  }, []);
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
+
+    return unsubscribe;
+  }, []);
  
  
    return (

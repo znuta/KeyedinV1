@@ -4,6 +4,10 @@ pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 pod 'react-native-video', :path => '../node_modules/react-native-video/react-native-video.podspec'
 platform :ios, '11.0'
 
+# React Native Maps dependencies
+rn_maps_path = '../node_modules/react-native-maps'
+pod 'react-native-google-maps', :path => rn_maps_path
+
 target 'KeyedinV1' do
   config = use_native_modules!
 
