@@ -2,7 +2,10 @@ require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 pod 'react-native-video', :path => '../node_modules/react-native-video/react-native-video.podspec'
+# pod 'FirebaseCore', :git => 'https://github.com/firebase/firebase-ios-sdk.git', 
 platform :ios, '11.0'
+
+# disable_input_output_paths: true
 
 # React Native Maps dependencies
 rn_maps_path = '../node_modules/react-native-maps'
@@ -32,6 +35,8 @@ target 'KeyedinV1' do
   pod 'Permission-Siri', :path => "#{permissions_path}/Siri"
   pod 'Permission-SpeechRecognition', :path => "#{permissions_path}/SpeechRecognition"
   pod 'Permission-StoreKit', :path => "#{permissions_path}/StoreKit"
+  pod "Firebase/Core"
+  
 
   use_react_native!(
     :path => config[:reactNativePath],
@@ -55,6 +60,13 @@ target 'KeyedinV1' do
 
   post_install do |installer|
     react_native_post_install(installer)
-    __apply_Xcode_12_5_M1_post_install_workaround(installer)
+    # __apply_Xcode_12_5_M1_post_install_workaround(installer)
+    # flipper_post_install(installer)
+
+  #   installer.pods_project.targets.each do |target|
+  #   if target.name == "React-Core-AccessibilityResources"
+  #   target.remove_from_project
+  #   end
+  # end
   end
 end
