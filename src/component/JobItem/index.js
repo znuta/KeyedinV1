@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import styled from 'styled-components/native';
 import ReadMore from 'react-native-read-more-text';
-import {colors, hp, wp} from 'src/config/variables';
+import {colors, fonts, hp, wp} from 'src/config/variables';
 import Feather from 'react-native-vector-icons/Feather'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import TimeAgo from 'react-native-timeago';
@@ -35,7 +35,8 @@ const defaultImage = 'https://images.unsplash.com/photo-1566753323558-f4e0952af1
         onPress={onPress}>
         <View
           style={{
-            marginVertical: 15,
+            marginHorizontal: wp('3.5%'),
+            marginVertical: hp('1.5%'),
             marginBottom: 0,
             flex: 1,
             borderRadius: 12,
@@ -43,13 +44,13 @@ const defaultImage = 'https://images.unsplash.com/photo-1566753323558-f4e0952af1
             padding: wp('2%'),
             shadowColor: '#000',
             shadowOffset: {
-              width: 0,
-              height: 2,
+              width: 2,
+              height: 1,
             },
-            shadowOpacity: 0.25,
-            shadowRadius: 1.41,
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
 
-            elevation: 2,
+            elevation: 10,
           }}>
           <View style={{flexDirection: 'row'}}>
             <View
@@ -79,7 +80,7 @@ const defaultImage = 'https://images.unsplash.com/photo-1566753323558-f4e0952af1
                     flex: 1,
                   }}>
                   <ReadMore
-                    numberOfLines={3}
+                    numberOfLines={4}
                     renderTruncatedFooter={_renderTruncatedFooter}
                     renderRevealedFooter={_renderRevealedFooter}>
                     <DescriptionText style={{flex: 1}}>
@@ -221,8 +222,10 @@ const SkillBadge = styled.View`
 `;
 const SectionTitle = styled.Text`
   font-weight: 700;
-  font-size: ${wp('3.5%')};
+  font-size: ${wp('4%')};
   color: rgba(19, 24, 68, 0.7);
+  line-height: 25px;
+  font-family: ${fonts.PRIMARY_REGULLAR}
 `;
 const GreenText = styled.Text`
   font-weight: 700;
@@ -230,11 +233,10 @@ const GreenText = styled.Text`
   color: ${colors.green};
 `;
 const DescriptionText = styled.Text`
-  font-size: ${wp('3%')};
-  letter-spacing: 0px;
-  color: rgba(19, 24, 68, 0.5);
-  line-height: ${wp('3.8%')};
-  font-weight: 500;
-
-  flex: 1;
+font-size: ${wp('3%')}
+margin-top: ${hp('1.8%')};
+line-height: ${hp('1.8%')};
+font-weight: 400;
+color: ${colors.medium};
+font-family: ${fonts.PRIMARY_REGULLAR}
 `;

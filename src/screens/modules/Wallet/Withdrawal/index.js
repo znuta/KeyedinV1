@@ -12,38 +12,40 @@ import {wp, fonts, colors, hp} from 'src/config/variables';
 import TextField from 'src/component/TextField';
 import Button from 'src/component/Button';
 import styled from 'styled-components/native';
-import { GetNigerianBank, validateAccountNumber } from 'src/redux/actions/payment/addCard/cardSetup';
-import { useDispatch } from 'react-redux';
+import { GetNigerianBank, GetUserBank, intializePayment, validateAccountNumber } from 'src/redux/actions/payment/addCard/cardSetup';
+import { useDispatch, useSelector } from 'react-redux';
 import SelectField from 'src/component/SelectField';
 
 const {width} = Dimensions.get('window');
 const Deposit = ({setstep}) => {
   const dispatch = useDispatch()
+  const {auth} = useSelector(state => state)
   const [banks, setBanks] = useState([])
-  const [values, setValues] = useState({"bank": {}})
+  const [values, setValues] = useState({email: auth.userData.email, full_name: `${auth.userData.first_name} ${auth.userData.last_name}`})
   const [bankItems, setBankItems] = useState([])
-  const {bank, account_number, amount} = values
+  const {full_name, email, amount} = values
   const onChangeText = (key, value) => {
    
     setValues({...values, [key]: value})
     
   };
   useEffect(()=>{
-    dispatch(GetNigerianBank((res,error)=>{
-      if (res !==null) {
-        const {data} = res.data
-        setBanks(data)
-        const bankSelections = []
-        data.forEach(item => {
-          bankSelections.push({label: item.name, value: item})
-        });
-        setBankItems(bankSelections)
-        console.log("___RES__NIGERIAN_BANK",res)
-      }else{
-        console.log("___ERROR__NIGERIAN_BANK",error)
-      }
+    // dispatch(GetUserBank((res,error)=>{
+    //   if (res !==null) {
+    //     const {data = []} = res.data
+    //     if (data.length) {
+         
+    //       const payload = data[0]
+       
+    //       setValues({...values, bank_id: payload.bank_id, })
+    //     }
+        
+    //     console.log("___RES__USER_BANK",res)
+    //   }else{
+    //     console.log("___ERROR__USER_BANK",error)
+    //   }
 
-    }))
+    // }))
   },[])
   return (
     <View style={styles.walletContainer}>
@@ -90,18 +92,22 @@ const Deposit = ({setstep}) => {
       </Text>
       <View style={{width: wp('80%')}}>
       <TextField
-        value={account_number}
-        onChangeText={value => onChangeText('account_number', value)}
-        placeholder="Account Number e.g 0124707068"
-        keyboardType="phone-pad"
+        value={full_name}
+        onChangeText={value => onChangeText('full_name', value)}
+        placeholder="Toyeeb Atunde"
+        placeholder="Full Name"
+        
       />
       </View>
-      {bankItems.length ? <View style={{width: wp('80%')}}>
-      <SelectField value={bank}
-        label="Select Bank"
-        items={[...bankItems]}
-        onChangeText={itemValue => onChangeText('bank', itemValue)} />
-      </View>: null}
+      <View style={{width: wp('80%')}}>
+      <TextField
+        value={email}
+        onChangeText={value => onChangeText('email', value)}
+        placeholder="atundearisekola@gmail.com"
+        placeholder="Email Address"
+        
+      />
+      </View>
       
       <View style={{marginTop: wp(15)}}>
         {/* <TouchableOpacity onPress={setstep} style={styles.buttonStyle}>
@@ -112,16 +118,8 @@ const Deposit = ({setstep}) => {
         </TouchableOpacity> */}
         <Button
           onPress={()=>{
-            dispatch(validateAccountNumber(values,(res,error)=>{
-              if (res !==null) {
-                const {data} = res.data
-               
-                console.log("___RES__Valid",res)
-              }else{
-                console.log("___ERROR__Valid_BANK",error)
-              }
-        
-            }))
+            setstep(values)
+           
           }}
           text="Proceed"
           type="primary"

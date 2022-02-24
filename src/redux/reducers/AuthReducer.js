@@ -21,11 +21,13 @@ import {
   GET_ALL_JOBS,
   SET_ALL_CATEGORIES,
   SET_EXPERIENCE_DETAILS,
+  SET_TOAST,
 } from "../action-types";
 
 const INITIAL_STATE = {
   hasAccount: false,
   loading: false,
+  toast:{},
   error: null,
   otpSuccess: null,
   allJobs: false,
@@ -162,6 +164,13 @@ const authReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: action.status,
+      };
+
+    case SET_TOAST:
+      // console.log("Loading,...");
+      return {
+        ...state,
+        toast: action.payload,
       };
     case GET_ALL_JOBS:
       // console.log("Loading,...");

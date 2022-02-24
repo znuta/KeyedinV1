@@ -1,6 +1,7 @@
 /* General Action Types */
 export const SET_FIRST_LAUNCH = "SET_FIRST_LAUNCH";
 export const SET_LOADING = "SET_LOADING";
+export const SET_TOAST = "SET_TOAST";
 
 /* Auth Action Types */
 export const SEND_OTP = "SEND_OTP";

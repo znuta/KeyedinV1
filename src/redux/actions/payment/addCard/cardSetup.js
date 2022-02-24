@@ -67,7 +67,7 @@ export const AddPaymentApi = (ref, callback) => async (dispatch, getState) =>  {
  
   let data = {
     payment_ref: ref.reference,
-    amount: 50/100,
+    amount: ref.amount,
     
   };
 
@@ -135,6 +135,7 @@ export const GetNigerianBank = (callback) => async (dispatch, getState) =>  {
     });
 };
 
+
 export const validateAccountNumber = (payload, callback) => async (dispatch, getState) =>  {
   console.log("__PAYLOAD__VSLI__", payload)
   const { code } = payload.bank
@@ -142,6 +143,103 @@ export const validateAccountNumber = (payload, callback) => async (dispatch, get
  
   dispatch(setLoading(true));
   axios.get(uri,{
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+      Authorization: 'Bearer' + ' ' + getState().auth.token,
+    },
+  }).then(res => {
+     
+      dispatch(setLoading(false));
+      callback(res,null)
+    
+    }).catch(error => {
+     
+      callback(null,error)
+     dispatch(setLoading(false));
+     
+    });
+};
+
+
+export const saveBank = (payload, callback) => async (dispatch, getState) =>  {
+  console.log("__PAYLOAD__VSLI__", payload)
+ 
+  let uri = BASEURL + `/wallets/banks/save`;
+ 
+  dispatch(setLoading(true));
+  axios.post(uri,{...payload},{
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+      Authorization: 'Bearer' + ' ' + getState().auth.token,
+    },
+  }).then(res => {
+     
+      dispatch(setLoading(false));
+      callback(res,null)
+    
+    }).catch(error => {
+     
+      callback(null,error)
+     dispatch(setLoading(false));
+     
+    });
+};
+
+
+export const GetUserBank = (callback) => async (dispatch, getState) =>  {
+  let uri = BASEURL + `/wallets/bank-accounts/${getState().auth.userData.id}`;
+
+  dispatch(setLoading(true));
+  axios.get(uri, {
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+      Authorization: 'Bearer' + ' ' + getState().auth.token,
+    },
+  }).then(res => {
+    
+      dispatch(setLoading(false));
+      callback(res,null)
+
+    }).catch(error => {
+      
+      dispatch(setLoading(false));
+      callback(null,error)
+      
+    });
+};
+
+
+export const intializePayment = (payload, callback) => async (dispatch, getState) =>  {
+  console.log("__PAYLOAD__VSLI__", payload)
+ 
+  let uri = BASEURL + `/wallets/initialize-payment-gateway`;
+ 
+  dispatch(setLoading(true));
+  axios.post(uri,{...payload},{
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+      Authorization: 'Bearer' + ' ' + getState().auth.token,
+    },
+  }).then(res => {
+     
+      dispatch(setLoading(false));
+      callback(res,null)
+    
+    }).catch(error => {
+     
+      callback(null,error)
+     dispatch(setLoading(false));
+     
+    });
+};
+
+export const tranferFund = (payload, callback) => async (dispatch, getState) =>  {
+  console.log("__PAYLOAD__VSLI__", payload)
+ 
+  let uri = BASEURL + `/wallets/send-money`;
+ 
+  dispatch(setLoading(true));
+  axios.post(uri,{...payload, user_id: getState().auth.userData.id},{
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
       Authorization: 'Bearer' + ' ' + getState().auth.token,

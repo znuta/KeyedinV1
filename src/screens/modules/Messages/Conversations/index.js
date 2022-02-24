@@ -32,57 +32,57 @@ function Conversations(props) {
   const [refreshing, setRefreshing] = useState(false);
   const [filterParam, setFilterParam] = useState("");
   const [filterResult, setFilterResult] = useState([
-    {
-      conversationWith: {
-        uid: "2383",
-        name: "Arisekola Atunde",
-        status: "online",
-        avatar: 'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80'
-      },
-      lastMessage: {
-        header: "Build an Online Shopping App",
-        text: "Hi, how ae you doing",
-        sentAt: 23313,
-        category: "message",
-        action: 'phone'
-      },
-      unreadMessageCount: 2,
-      conversationId: 2
-    },
-    {
-      conversationWith: {
-        uid: "233",
-        name: "Toyeeb Atunde",
-        status: "online",
-        avatar: 'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80'
-      },
-      lastMessage: {
-        text: "You: Alright then.. How about we set up a milestone for the....",
-        header: "Build an Online Shopping App",
-        sentAt: 2333,
-        category: "message",
-        action: 'phone'
-      },
-      unreadMessageCount: 2,
-      conversationId: 2
-    },
-    {
-      conversationWith: {
-        uid: "234",
-        name: "Ajibola A",
-        status: "offline",
-        avatar: 'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80'
-      },
-      lastMessage: {
-        header: "Build a Web App",
-        text: "You: Alright then.. How about we set up a milestone for the....",
-        sentAt: 23393,
-        category: "message",
-        action: 'phone'
-      },
-      unreadMessageCount: 2,
-      conversationId: 2
-    }
+    // {
+    //   conversationWith: {
+    //     uid: "2383",
+    //     name: "Arisekola Atunde",
+    //     status: "online",
+    //     avatar: 'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80'
+    //   },
+    //   lastMessage: {
+    //     header: "Build an Online Shopping App",
+    //     text: "Hi, how ae you doing",
+    //     sentAt: 23313,
+    //     category: "message",
+    //     action: 'phone'
+    //   },
+    //   unreadMessageCount: 2,
+    //   conversationId: 2
+    // },
+    // {
+    //   conversationWith: {
+    //     uid: "233",
+    //     name: "Toyeeb Atunde",
+    //     status: "online",
+    //     avatar: 'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80'
+    //   },
+    //   lastMessage: {
+    //     text: "You: Alright then.. How about we set up a milestone for the....",
+    //     header: "Build an Online Shopping App",
+    //     sentAt: 2333,
+    //     category: "message",
+    //     action: 'phone'
+    //   },
+    //   unreadMessageCount: 2,
+    //   conversationId: 2
+    // },
+    // {
+    //   conversationWith: {
+    //     uid: "234",
+    //     name: "Ajibola A",
+    //     status: "offline",
+    //     avatar: 'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80'
+    //   },
+    //   lastMessage: {
+    //     header: "Build a Web App",
+    //     text: "You: Alright then.. How about we set up a milestone for the....",
+    //     sentAt: 23393,
+    //     category: "message",
+    //     action: 'phone'
+    //   },
+    //   unreadMessageCount: 2,
+    //   conversationId: 2
+    // }
   ]);
 
   useEffect(() => {

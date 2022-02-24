@@ -21,6 +21,7 @@ const TextField = ({
   editable = true,
   multiline = false,
   label,
+  ...otherProps
 }) => {
   return (
     <InputGroup style={[additionalStyle.inputGroup]}>
@@ -30,9 +31,11 @@ const TextField = ({
         <TextInput
           placeholder={placeholder}
           onChangeText={input => onChangeText(input)}
+          placeholderTextColor="#C9CFD2"
           value={value}
           editable={editable}
           style={[styles.inputField, additionalStyle.inputField]}
+          {...otherProps}
         />
       </InputField>
     </InputGroup>

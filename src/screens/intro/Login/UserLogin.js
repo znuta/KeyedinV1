@@ -34,6 +34,7 @@ import {
   saveToken,
   completeRegistration,
   sendUserDetails,
+  setToast,
   // setIsAuthenticated
   
 } from 'src/redux/actions/AuthActions';
@@ -41,10 +42,13 @@ import styles from './style';
 import axios from 'axios';
 import TextField from 'src/component/TextField';
 import Toast from 'react-native-toast-message';
+import { privacyModalActive, setLocation, termsModalActive } from 'src/redux/actions/AuthActions';
+import TermsModal from 'src/component/TermsModal';
+import PrivacyModal from 'src/component/PrivacyModal';
 const UserLogin = props => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const {auth} = useSelector(state => state);
+  const {auth,ui} = useSelector(state => state);
   let _passwordinput = useRef();
   let [email, setEmail] = useState('');
   let [password, setPassword] = useState('');
@@ -81,15 +85,16 @@ const UserLogin = props => {
     let uri = BASEURL + '/auth/login';
   
     //const apikey = "73dc1cb067c39b8b3026859320a668770e064e2c";
-    const apikey = 'b68cf77ff29b7ceb92944466e64d3d6e4ed256d6';
+    const apikey = '9b276d509004d11955a380f29c65058679429862';
     let data = {
       email: email,
       password: password,
       role: 'artisan'
     };
-
+    
+    
     dispatch(setLoading(true));
-
+    
     
       //console.log("Sending Login Data: ", data);
       axios.post(uri, data).then(res => {
@@ -139,11 +144,12 @@ const UserLogin = props => {
           console.log("Something went wrong", error);
         }
             );
-            Toast.show({
-              type: 'success',
-              text1: 'Login Success',
-              text2: 'Welcome back 👋'
-            });
+            // Toast.show({
+            //   type: 'success',
+            //   text1: 'Login Success',
+            //   text2: 'Welcome back 👋'
+            // });
+            dispatch(setToast({ show: true, type: "success", message: "Welcome back 👋, it's great seeing you back here!!", title: "Login Success"}));
             dispatch(saveToken(data.token));
             dispatch(sendUserDetails(data))
             // dispatch(setIsAuthenticated(true));
@@ -153,11 +159,12 @@ const UserLogin = props => {
          
         })
         .catch(error => {
-          Toast.show({
-            type: 'error',
-            text1: 'Login failed',
-            text2: 'Error with credential'
-          });
+          // Toast.show({
+          //   type: 'error',
+          //   text1: 'Login failed',
+          //   text2: 'Error with credential'
+          // });
+          dispatch(setToast({ show: true, type: "error", message: "There is a problem signing you in !!!", title: "Login failed"}));
           dispatch(setLoading(false));
           
           console.log('Fetch Exception Caught...', error.response);
@@ -234,6 +241,7 @@ const UserLogin = props => {
               />}
               onChangeText={uemail => setEmail(uemail)}
               placeholder="Enter Email"
+              placeholderTextColor="#C9CFD2"
               keyboardType="email-address"
               autoCapitalize="none"
               ref={ref => {
@@ -334,14 +342,14 @@ const UserLogin = props => {
                 button, you agree to our
                 <Text
                   style={{color: colors.green, fontWeight: 'bold'}}
-                  onPress={() => navigation.navigate('GetStarted')}>
+                  onPress={() => dispatch(privacyModalActive(true))}>
                   {' '}
                   Terms of use
                 </Text>{' '}
                 and
                 <Text
                   style={{color: colors.green, fontWeight: 'bold'}}
-                  onPress={() => navigation.navigate('GetStarted')}>
+                  onPress={() => dispatch(termsModalActive(true))}>
                   {' '}
                   Privacy Policy
                 </Text>
@@ -363,7 +371,8 @@ const UserLogin = props => {
           </View>
         </ScrollView>
       </KeyboardAwareView>
-
+      <PrivacyModal visible={ui.privacyModalActive} />
+      <TermsModal visible={ui.termsModalActive} />
       {/* </Footer> */}
     </View>
   );

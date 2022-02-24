@@ -93,7 +93,7 @@ import {colors, hp, wp} from 'src/config/variables';
       //height: "100%",
       //backgroundColor: colors.disabled,
       //alignItems: "center",
-      marginTop: 13,
+      
       justifyContent: 'center',
       //marginBottom: 120,
       //borderRadius: 10,

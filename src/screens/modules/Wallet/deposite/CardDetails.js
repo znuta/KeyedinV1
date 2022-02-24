@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, {useState,useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -14,10 +14,14 @@ import Button from 'src/component/Button';
 import styled from 'styled-components/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-
+import {LinearProgress} from 'react-native-elements'
 
 const {width} = Dimensions.get('window');
-const CardDetails = ({setstep, _onChange=()=>{}}) => {
+const CardDetails = ({setstep, refreshing=false, _onChange=()=>{}}) => {
+  const [loading, setLoading] = useState(refreshing)
+  useEffect(()=>{
+setLoading(refreshing)
+  },[refreshing])
   return (
     <View style={styles.walletContainer}>
       <Text style={styles.walletHeader}>Enter Card Details</Text>
@@ -38,6 +42,9 @@ const CardDetails = ({setstep, _onChange=()=>{}}) => {
           to add funds to your keyedin wallet.
         </Text>
       </View>
+      {
+        loading && <LinearProgress value={loading} style={{ marginVertical: 10 }} color={colors.green} />
+      }
       <View style={styles.inputContainer}>
         <View style={styles.nairaStyle}>
           <FontAwesome name="credit-card" size={20} color="gray" />

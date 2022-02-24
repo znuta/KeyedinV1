@@ -33,10 +33,14 @@ import {
   setLoading,
   sendOTPSuccess,
   sendOTPError,
+  setToast,
 } from 'src/redux/actions/AuthActions';
 import ListItemSeparator from 'src/component/ListItemSeparator';
 import {hp} from 'src/config/variables';
 import axios from 'axios';
+import { privacyModalActive, setLocation, termsModalActive } from 'src/redux/actions/AuthActions';
+import TermsModal from 'src/component/TermsModal';
+import PrivacyModal from 'src/component/PrivacyModal';
 
 
 const PhoneNumber = props => {
@@ -44,7 +48,7 @@ const PhoneNumber = props => {
   let _phoneRef;
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const {auth} = useSelector(state => state);
+  const {auth,ui} = useSelector(state => state);
 
   const [phone, setPhone] = useState('');
   const [country, setCountry] = useState('234');
@@ -88,11 +92,8 @@ const PhoneNumber = props => {
        
       })
         .catch(error => {
-          Toast.show({
-            type: 'error',
-            text1: 'Registration failed',
-            text2: 'Error with Phone number'
-          });
+         
+          dispatch(setToast({ show: true, type: "error", message: "There is a problem signing you up, this user already exist", title: "Signup failed"}));
         dispatch(setLoading(false));
         dispatch(sendOTPError(error));
       });
@@ -185,14 +186,14 @@ const PhoneNumber = props => {
                       button, you agree to our
                       <Text
                         style={{color: colors.green, fontWeight: 'bold'}}
-                        onPress={() => navigation.navigate('GetStarted')}>
+                        onPress={() => dispatch(privacyModalActive(true))}>
                         {' '}
                         Terms of use
                       </Text>{' '}
                       and
                       <Text
                         style={{color: colors.green, fontWeight: 'bold'}}
-                        onPress={() => navigation.navigate('GetStarted')}>
+                        onPress={() => dispatch(termsModalActive(true))}>
                         {' '}
                         Privacy Policy
                       </Text>
@@ -226,6 +227,8 @@ const PhoneNumber = props => {
             {auth.loading && <Loader />}
           </KeyboardAwareScrollView>
         </Container>
+        <PrivacyModal visible={ui.privacyModalActive} />
+      <TermsModal visible={ui.termsModalActive} />
       </View>
     </View>
   );

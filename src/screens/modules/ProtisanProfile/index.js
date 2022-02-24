@@ -12,7 +12,9 @@ import {
   StatusBar,
   Platform,
   SafeAreaView,
-  ScrollView
+  ScrollView,
+  ImageBackground
+
 } from 'react-native';
 import styled from 'styled-components';
 
@@ -96,15 +98,17 @@ function ProtisanProfile(props) {
   const [expertises, setExpertises] = useState({});
   const [experience, setExperience] = useState([]);
   const [education, setEducation] = useState([]);
-  const [videoUrl, setvideoUrl] = useState('');
+  const [videoUrl, setvideoUrl] = useState('https://vjs.zencdn.net/v/oceans.mp4');
   const [rating, setRating] = useState({});
   const [jobInsight, setJobInsight] = useState({});
   const [average_rating, setAverage_rating] = useState('');
   const [quality, setQuality] = useState('');
+  const [play, setPlay] = useState(true)
   const [reviewsd, setReviewsd] = useState([]);
   const [view, setView] = useState({});
   const { auth  } = useSelector(state => state);
   const { params = {} } = props.route || {}
+
   
   const defaultImg =
     'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80';
@@ -758,7 +762,7 @@ const GalleryVideoModal = item => {
                 justifyContent: 'center',
               }}>
               {console.log('video', videoUrl)}
-              {videoUrl != '' ? (
+              {videoUrl !== '' ? (
                 <Video
                   source={{
                     uri: videoUrl,
@@ -1131,30 +1135,30 @@ const PortfolioView = ({item}) => {
 
     return (
       
-          <TouchableOpacity
-            key={item.id}
-            style={{
-              width: wp('32%'),
-              height: hp('20%'),
-              marginBottom: 5,
-              marginHorizontal: 2,
-              // backgroundColor: 'green'
-            }}
-            onPress={() => {
-              setModalVisible(true);
-              setPreimage(item);
-              //GalleryModal(item);
-              //setActiveGallery(index);
-            }}>
-           
-            <Image
-              source={{uri: item.portfolio}}
-              resizeMode='contain'
-              style={{ borderRadius: 0, borderWidth: 2,width: wp('32%'),
-              height: hp('20%'),}}
-            />
-           
-          </TouchableOpacity>
+      <TouchableOpacity
+      key={item.id}
+      style={{
+        width: wp('32%'),
+        height: hp('20%'),
+        marginBottom: 5,
+        marginHorizontal: 2,
+        // backgroundColor: 'green'
+      }}
+      onPress={() => {
+        setModalVisible(true);
+        setPreimage(item);
+        //GalleryModal(item);
+        //setActiveGallery(index);
+      }}>
+     
+      <Image
+        source={{uri: item.portfolio}}
+        resizeMode='contain'
+        style={{ borderRadius: 0, width: wp('32%'),
+        height: hp('20%'),}}
+      />
+     
+    </TouchableOpacity>
          
     );
  
@@ -1269,19 +1273,19 @@ const renderContent = () => {
       {/* <StatusBar hidden={false} /> */}
       <View style={{height: hp('30%')}}>
            {renderNavBar()}
-            {videoUrl === '' ? (
+            {videoUrl !== '' ? (
               
                   <Video
-                    source={{
-                      uri: videoUrl,
-                    }}
-                    ref={(ref) => {
-                    console.log("__REF__", ref)
-                    }} 
-                    style={{height: hp('30%'), }}
-                    shouldPlay
-                    resizeMode={'contain'}
-                    rate={1.0}
+                  source={{uri: videoUrl}}
+                  ref={(ref)=>{
+                 
+                console.log("__PLAYER__REF__", ref)
+                  }} 
+                  
+                  style={{flex: 1, color: colors.green }}
+                 controls
+                  resizeMode={'cover'}
+                  paused={play}
                   />
                  
                 ) : (
@@ -1299,7 +1303,7 @@ const renderContent = () => {
       <GalleryModal />
       <GalleryVideoModal />
       {/* <MessageFAB /> */}
-      <SafeAreaView style={{}}>
+      {/* <SafeAreaView style={{}}>
         <View
           style={{
             flexDirection: 'row',
@@ -1307,8 +1311,8 @@ const renderContent = () => {
             paddingHorizontal: 20,
 
             paddingVertical: hp('2%'),
-          }}>
-          <TouchableOpacity
+          }}> */}
+          {/* <TouchableOpacity
             onPress={() => {
               navigation.navigate('CreateJobOffer', {...artisan});
             }}>
@@ -1322,7 +1326,7 @@ const renderContent = () => {
               />
               <Text style={{color: colors.green, left: 28}}>Assign Job</Text>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           {/* <TouchableOpacity
             onPress={() => {
@@ -1339,8 +1343,8 @@ const renderContent = () => {
               <LogoutIcon style={{marginTop: -20}} />
             </View>
           </TouchableOpacity> */}
-        </View>
-      </SafeAreaView>
+        {/* </View>
+      </SafeAreaView> */}
 
       <RBSheet
           ref={refRBSheet}

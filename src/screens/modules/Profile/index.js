@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState,useRef, useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -54,6 +54,7 @@ import {
   sendExpert,
   saveAvatar,
   GetExpertiseFromApi,
+  GetPortfolio,
 } from 'src/redux/actions/AuthActions';
 import ReviewItem from 'src/component/ReviewItem';
 
@@ -82,6 +83,7 @@ function ArtisanProfile(props) {
   // const [reviews, setReviews] = useState(REVIEWS);
   const [reviewart, setReviewart] = useState('');
   const [activeGallery, setActiveGallery] = useState(null);
+  const [portfolio, setPortfolio] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [videoVisible, setVideoVisible] = useState(false);
   const [artisan, setArtisan] = useState({});
@@ -89,7 +91,7 @@ function ArtisanProfile(props) {
   const [preimage, setPreimage] = useState({});
   const [imchange, setImchange] = useState(true);
   const [expertises, setExpertises] = useState({});
-  const [videoUrl, setvideoUrl] = useState('https://www.youtube.com/watch?v=5f7hpKr3LKQ');
+  const [videoUrl, setvideoUrl] = useState('https://vjs.zencdn.net/v/oceans.mp4');
   const [rating, setRating] = useState({});
   const [jobInsight, setJobInsight] = useState({});
   const [average_rating, setAverage_rating] = useState('');
@@ -98,7 +100,7 @@ function ArtisanProfile(props) {
   const [view, setView] = useState({});
   const { auth  } = useSelector(state => state);
   const {expertise = {}} = auth
-  
+  const [play, setPlay] = useState(true)
   const defaultImg =
     'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80';
   
@@ -116,6 +118,13 @@ function ArtisanProfile(props) {
     GetRating();
     GetInsights();
     GetArtisanReview();
+    GetPortfolio(auth.userData.id,(res,err)=>{
+      if (err !== null) {
+        
+      }else{
+        setPortfolio(res)
+      }
+    })
     // setLoading(false);
   }, []);
 
@@ -228,21 +237,18 @@ function ArtisanProfile(props) {
 
  
   const _pickPortfolio = async () => {
-    const {saveGovId} = props;
 
     try {
       let result = await launchImageLibrary({
         mediaType: 'photo',
         aspect: [4, 3],
         quality: 0.4,
-        base64: true,
+        includeBase64: true,
       });
       if (!result.cancelled) {
-        AddPortfoliod(
-          `data:${result.type}/${
-            result.uri.split('.')[result.uri.split('.').length - 1]
-          };base64,${result.base64}`,
-        );
+        const { uri, type, base64, fileName, fileSize, width, height } = result.assets[0]
+        const file = {uri, type, base64,name:fileName , size:fileSize, width, height }
+        AddPortfoliod(file);
       }
 
     } catch (E) {
@@ -323,23 +329,23 @@ function ArtisanProfile(props) {
   };
 
   const DeletePortfolio = id => {
-    let uri = BASEURL + `/artisan/portfolio/${id}`;
+    let uri = BASEURL + `/portfolio/${id}`;
     //setLoading(true);
     axios.delete(uri, {
      
-      //body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json;charset=utf-8",
         Authorization: 'Bearer' + ' ' + auth.token,
       },
     })
-      
       .then(res => {
-        console.log({res});
-        GetProfile();
-      })
-      .then(rest => {
-        setArtisanImg(auth.avatar);
+        GetPortfolio(auth.userData.id,(res,err)=>{
+          if (err !== null) {
+            
+          }else{
+            setPortfolio(res)
+          }
+        })
        
       })
       .catch(error => {
@@ -369,61 +375,56 @@ function ArtisanProfile(props) {
       });
   };
 
-  const GetPortfolio = () => {
-    let uri = BASEURL + `/artisan/portfolio/`;
+  // const GetPortfolio = () => {
+  //   let uri = BASEURL + `/portfolio/${auth.userData.id}`;
 
-    //setLoading(true);
-    axios(uri, {
+  //   //setLoading(true);
+  //   axios.get(uri, {
+  //     headers: {
+  //       "Content-Type": "application/json;charset=utf-8",
+  //       Authorization: 'Bearer' + ' ' + auth.token,
+  //     },
+  //   })
      
-      //body: JSON.stringify(data),
-      headers: {
-        //"Content-Type": "application/json;charset=utf-8",
-        Authorization: 'Bearer' + ' ' + auth.token,
-      },
-    })
-     
-      .then(res => {
+  //     .then(res => {
         
-        console.log('This is the portfolio', res.data);
-        if (res.data.error) {
-          alert('error');
-        } else {
-          const { data = {} } = res.data
-          dispatch({type: 'API_PORTFOLIO_DATA', data:data.portfolio})
-        }
-      })
-      .catch(error => {
-        //setLoading(false);
+  //       console.log('This is the portfolio', res.data);
+  //         const { data = {} } = res.data
+  //         dispatch({type: 'API_PORTFOLIO_DATA', data:data.portfolio})
+       
+  //     })
+  //     .catch(error => {
+  //       //setLoading(false);
   
-      });
-  };
+  //     });
+  // };
 
-  const _pickAvatar = async () => {
-    let {saveAvatar} = props;
-    try {
-      let result = await launchImageLibrary({
-        mediaType: 'photo',
-        //allowsEditing: true,
-        aspect: [4, 3],
-        quality: 0.4,
-        //allowsMultipleSelection: false,
-        base64: true,
-      });
-      if (!result.cancelled) {
-        // console.log(detectFaces(result.uri));
+  // const _pickAvatar = async () => {
+  //   let {saveAvatar} = props;
+  //   try {
+  //     let result = await launchImageLibrary({
+  //       mediaType: 'photo',
+  //       //allowsEditing: true,
+  //       aspect: [4, 3],
+  //       quality: 0.4,
+  //       //allowsMultipleSelection: false,
+  //       base64: true,
+  //     });
+  //     if (!result.cancelled) {
+  //       // console.log(detectFaces(result.uri));
 
-        saveAvatar(result.uri);
-        UploadAvatarToApi(
-          `data:${result.type}/${
-            result.uri.split('.')[result.uri.split('.').length - 1]
-          };base64,${result.base64}`,
-        );
-      }
-      //console.log(Object.keys(result));
-    } catch (E) {
-      console.log(E);
-    }
-  };
+  //       saveAvatar(result.uri);
+  //       UploadAvatarToApi(
+  //         `data:${result.type}/${
+  //           result.uri.split('.')[result.uri.split('.').length - 1]
+  //         };base64,${result.base64}`,
+  //       );
+  //     }
+  //     //console.log(Object.keys(result));
+  //   } catch (E) {
+  //     console.log(E);
+  //   }
+  // };
 
   const _handleLogout = () => {
     Alert.alert('Logout', 'Are you sure you want to logout ?', [
@@ -451,52 +452,57 @@ function ArtisanProfile(props) {
 
  
 
-  const UploadAvatarToApi = text => {
-    let uri = BASEURL + `/media/user/${auth.userData.id}`;
-    let data = {
-      image: text,
-    };
-    setLoading(true);
-    axios.post(uri, data,{
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8',
-        Authorization: 'Bearer' + ' ' + auth.token,
-      },
-    }).then(res => {
-        console.log({res});
-        setLoading(false);
+  // const UploadAvatarToApi = text => {
+  //   let uri = BASEURL + `/media/user/${auth.userData.id}`;
+  //   let data = {
+  //     image: text,
+  //   };
+  //   setLoading(true);
+  //   axios.post(uri, data,{
+  //     headers: {
+  //       'Content-Type': 'application/json;charset=utf-8',
+  //       Authorization: 'Bearer' + ' ' + auth.token,
+  //     },
+  //   }).then(res => {
+  //       console.log({res});
+  //       setLoading(false);
         
-      }) .catch(error => {
-        setLoading(false);
+  //     }) .catch(error => {
+  //       setLoading(false);
        
-      });
+  //     });
    
-  };
+  // };
 
   const AddPortfoliod = text => {
-    let uri = BASEURL + '/artisan/portfolio';
+    let uri = BASEURL + '/portfolio';
 
     let data = {
       portfolio: text,
+      name: '',
+      description:'',
+      user_id: auth.userData.id,
+      portfolio_type: "image",
+      portfolio_url:text
     };
     setLoading(true);
-    axios.post(uri, {
-      
-      body: JSON.stringify(data),
+    axios.post(uri,data, {
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
         Authorization: 'Bearer' + ' ' + auth.token,
       },
-    })
-      .then(res => res.json())
-      .then(res => {
-        console.log({res});
+    }) .then(res => {
+        console.log("New Port",res);
+        const {data=[]} = res.data
         setLoading(false);
+        GetPortfolio(auth.userData.id,(res,err)=>{
+          if (err !== null) {
+            
+          }else{
+            setPortfolio(res)
+          }
+        })
         //setImchange(!imchange);
-      })
-      .then(res => {
-        
-        navigation.navigate('ArtisanProfile');
       })
       .catch(error => {
         console.log('the error', error);
@@ -670,7 +676,7 @@ function ArtisanProfile(props) {
                 <TouchableHighlight
                   onPress={() => {
                    
-                    dispatch({type: 'TOGGLE_PORTFOLIO', id:preimage.id})
+                    // dispatch({type: 'TOGGLE_PORTFOLIO', id:preimage.id})
                     _handleDeletePortfolio(preimage.id);
                   }}>
                   <MaterialCommunityIcons
@@ -1056,9 +1062,10 @@ function ArtisanProfile(props) {
                   }}>
                   <MaterialCommunityIcons name="camera" style={{color: colors.green, fontSize: wp('8%')}} />
                 </TouchableOpacity>
-         
+
+               
           <FlatList
-            data={[{
+            data={portfolio || [{
               id: "3",
               portfolio: defaultImg
             },{
@@ -1123,7 +1130,7 @@ function ArtisanProfile(props) {
               <Image
                 source={{uri: item.portfolio}}
                 resizeMode='contain'
-                style={{ borderRadius: 0, borderWidth: 2,  width: wp('32%'),
+                style={{ borderRadius: 0, width: wp('32%'),
                 height: hp('20%'),}}
               />
              
@@ -1261,20 +1268,59 @@ function ArtisanProfile(props) {
       /> */}
 <View style={{height: hp('30%')}}>
   {renderNavBar()}
-            {videoUrl === '' ? (
-              
-                  <Video
-                    source={{
-                      uri: videoUrl,
-                    }}
-                    ref={(ref) => {
-                    console.log("__REF__", ref)
+            {videoUrl !== '' ? (
+              <View style={{flex: 1, }}>
+               
+                 <Video
+                 
+                  source={{uri: videoUrl}}
+                    ref={(ref)=>{
+                   
+                  console.log("__PLAYER__REF__", ref)
                     }} 
-                    style={{height: hp('30%'), }}
-                    shouldPlay
-                    resizeMode={'contain'}
-                    rate={1.0}
+                    
+                    style={{flex: 1, color: colors.green }}
+                   controls
+                    resizeMode={'cover'}
+                    paused={play}
+                    
                   />
+                   {/* <TouchableOpacity
+                  style={{
+                    position: 'absolute',
+                    top: hp('12%'),
+                    zIndex: 9000,
+                    alignSelf: 'center',
+                    
+                    
+
+                  
+
+                  }}
+                  onPress={()=>{
+                    setPlay(!play)
+                  }}> 
+
+                  {!play?<AntDesign
+                name="pause"
+                
+                color={colors.green}
+                style={{
+                  fontSize: wp('15%'),
+                  opacity: 0.3
+                }}
+              />:<AntDesign
+              name="play"
+              
+              color={colors.green}
+              style={{
+                fontSize: wp('15%')
+              }}
+            /> }
+                
+              </TouchableOpacity> */}
+              </View>
+                 
                  
                 ) : (
                   <ImageBackground source={{
@@ -1283,6 +1329,7 @@ function ArtisanProfile(props) {
 
                   </ImageBackground>
                 )}
+                
        </View>
       <View style={{flex:1}}>
       {renderContent()}

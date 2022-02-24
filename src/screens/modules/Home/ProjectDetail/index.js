@@ -257,6 +257,7 @@ const {params = {}} = props.route
                 renderRevealedFooter={_renderRevealedFooter}>
                 <JobDesc>{item.description}</JobDesc>
               </ReadMore>
+              
               <View
                 style={{
                   flexDirection: 'row',
@@ -264,7 +265,7 @@ const {params = {}} = props.route
                   flex: 1,
                 }}>
                 <FlatList
-                  data={item.skillSet}
+                  data={item.skill_set}
                   showsVerticalScrollIndicator={false}
                   showsHorizontalScrollIndicator={false}
                   bounces={false}
@@ -291,7 +292,7 @@ const {params = {}} = props.route
                       fontSize: wp('4%'),
                       color: colors.green,
                       fontWeight: '500',
-                      marginLeft: 7,
+                      marginLeft: wp('2%'),
                     }}
                   />
                   <Text
@@ -299,7 +300,7 @@ const {params = {}} = props.route
                       fontSize: wp('3.5%'),
                       color: colors.green,
                       fontWeight: '500',
-                      marginLeft: 7,
+                      marginLeft: wp('2%'),
                     }}>
                     {item.status || "Open"}
                   </Text>
@@ -882,9 +883,10 @@ const ProposalContent = styled.Text`
 `;
 
 const StatusWrap = styled.View`
-  flex: 0.4;
-  flex-direction: row;
-  align-items: center;
+flex: 0.5;
+flex-direction: row;
+align-items: center;
+margin-right: ${wp('5%')}
 `;
 const DescriptionText = styled.Text`
 font-size: ${wp('3%')}

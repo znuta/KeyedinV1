@@ -13,6 +13,8 @@ import styles, { typeStyle } from './styles';
 const Button = ({
   text,
   icon,
+  loading,
+  disabled,
   onPress = () => { },
   additionalStyle = {},
   type = 'primary',
@@ -21,6 +23,7 @@ const Button = ({
   
   return (
     <TouchableOpacity
+    disabled={disabled}
       {...props}
       onPress={onPress}
       style={[styles.button, typeStyle[type]?.button, additionalStyle.button]}>

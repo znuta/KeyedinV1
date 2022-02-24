@@ -274,7 +274,7 @@ const onChangeText = (key, data) => {
                   flex: 1,
                 }}>
                 <FlatList
-                  data={item.skillSet}
+                  data={item.skill_set}
                   showsVerticalScrollIndicator={false}
                   showsHorizontalScrollIndicator={false}
                   bounces={false}

@@ -19,6 +19,7 @@ import {
   SET_LOCATION,
   SET_EDUCATION_DETAILS,
   SET_EXPERIENCE_DETAILS,
+  SET_TOAST,
 } from 'src/redux/action-types';
 import {BASEURL} from 'src/constants/Services';
 import {CometChat} from '@cometchat-pro/react-native-chat';
@@ -125,6 +126,13 @@ const setLoading = status => {
   return {
     type: SET_LOADING,
     status: status,
+  };
+};
+
+const setToast = ({ show= false, type= "", message= "", title= "", callback}) => {
+  return {
+    type: SET_TOAST,
+    payload: { show, type, message, title, callback},
   };
 };
 const saveId = (_id) => {return { type: SAVE_ID, _id: _id }}
@@ -903,6 +911,30 @@ const getArtisanEducation = async (id, callback) => async dispatch => {
      
     });
 };
+
+const GetPortfolio = async(id, callback) => {
+  console.log("___ID__++", id)
+  let uri = BASEURL + `/portfolio/${id}`;
+  const token = await getToken()
+  //props.setLoading(true);
+  axios.get(uri, {
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+      Authorization: 'Bearer' + ' ' + token,
+    },
+  }).then(res => {
+
+    console.log('__RES_Portfolio__', res);
+    const { data = {} } = res.data
+    callback(data,null)
+  
+    })
+    .catch(error => {
+      callback(null,error)
+      console.log("___ERROR__Portifolio@", error.response)
+     
+    });
+};
 const saveAvatar= path => async dispatch =>{
       dispatch({
         type: SAVE_AVATAR,
@@ -910,6 +942,8 @@ const saveAvatar= path => async dispatch =>{
       })}
 
 export {
+  setToast,
+  GetPortfolio,
   GetArtisanExperience,
 getArtisanExpertise,
 getArtisanEducation,

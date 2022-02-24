@@ -216,7 +216,7 @@ function ProjectsList(props) {
           data={proposals}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{paddingBottom: 80}}
-          style={{flex: 1, paddingHorizontal: wp('4%')}}
+          style={{flex: 1,}}
           renderItem={({item, index}) => {
             return <ProjectItem onPress={()=>navigation.navigate("JobOfferDetail", {data: item, type: 'Home'})} item={item} />;
           }}
@@ -378,7 +378,7 @@ const ProjectsContainer = styled.ScrollView`
 `;
 
 const ProjectsWrap = styled.View`
-padding-horizontal: ${wp('4%')}
+
 `;
 
 const ProjectCard = styled.View`

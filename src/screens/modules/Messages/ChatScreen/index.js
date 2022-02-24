@@ -11,7 +11,9 @@ import {
   TouchableHighlight,
   Modal,
     ActivityIndicator,
-    Text
+    Text,
+    SafeAreaView
+    
 } from "react-native";
 import { CometChat } from "@cometchat-pro/react-native-chat";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -972,7 +974,7 @@ export class ChatScreen extends Component {
 
     const rightComponent = () => {
       return (
-        <View style={{ flexDirection: 'row', justifyContent: "flex-end", alignItems: "center", width: wp('100%') }}>
+        <View style={{ flexDirection: 'row',   alignSelf: "flex-end", justifyContent: "flex-end", alignItems: "center",  }}>
           <View style={{alignItems: "flex-end"}}>
             <Text style={{ color: colors.white, fontSize: wp('5%'), fontWeight: '700' }}>{ this.state.username }</Text>
             <Text style={{color: colors.white,fontSize: wp('3%')}}>5:03PM GMT</Text>
@@ -989,7 +991,8 @@ export class ChatScreen extends Component {
             onPress={() => {
               //navigation.openDrawer();
               //Keyboard.dismiss();
-              navigation.navigate("Profile");
+              // navigation.navigate("Profile");
+              this.props.navigation.goBack()
             }}
           >
             {/* <EntypoIcon name="menu" size={27} style={{}} /> */}
@@ -1042,10 +1045,12 @@ export class ChatScreen extends Component {
     }
     return (
       <KeyboardAwareView animated={true}>
-        <Header
+        {/* <Header
         placement="center"
           leftComponent={
-          <View>
+            () => {
+              return (
+          <View >
             <TouchableOpacity
             style={{
             justifyContent: "flex-end",
@@ -1065,8 +1070,9 @@ export class ChatScreen extends Component {
                   />
               </TouchableOpacity>
               </View>
+              )}
               }
-        
+             
           rightComponent={ rightComponent}
         barStyle={"light-content"}
         containerStyle={{
@@ -1077,7 +1083,54 @@ export class ChatScreen extends Component {
           borderBottomLeftRadius:30,
           borderBottomRightRadius:30
         }}
-      />
+      /> */}
+       <SafeAreaView
+        style={{
+          backgroundColor: colors.green,
+          zIndex: 900000000,
+          borderBottomRightRadius: wp('10%'),
+          borderBottomLeftRadius: wp('10%'),
+          flexDirection: "row",
+        }}>
+        <View
+          style={{
+            backgroundColor: 'transparent',
+           flex: 1,
+            flexDirection: "row",
+            paddingVertical: hp('2%'),
+            paddingHorizontal: hp('1%'),
+            borderBottomRightRadius: wp('10%'),
+          borderBottomLeftRadius: wp('10%'),
+          }}>
+          
+            <TouchableOpacity
+            style={{
+            justifyContent: "flex-end",
+            alignItems: "center", 
+            alignSelf: 'flex-start',
+                padding: 8,    
+                marginRight: 'auto'
+            
+            }}
+              onPress={() => {
+              this.props.navigation.goBack()
+            }}
+            >
+                <Feather
+                    name="arrow-left"
+                    size={24}
+                    color="white"
+                    style={{ opacity: 0.8,  }}
+                  />
+              </TouchableOpacity>
+           
+
+              {rightComponent()}
+          
+            
+        </View>
+        
+      </SafeAreaView>
         <PreviewModal
           showmodal={this.state.showModal}
           onClose={() => this.setState({ showModal: false, mediaMsg: "" })}

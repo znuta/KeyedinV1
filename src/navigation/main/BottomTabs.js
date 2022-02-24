@@ -50,7 +50,7 @@ import EditExpertise from 'src/screens/modules/EditProfile/Expertise';
 import EditEmployment from 'src/screens/modules/EditProfile/Experience';
 import EditUser from 'src/screens/modules/EditProfile/EditUser';
 import Conversations from 'src/screens/modules/Messages/Conversations';
-import {colors} from 'src/config/variables';
+import {colors, hp,wp,fonts} from 'src/config/variables';
 import { CallingScreen } from 'src/screens/modules/Messages/CallingScreen';
 
 
@@ -84,8 +84,19 @@ export function HomeTabs({navigation, route}) {
       initialRouteName="Homex"
       screenOptions={{
         headerShown: false,
+        tabBarStyle: {
+          borderTopRightRadius: 35,
+          borderTopWidth: 1,
+          borderTopLeftRadius: 35,
+          
+          
+        },
+        tabBarLabelStyle: {
+          marginBottom: hp('1%')
+        }
         
       }}
+     
       tabBarOptions={{
         activeTintColor: colors.white, // Color of tab when pressed
         inactiveTintColor: '#b5b5b5', // Color of tab when not pressed
@@ -94,13 +105,16 @@ export function HomeTabs({navigation, route}) {
         showLabel: 'true', //(Platform.OS !== 'android'), //No label for Android
         labelStyle: {
           fontSize: 11,
+          
         },
+        
         style: {
           //backgroundColor: colors.white, // Makes Android tab bar white instead of standard blue
           borderTopRightRadius: 35,
           borderTopWidth: 1,
           borderTopLeftRadius: 35,
           overflow: 'hidden',
+          paddingBottom: 10
           //height: (Platform.OS === 'ios') ? 58 : 60 // I didn't use this in my app, so the numbers may be off.
         },
       }}>
@@ -109,6 +123,9 @@ export function HomeTabs({navigation, route}) {
         component={Home}
         
         options={{
+          tabBarItemStyle: {
+            borderTopLeftRadius: 35,
+          },
           tabBarLabel: 'Home',
           tabBarIcon: ({color, size, focused}) =>
            
@@ -152,6 +169,9 @@ export function HomeTabs({navigation, route}) {
         name="Wallet"
         component={Wallet}
         options={{
+          tabBarItemStyle: {
+            borderTopRightRadius: 35,
+          },
           tabBarLabel: 'Wallet',
           tabBarIcon: ({color, size, focused}) =>
           

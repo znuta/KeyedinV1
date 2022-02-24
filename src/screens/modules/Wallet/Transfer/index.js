@@ -12,17 +12,19 @@ import {wp, fonts, colors, hp} from 'src/config/variables';
 import TextField from 'src/component/TextField';
 import Button from 'src/component/Button';
 import styled from 'styled-components/native';
-import { GetNigerianBank, validateAccountNumber } from 'src/redux/actions/payment/addCard/cardSetup';
-import { useDispatch } from 'react-redux';
+import { GetNigerianBank, tranferFund, validateAccountNumber } from 'src/redux/actions/payment/addCard/cardSetup';
+import { useDispatch, useSelector } from 'react-redux';
 import SelectField from 'src/component/SelectField';
+import Loader from 'src/component/Loader';
 
 const {width} = Dimensions.get('window');
 const Transfer = ({setstep}) => {
   const dispatch = useDispatch()
+  const {auth} = useSelector(state=>state)
   const [banks, setBanks] = useState([])
-  const [values, setValues] = useState({"bank": {}})
+  const [values, setValues] = useState({})
   const [bankItems, setBankItems] = useState([])
-  const {bank, account_number, amount} = values
+  const {bank, receiver_email, amount} = values
 
   const onChangeText = (key, value) => {
    
@@ -50,6 +52,7 @@ const Transfer = ({setstep}) => {
 
   return (
     <View style={styles.walletContainer}>
+       {auth.loading && <Loader />}
       <Text style={styles.walletHeader}> Transfer Amount</Text>
       <View
         style={{
@@ -94,10 +97,12 @@ const Transfer = ({setstep}) => {
       </Text>
       <View style={{width: wp('80%')}}>
       <TextField
-       label="Account Email"
-        value={account_number}
-        onChangeText={value => onChangeText('account_email', value)}
-        placeholder="Account Email e.g 0124707068"
+       label="Receipient Email"
+        value={receiver_email}
+        keyboardType="email-address"
+         autoCapitalize="none"
+        onChangeText={value => onChangeText('receiver_email', value)}
+        placeholder="Account Email e.g atundearisekola@gmail.com"
         
       />
       </View>
@@ -106,16 +111,9 @@ const Transfer = ({setstep}) => {
        
         <Button
           onPress={()=>{
-            dispatch(validateAccountNumber(values,(res,error)=>{
-              if (res !==null) {
-                const {data} = res.data
-               
-                console.log("___RES__Valid",res)
-              }else{
-                console.log("___ERROR__Valid_BANK",error)
-              }
-        
-            }))
+
+            setstep(values)
+            
           }}
           text="Proceed"
           type="primary"

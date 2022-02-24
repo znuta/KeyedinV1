@@ -179,6 +179,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  walletHeader: {
+    fontSize: wp('8%'),
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontFamily: 'Poppins',
+    marginTop: hp('-15%'),
+    marginBottom: hp('5%')
+
+
+  },
   contentWrapper: {
     backgroundColor: 'white',
     flex: 1,

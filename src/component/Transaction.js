@@ -3,8 +3,10 @@ import { View, Text, Image } from "react-native";
 import styled from "styled-components";
 import colors from "../config/colors";
 import Colors from "../constants/Colors";
+import moment from "moment"
 
-export default function Transaction() {
+export default function Transaction({ item }) {
+  const {sub_title, amount,createdAt} = item
   return (
     <TransactionItemWrap>
       <TransactionBody>
@@ -15,11 +17,11 @@ export default function Transaction() {
           />
         </TransactionImage>
         <TransactionDescription>
-          <TransactionTitle>Payment for Mobile App</TransactionTitle>
-          <TransactionMeta>August 19, 2020 &bull; 10:37 AM</TransactionMeta>
+          <TransactionTitle>{sub_title}</TransactionTitle>
+          <TransactionMeta>{moment(createdAt).format('MMMM Do YYYY, h:mm:ss a')}</TransactionMeta>
         </TransactionDescription>
       </TransactionBody>
-      <TransactionAmount>+ &#8358; 50000</TransactionAmount>
+      <TransactionAmount>+ &#8358; {amount}</TransactionAmount>
     </TransactionItemWrap>
   );
 }

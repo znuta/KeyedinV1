@@ -16,7 +16,7 @@
    useColorScheme,
    View,
  } from 'react-native';
- import SplashScreen from './src/screens/intro/SplashScreen/SplashScreen';
+ import Splash from './src/screens/intro/SplashScreen/SplashScreen';
  import rootReducer from './src/redux/reducers';
  import {persistStore, persistReducer} from 'redux-persist';
  import {createLogger} from 'redux-logger';
@@ -28,8 +28,9 @@
  import {CometChat} from '@cometchat-pro/react-native-chat';
  import messaging from '@react-native-firebase/messaging';
 import axios from 'axios';
+import SplashScreen from 'react-native-splash-screen';
 
- let appID = '2008518ba66d45e4';
+ let appID = '203940f744fdbcce';
  let region = 'us';
  let appSetting = new CometChat.AppSettingsBuilder()
    .subscribePresenceForAllUsers()
@@ -96,6 +97,10 @@ import axios from 'axios';
 
     return unsubscribe;
   }, []);
+
+   useEffect(() => {
+        SplashScreen.hide();
+      }, []);
  
  
    return (
@@ -109,7 +114,7 @@ import axios from 'axios';
            hidden={hidden}
          />
  
-         <SplashScreen />
+         <Splash />
        </PersistGate>
      </Provider>
    );

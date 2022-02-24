@@ -15,7 +15,7 @@ import Feather from 'react-native-vector-icons/Feather'
 import ReadMore from 'react-native-read-more-text';
 import {useNavigation} from '@react-navigation/native';
 import colors from 'src/config/colors';
-import {hp, wp} from 'src/config/variables';
+import {hp, wp, fonts} from 'src/config/variables';
 
 const ProjectItem = props => {
     let item = props.item;
@@ -222,7 +222,7 @@ const {onPress=()=>{}} = props
     z-index: 10;
     background-color: ${colors.white};
     border-radius: ${wp('3%')};
-  
+    margin-horizontal: ${wp('4%')}
     min-width: 40%;
     min-height: 20%;
   
@@ -239,6 +239,7 @@ const {onPress=()=>{}} = props
     font-size: ${wp('4%')};
     font-weight: 700;
     line-height: 25px;
+    font-family: ${fonts.PRIMARY_REGULLAR}
   `;
   
   const Meta = styled.View`
@@ -267,6 +268,7 @@ const {onPress=()=>{}} = props
     line-height: ${hp('1.8%')};
     font-weight: 400;
     color: ${colors.medium};
+    font-family: ${fonts.PRIMARY_REGULLAR}
   `;
   
   const Footer = styled.View`

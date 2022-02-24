@@ -78,7 +78,9 @@ const ReviewForm = props => {
 
   return (
     <View style={styles.container2}>
-      <View style={{marginVertical: hp('2%'), alignItems: 'center', }}>
+        <Text style={styles.walletHeader}> Review User</Text>
+      <View style={{marginVertical: hp('2%'),  alignItems: 'center', justifyContent: 'center' }}>
+    
           <StarRating
           starStyle={{marginHorizontal: wp('3%')}}
              selectedStar={(rating) => {

@@ -82,6 +82,7 @@ function JobSearch(props) {
   const refRBSheet = useRef();
   const [searchItem, setsearchItem] = useState('');
   const [filters, setFilter] = useState({});
+  const {priority = ""} = filters
   const [searchFocused, setSearchFocused] = useState(false);
   const [isSwitchOn, setIsSwitchOn] = useState(false);
   const {auth, expert} = useSelector(state => state);
@@ -218,8 +219,9 @@ function JobSearch(props) {
   };
 
   const filterJobs = () => {
-    const {latitude="", longitude = "", priority="", skill="", profession} = filters
-    let uri = BASEURL + `/projects/filter/longitude=${longitude}&latitude=${latitude}&priority=${priority}&skill_set=${skill}&profession=${profession}`;
+    const {latitude="", longitude = "", priority="", skill="", profession=""} = filters
+    
+    let uri = BASEURL + `/projects/search/filter?longitude=${longitude}&latitude=${latitude}&priority=${priority}&skill_set=${skill}&profession=${profession}`;
     const data = {
       longitude: auth.userData.location.lng,
       latitude: auth.userData.location.lat
@@ -228,17 +230,17 @@ function JobSearch(props) {
     axios.get(uri,{
       headers: {
         "Content-Type": "application/json;charset=utf-8",
-        Authorization: 'Bearer' + ' ' + props.auth.token,
+        Authorization: 'Bearer' + ' ' + auth.token,
       },
     }).then(res => {
       const {data} = res.data
-        console.log("__Download___", res)
+        console.log("__Download_Filter_job__", res)
         props.setLoading(false);
         setData(data);
        
       })
       .catch(error => {
-        console.log('Job Get Failed because', error.response);
+        console.log('Job_filter_Fail', error.response);
         props.setLoading(false);
         setisFetching(false);
        
@@ -246,7 +248,7 @@ function JobSearch(props) {
   };
 
   const JobsSearch = () => {
-
+    console.log("__SEARCH_PAYLOAD__",searchItem)
     let uri = BASEURL + `/projects/find`;
 
     //props.setLoading(true);
@@ -260,20 +262,20 @@ function JobSearch(props) {
       {
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
-        Authorization: 'Bearer' + ' ' + props.auth.token,
+        Authorization: 'Bearer' + ' ' + auth.token,
       },
     })
      
       .then(res => {
         const {data} = res.data
-        console.log("__Download___", res)
+        console.log("__Download__SERACH_", res)
         props.setLoading(false);
         setData(data);
       })
       
       .catch(error => {
         
-        console.log('Job Get Failed because', error.response);
+        console.log('__SEARCH__JOB_FAIL', error.response);
         props.setLoading(false);
         
       });
@@ -477,7 +479,7 @@ function JobSearch(props) {
       </SafeAreaView>
       <View
         style={{
-          paddingHorizontal: wp('3.5%'),
+          // paddingHorizontal: wp('3.5%'),
           flex: 1,
           
         }}>
@@ -515,7 +517,7 @@ function JobSearch(props) {
                 style={{
                   marginBottom: 10,
                   flex: 1,
-                  shadowColor: colors.disabled,
+                  // shadowColor: colors.disabled,
                 }}
                 renderItem={({item, index}) => _renderReviewItem({item, index})}
                 keyExtractor={(item, index) => index.toString()}
@@ -640,7 +642,7 @@ function JobSearch(props) {
           /> */}
 
           <SelectField
-            value={''}
+            value={priority}
             label="Urgency"
             items={[
               {label: 'Junior WAEC', value: 'Junior WAEC'},
