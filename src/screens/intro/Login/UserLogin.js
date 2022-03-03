@@ -17,7 +17,7 @@ import {
 } from 'src/screens/intro/styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
+import messaging from '@react-native-firebase/messaging';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useSelector, useDispatch} from 'react-redux';
@@ -81,6 +81,25 @@ const UserLogin = props => {
     dispatch(setLoading(false));
   }, []);
 
+
+  const sendFcmToken = async (id,authToken) => {
+    try {
+      await messaging().registerDeviceForRemoteMessages();
+      const token = await messaging().getToken();
+console.log("___DEVICE__TOKEN___", token)
+    const res=  await axios.put(`${BASEURL}/users/device/${id}`, {device_token:token}, {
+        headers: {
+          'Content-Type': 'application/json;charset=utf-8',
+          Authorization: 'Bearer' + ' ' + authToken,
+        }});
+        console.log("___DEVICE__TOKEN__RES_", res)
+    } catch (err) {
+      //Do nothing
+      console.log("DEVICE_TOKEN___ERROR___",err);
+      return;
+    }
+  };
+
   const login = () => {
     let uri = BASEURL + '/auth/login';
   
@@ -108,6 +127,7 @@ const UserLogin = props => {
         } = data;
         let fullname = first_name + ' ' + last_name;
         let uid = id;
+         sendFcmToken(id,data.token)
         var user = new CometChat.User(uid.toString());
         user.setName(fullname);
         CometChat.createUser(user, apikey).then(

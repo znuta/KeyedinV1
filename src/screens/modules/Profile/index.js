@@ -55,6 +55,7 @@ import {
   saveAvatar,
   GetExpertiseFromApi,
   GetPortfolio,
+  uploadImage,
 } from 'src/redux/actions/AuthActions';
 import ReviewItem from 'src/component/ReviewItem';
 
@@ -191,8 +192,25 @@ function ArtisanProfile(props) {
           if (duration > 30) {
             alert('This video is more than 30 seconds');
           } else {
-            setvideoUpload(result);
-            UploadVideoApi(result);
+
+            Alert.alert('Upload', 'Are you sure you want to upload this video ?', [
+              {
+                text: 'Cancel',
+                onPress: () => {
+                  console.log('cancel logout');
+                },
+                style: 'cancel',
+              },
+              {
+                text: 'Yes',
+                onPress: async () => {
+                  const imageUrl =  await uploadImage(result)
+            setvideoUpload(imageUrl);
+            UploadVideoApi(imageUrl);
+                },
+              },
+            ]);
+           
             
           }
           

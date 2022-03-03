@@ -98,55 +98,7 @@ function JobSearch(props) {
   const [modalVisible, setModalVisible] = useState(false);
   const [distance, setDistance] = useState(1);
   const [editing, setEditing] = useState(false);
-  const autocomplete = {
-    container: {
-      flex: 1,
-      position: "absolute",
-
-      left: wp('7%'),
-      top: wp('3%'),
-      
-    },
-    textInputContainer: {
-      flexDirection: "row",
-    },
-    textInput: {
-      // backgroundColor: colors.green,
-      height: 25,
-      borderRadius: 5,
-      paddingVertical: 5,
-      paddingHorizontal: 10,
-      fontSize: 15,
-      flex: 1,
-      backgroundColor: '#f2f3f4',
-    },
-    poweredContainer: {
-      justifyContent: "flex-end",
-      alignItems: "center",
-      borderBottomRightRadius: 5,
-      borderBottomLeftRadius: 5,
-      borderColor: "#c8c7cc",
-      borderTopWidth: 0.5,
-    },
-    powered: {},
-    listView: {},
-    row: {
-      backgroundColor: "#FFFFFF",
-      padding: 13,
-      height: 44,
-      flexDirection: "row",
-    },
-    separator: {
-      height: 0.5,
-      backgroundColor: "#c8c7cc",
-    },
-    description: {},
-    loader: {
-      flexDirection: "row",
-      justifyContent: "flex-end",
-      height: 20,
-    },
-  };
+ 
 
   const onChangeText = (key, data) => {
     setFilter({...filters, [key]: data});
@@ -194,7 +146,8 @@ function JobSearch(props) {
     const latitude = auth.userData.location.coordinates[1] === null ? "0.0": auth.userData.location.coordinates[1]
     let uri = BASEURL + `/projects/location/find?longitude=${longitude}&latitude=${latitude}`;
     console.log("__Download___URL", uri)
-    props.setLoading(true);
+    // props.setLoading(true);
+    setisFetching(true);
     axios.get(uri, 
       {
       headers: {
@@ -203,15 +156,15 @@ function JobSearch(props) {
       },
       }).then(res => {
         const {data} = res.data
-        console.log("__Download___", res)
-        props.setLoading(false);
+        console.log("__Download___JOBS__HOME", res)
         setData(data);
-       
-
+        setisFetching(false);
+        // props.setLoading(false);
+        
       })
       .catch(error => {
         setisFetching(false);
-        props.setLoading(false);
+        // props.setLoading(false);
         console.log('Job Get Failed because', error.response);
         //props.setLoading(false);
        
@@ -235,14 +188,15 @@ function JobSearch(props) {
     }).then(res => {
       const {data} = res.data
         console.log("__Download_Filter_job__", res)
-        props.setLoading(false);
         setData(data);
+        props.setLoading(false);
+       
        
       })
       .catch(error => {
         console.log('Job_filter_Fail', error.response);
         props.setLoading(false);
-        setisFetching(false);
+        // setisFetching(false);
        
       });
   };
@@ -251,7 +205,7 @@ function JobSearch(props) {
     console.log("__SEARCH_PAYLOAD__",searchItem)
     let uri = BASEURL + `/projects/find`;
 
-    //props.setLoading(true);
+    props.setLoading(true);
     let data = {
       longitude: auth.userData.location.lng,
       latitude: auth.userData.location.lat,
@@ -269,13 +223,16 @@ function JobSearch(props) {
       .then(res => {
         const {data} = res.data
         console.log("__Download__SERACH_", res)
-        props.setLoading(false);
         setData(data);
+        // setisFetching(false);
+        props.setLoading(false);
+       
       })
       
       .catch(error => {
         
         console.log('__SEARCH__JOB_FAIL', error.response);
+        // setisFetching(false);
         props.setLoading(false);
         
       });
@@ -496,7 +453,7 @@ function JobSearch(props) {
             pWidth={['90%', '100%']}
             tWidth={'70%'}
             tHeight={35}
-            loading={props.auth.loading}
+            loading={props.auth.loading || isFetching}
             active
             containerStyles={{
               marginTop: 20,
@@ -515,7 +472,7 @@ function JobSearch(props) {
                 data={Data}
                 showsVerticalScrollIndicator={false}
                 style={{
-                  marginBottom: 10,
+                  // marginBottom: 10,
                   flex: 1,
                   // shadowColor: colors.disabled,
                 }}
@@ -615,33 +572,13 @@ function JobSearch(props) {
             onChangeText={itemValue => onChangeText('skill', itemValue)}
           />
 
-          {/* <SelectField
-            value={''}
-            label="Location"
-            items={[
-              {label: 'Junior WAEC', value: 'Junior WAEC'},
-              {label: 'WAEC', value: 'WAEC'},
-              {label: 'B.Sc', value: 'Bachelor of Science'},
-              {label: 'Masters', value: 'Masters'},
-              {label: 'PhD', value: 'Doctor of Philosophy'},
-            ]}
-            onChangeText={itemValue => onChangeText('degree', itemValue)}
+         <TextField
+             value={priority}
+            label="Urgency"
+            placeholder={"e.g Immediately "}
+            onChangeText={itemValue => onChangeText('priority', itemValue)}
           />
-
-          <SelectField
-            value={''}
-            label="Distance"
-            items={[
-              {label: 'Junior WAEC', value: 'Junior WAEC'},
-              {label: 'WAEC', value: 'WAEC'},
-              {label: 'B.Sc', value: 'Bachelor of Science'},
-              {label: 'Masters', value: 'Masters'},
-              {label: 'PhD', value: 'Doctor of Philosophy'},
-            ]}
-            onChangeText={itemValue => onChangeText('degree', itemValue)}
-          /> */}
-
-          <SelectField
+          {/* <SelectField
             value={priority}
             label="Urgency"
             items={[
@@ -652,7 +589,7 @@ function JobSearch(props) {
               {label: 'PhD', value: 'Doctor of Philosophy'},
             ]}
             onChangeText={itemValue => onChangeText('priority', itemValue)}
-          />
+          /> */}
          
         </ScrollView>
       </RBSheet>
@@ -666,6 +603,7 @@ const GreenText = styled.Text`
   font-size: ${wp('5%')};
   color: ${colors.green};
 `;
+
 
 
 

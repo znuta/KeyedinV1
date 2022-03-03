@@ -26,7 +26,7 @@ import {
   Container,
 } from 'src/screens/modules/EditProfile/styles';
 import axios from 'axios';
-import { sendWorkDetails, setLoading } from 'src/redux/actions/AuthActions';
+import { sendWorkDetails, setLoading, uploadImage } from 'src/redux/actions/AuthActions';
 import DocumentPicker from 'react-native-document-picker'
 
 function EditEmployment(props) {
@@ -63,11 +63,27 @@ function EditEmployment(props) {
       let uri = result.uri;
       let lastIndexOf = uri.lastIndexOf(".");
       let ext = uri.substr(lastIndexOf+1, uri.length-1);
-      var file = {
-          name: name,
-          uri: Platform.OS === 'android' ? result.uri : result.uri.replace("file://", ""),
-      };
-      onChangeText("portfolio", file, index)
+      // var file = {
+      //     name: name,
+      //     uri: Platform.OS === 'android' ? result.uri : result.uri.replace("file://", ""),
+      // };
+      Alert.alert('Upload', 'Are you sure you want to upload this file ?', [
+        {
+          text: 'Cancel',
+          onPress: () => {
+            console.log('cancel logout');
+          },
+          style: 'cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: async() => {
+            const imageUrl =  await uploadImage(result)
+      onChangeText("portfolio", imageUrl, index)
+          },
+        },
+      ]);
+     
     } catch (err) {
         if (DocumentPicker.isCancel(err)) {
         // User cancelled the picker, exit any dialogs or menus and move on

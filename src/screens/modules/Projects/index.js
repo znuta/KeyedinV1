@@ -25,6 +25,7 @@ import Empty from 'src/component/Empty';
 import {hp, wp} from 'src/config/variables';
 import axios from 'axios'
 import ProjectItem from 'src/component/ProjectItem';
+import ContentLoader from 'react-native-easy-content-loader';
 const mapStateToProps = state => {
   const {auth, projects, demo} = state;
   return {auth, projects, demo};
@@ -52,12 +53,16 @@ function ProjectsList(props) {
   const [jobCompleted, setjobCompleted] = useState([]);
 
   useEffect(() => {
-    (async () => {
-    GetJobOffers();
-    GetOngoingJobs();
-    GetCompletedJobs();
-    
-    })();
+     const loadData = async  () => {
+      props.setLoading(true);
+   await  GetJobOffers();
+   await GetOngoingJobs();
+  await  GetCompletedJobs();
+   
+    };
+
+    loadData()
+  
   }, []);
 
   const RefreshJobOffers = () => {
@@ -77,7 +82,7 @@ function ProjectsList(props) {
     return setActiveSegment(index);
   };
 
-  const GetJobOffers = () => {
+  const GetJobOffers = async () => {
     props.setLoading(true);
     let uri = BASEURL + `/projects/all/status?status=open&user_id=${props.auth.userData.id}`;
 
@@ -91,16 +96,16 @@ function ProjectsList(props) {
         const {data=[]} = res.data
          setisFetching(false);
             setProposals(data);
-            props.setLoading(false);
+            // props.setLoading(false);
       }).catch(error => {
-        props.setLoading(false);
+        // props.setLoading(false);
         setisFetching(false);
       
       });
   };
 
   const GetOngoingJobs = async () => {
-    props.setLoading(true);
+    // props.setLoading(true);
     let uri = BASEURL + `/projects/all/status?user_id=${props.auth.userData.id}&status=ongoing`;
      axios.get(uri, {
       headers: {
@@ -113,18 +118,18 @@ function ProjectsList(props) {
         setisFetching(false);
         const {data=[]} = res.data
           setJobOngoing(data);
-          props.setLoading(false);
+          // props.setLoading(false);
       })
       .catch(error => {
         console.log('__ONGOING_ERROR__', error);
-        props.setLoading(false);
+        // props.setLoading(false);
         setisFetching(false);
        
       });
   };
 
   const GetCompletedJobs = async () => {
-    props.setLoading(true);
+    // props.setLoading(true);
     let uri = BASEURL + `/projects/all/status?status=completed&user_id=${props.auth.userData.id}`;
    axios.get(uri, {
       headers: {
@@ -313,6 +318,7 @@ function ProjectsList(props) {
             height: 75,
           },
         ]}>
+          
         <SegmentControl
           values={['Job Offers', 'Ongoing', 'Completed']}
           badges={[proposals.length, jobOngoing.length, jobCompleted.length]}
@@ -331,6 +337,25 @@ function ProjectsList(props) {
 
       <Wrapper>
         <View style={{flex: 1}}>
+        <ContentLoader
+            avatar
+            aShape={'square'}
+            avatarStyles={{borderRadius: 15}}
+            animationDuration={400}
+            listSize={7}
+            pRows={1}
+            pHeight={[28, 20]}
+            pWidth={['90%', '100%']}
+            tWidth={'70%'}
+            tHeight={35}
+            loading={props.auth.loading}
+            active
+            containerStyles={{
+              marginTop: 20,
+              shadowOffset: 5,
+              shadowColor: colors.disabled,
+            }}
+          />
           {activeSegment == 0 ? <Proposals /> : <AllProjects />}
         </View>
       </Wrapper>

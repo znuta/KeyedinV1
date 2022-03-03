@@ -123,7 +123,9 @@ function ProposalsList(props) {
   // };
 
   const ProposalItem = ({ item, index }) => {
-    var num = parseFloat(item.bid_amount);
+    const { proposal = {}, project = {}} = item
+    var num = parseFloat(proposal.bid_amount);
+   
   var amountToReceived = num - (num * .20);
       return (
         <TouchableOpacity onPress={()=>navigation.navigate("ProposalDetail", {data: item, type: 'Home'})}>
@@ -132,14 +134,14 @@ function ProposalsList(props) {
           <ProposalImage style={{borderRadius: 50}}>
             <Image
               source={{
-                uri: item.avatar || defaultImage,
+                uri: project.avatar || defaultImage,
               }}
               style={{...StyleSheet.absoluteFill, borderRadius: 50}}
             />
           </ProposalImage>
 
           <ProposalBody>
-            <ProposalTitle>{item.name ?? 'Nothing'}</ProposalTitle>
+            <ProposalTitle>{project.name ?? 'Nothing'}</ProposalTitle>
 
             <View
               style={{
@@ -152,7 +154,7 @@ function ProposalsList(props) {
                 renderTruncatedFooter={_renderTruncatedFooter}
                 renderRevealedFooter={_renderRevealedFooter}>
                 <DescriptionText style={{flex: 1}}>
-                  {item.cover_letter}
+                  {proposal.cover_letter}
                 </DescriptionText>
               </ReadMore>
             </View>
@@ -174,7 +176,7 @@ function ProposalsList(props) {
               color: colors.green,
               fontWeight: '700',
             }}>
-            {item.city}
+            {project.city}
           </Text>
 
           <Text

@@ -29,6 +29,7 @@
  import messaging from '@react-native-firebase/messaging';
 import axios from 'axios';
 import SplashScreen from 'react-native-splash-screen';
+import { BASEURL } from 'src/constants/Services';
 
  let appID = '203940f744fdbcce';
  let region = 'us';
@@ -74,29 +75,16 @@ import SplashScreen from 'react-native-splash-screen';
      TRANSITIONS[0],
    );
 
-   const sendFcmToken = async () => {
-    try {
-      await messaging().registerDeviceForRemoteMessages();
-      const token = await messaging().getToken();
-
-      await axios.post('http://192.168.28.232:3000/register', {token});
-    } catch (err) {
-      //Do nothing
-      console.log(err.response.data);
-      return;
-    }
-  };
-
+  
   useEffect(() => {
-    // sendFcmToken();
-  }, []);
-  useEffect(() => {
+    
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
     });
 
     return unsubscribe;
   }, []);
+ 
 
    useEffect(() => {
         SplashScreen.hide();

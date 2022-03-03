@@ -16,6 +16,7 @@ import ReadMore from 'react-native-read-more-text';
 import {useNavigation} from '@react-navigation/native';
 import colors from 'src/config/colors';
 import {hp, wp, fonts} from 'src/config/variables';
+import moment from 'moment';
 
 const ProjectItem = props => {
     let item = props.item;
@@ -75,6 +76,9 @@ const {onPress=()=>{}} = props
                 {/* Due Tomorrow */}
                 {/* {item.endDate} */}
                 Due <TimeAgo time={new Date(item.end_date)} />
+                 {/* <TimeWrapper>{moment(item.end_date, "YYYYMMDD").fromNow() ||"5 min ago"}</TimeWrapper> */}
+                
+                
                 {/* If deadline has passed, mark 'project as closed', set 'status to archived' and set deadline to 'Expired'  */}
               </Text>
             </DeadlineWrap>
@@ -96,7 +100,7 @@ const {onPress=()=>{}} = props
                   fontWeight: '500',
                   marginLeft: 7,
                 }}>
-                Open
+                {item.status}
               </Text>
             </StatusWrap>
           </Meta>
@@ -201,6 +205,13 @@ const {onPress=()=>{}} = props
     },
   });
   
+
+  const TimeWrapper = styled.Text`
+  font-size: ${wp('2.5%')};
+  color: ${colors.lightgrey};
+  font-weight: 300;
+  margin-left: auto;
+`;
   const Wrapper = styled.View`
     flex: 1;
     ${'' /* padding-horizontal: 20px; */}
@@ -257,7 +268,7 @@ const {onPress=()=>{}} = props
     flex-direction: row;
     flex: 1;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: flex-start;
   `;
   
   const Description = styled.View``;

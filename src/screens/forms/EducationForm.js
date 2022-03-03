@@ -87,7 +87,15 @@ const Education = props => {
         </View>
       )}
 
-      <SelectField
+
+      <TextField
+        value={degree}
+        label="Degree/Certificate earned"
+        onChangeText={itemValue => onChangeText('degree', itemValue)}
+        placeholder="Name of School/Institution"
+      />
+
+      {/* <SelectField
         value={degree}
         label="Degree/Certificate earned"
         items={[
@@ -98,7 +106,7 @@ const Education = props => {
           {label: 'PhD', value: 'Doctor of Philosophy'},
         ]}
         onChangeText={itemValue => onChangeText('degree', itemValue)}
-      />
+      /> */}
       
       <ListItemSeparator style={{marginTop: hp('2.5%')}} />
       

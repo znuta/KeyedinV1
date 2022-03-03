@@ -22,7 +22,7 @@ import {colors, hp, wp} from 'src/config/variables';
     },
     filterContainer: {
       flex: 1,
-      paddingHorizontal: wp('5%'),
+      paddingHorizontal: wp('8%'),
     },
     filterHeader: {
       flexDirection: 'row',

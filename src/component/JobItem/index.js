@@ -12,6 +12,7 @@ import {colors, fonts, hp, wp} from 'src/config/variables';
 import Feather from 'react-native-vector-icons/Feather'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import TimeAgo from 'react-native-timeago';
+import moment from 'moment';
 
 const JobItem = ({ item, index, onPress = ()=>{} }) => {
 const defaultImage = 'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80'
@@ -190,7 +191,9 @@ const defaultImage = 'https://images.unsplash.com/photo-1566753323558-f4e0952af1
                 {item.city}
               </Text>
               <Text> </Text>
-              <TimeAgo
+
+              <TimeWrapper>{moment(item.createdAt, "YYYYMMDD").fromNow() ||"5 min ago"}</TimeWrapper>
+              {/* <TimeAgo
                 style={{
                   fontSize: wp('2.5%'),
                   color: 'grey',
@@ -199,7 +202,7 @@ const defaultImage = 'https://images.unsplash.com/photo-1566753323558-f4e0952af1
                 }}
                
                 dateTo={item.createdAt}
-              />
+              /> */}
             
             </View>
             
@@ -211,7 +214,12 @@ const defaultImage = 'https://images.unsplash.com/photo-1566753323558-f4e0952af1
 
 export default JobItem
   
-
+const TimeWrapper = styled.Text`
+  font-size: ${wp('2.5%')};
+  color: ${colors.lightgrey};
+  font-weight: 300;
+  margin-left: auto;
+`;
 const SkillBadge = styled.View`
   background-color: rgba(142, 135, 241, 0.1);
   padding: 6px;

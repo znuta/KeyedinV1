@@ -19,7 +19,7 @@ import {hp, wp} from 'src/config/variables';
 import StarRating from 'react-native-star-rating';
 
 const ReviewItem = props => {
-    let {rating=0,comment = "", user={}} = props.item;
+    let {rating=0,comment = "",username,avatar, user={}} = props.item;
 const {onPress=()=>{}} = props
     const _renderTruncatedFooter = handlePress => {
         return (
@@ -51,14 +51,14 @@ const {onPress=()=>{}} = props
           <RatingImage>
             <Image
               source={{
-                uri: user.avatar,
+                uri: avatar,
               }}
               style={{...StyleSheet.absoluteFill, borderRadius: 10}}
             />
           </RatingImage>
           <RatingBody>
          
-            <RatingTitle>{`${user.first_name} ${user.last_name}`}</RatingTitle>
+            <RatingTitle>{`${username}`}</RatingTitle>
             <Description>
             
             <ReadMore

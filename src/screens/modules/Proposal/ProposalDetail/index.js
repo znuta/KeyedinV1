@@ -55,6 +55,8 @@ const ProjectApply = props => {
   const [item, setItem] = useState({});
   const [type, setType] = useState('');
   const [items, setitems] = useState(null);
+  const [Permission, setPermission] = useState(null);
+  const [value, setValue] = useState({});
   const [isSendProposal, setSendProposal] = useState(false);
   const [defaultImage, setDefaultImage] = useState(
     'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
@@ -69,11 +71,11 @@ const ProjectApply = props => {
 
   useEffect(() => {
     if (mapRef.current) {
+   
       mapRef.current.fitToSuppliedMarkers([item.id]);
     }
   }, [item]);
-  const [Permission, setPermission] = useState(null);
-  const [value, setValue] = useState({...item});
+ 
   const onChangeText = (key, data) => {
     setValue({...value, [key]: data});
   };
@@ -81,10 +83,11 @@ const {params = {}} = props.route
   useEffect(() => {
     if (params) {
       console.log(params);
-      setItem(params.data);
-      setValue({...value, ...params.data});
+      const {proposal, project} = params.data
+      setItem(project);
+      setValue({...value, ...proposal});
       console.log("___PARAAM+++",params)
-      GetProject()
+      // GetProject()
     }
   }, [params]);
 
@@ -222,265 +225,257 @@ const {params = {}} = props.route
   var amountToReceived = num - (num * .20);
   return (
     <Container>
-      <Header
-        leftComponent={<BackButton />}
-        rightComponent={<RightButton />}
-        //rightComponent={<FilterButton />}
-        centerComponent={{
-          text: 'View Offer',
-          style: {
-            fontWeight: '700',
-            fontSize: wp('5%'),
-            color: colors.white,
-          },
-        }}
-        statusBarProps={{barStyle: 'dark-content'}}
-        containerStyle={{
-          backgroundColor: 'transparent',
-          justifyContent: 'space-between',
-          borderBottomWidth: 0,
-          paddingVertical: hp('3%'),
-          backgroundColor: colors.green,
-          borderBottomLeftRadius: wp('8%'),
-          borderBottomRightRadius: wp('8%'),
-        }}
-      />
-      <Toast/>
-      <ContentContainer containerStyle={{flex: 1}}>
-        <TitleSection>
-          <Title>{item.name}</Title>
-        </TitleSection>
-        <Row style={{marginHorizontal: wp('4%'), alignItems: 'center'}}>
-          <MaterialIcons style={styles.paste_icon_style} name="content-paste" />
-          <DescriptionHeader>Job Description</DescriptionHeader>
-          <TimeWrapper>{moment(item.createdAt, "YYYYMMDD").fromNow() ||"5 min ago"}</TimeWrapper>
-        </Row>
-        <InnerContentContainer>
-          {/* <Sectiontitle>Description :</Sectiontitle> */}
-          <ProposalWrap>
-            <ProposalImage style={{}}>
-              <Image
-                source={{
-                  uri: item && item.avatar ? item.avatar : defaultImage,
-                }}
-                style={{...StyleSheet.absoluteFill, borderRadius: 50}}
-              />
-            </ProposalImage>
-
-            <ProposalBody>
-              <ReadMore
-                numberOfLines={4}
-                renderTruncatedFooter={_renderTruncatedFooter}
-                renderRevealedFooter={_renderRevealedFooter}>
-                <JobDesc>{item.description}</JobDesc>
-              </ReadMore>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  flexWrap: 'wrap',
-                  flex: 1,
-                }}>
-                <FlatList
-                  data={item.skillSet}
-                  showsVerticalScrollIndicator={false}
-                  showsHorizontalScrollIndicator={false}
-                  bounces={false}
-                  decelerationRate={'normal'}
-                  scrollEnabled={true}
-                  //numColumns={2}
-                  horizontal={true}
-                  style={{marginTop: 10, flex: 1}}
-                  // renderItem={({item}) => _renderGalleryImage}
-                  renderItem={({item, index}) => (
-                    <View style={{flex: 1, width: '100%'}}>
-                      <SkillBadge key={index.toString()}>
-                        <BadgeText>{item}</BadgeText>
-                      </SkillBadge>
-                    </View>
-                  )}
-                  keyExtractor={(item, index) => index.toString()}
-                  //ItemSeparatorComponent={ListItemSeparator}
-                />
-                <StatusWrap>
-                  <Feather
-                    name="info"
-                    style={{
-                      fontSize: wp('4%'),
-                      color: colors.green,
-                      fontWeight: '500',
-                      marginLeft: 7,
-                    }}
-                  />
-                  <Text
-                    style={{
-                      fontSize: wp('3.5%'),
-                      color: colors.green,
-                      fontWeight: '500',
-                      marginLeft: 7,
-                    }}>
-                    {item.status || "Open"}
-                  </Text>
-                </StatusWrap>
-              </View>
-            </ProposalBody>
-          </ProposalWrap>
-
-          <ProposalWrap>
-            <MaterialCommunityIcons
-              name="paperclip"
-              style={{
-                fontSize: wp('6%'),
-                color: colors.grey,
-                fontWeight: '500',
-                marginLeft: wp('10%'),
+    <Header
+      leftComponent={<BackButton />}
+      rightComponent={<RightButton />}
+      //rightComponent={<FilterButton />}
+      centerComponent={{
+        text: 'View Offer',
+        style: {
+          fontWeight: '700',
+          fontSize: wp('5%'),
+          color: colors.white,
+        },
+      }}
+      statusBarProps={{barStyle: 'dark-content'}}
+      containerStyle={{
+        backgroundColor: 'transparent',
+        justifyContent: 'space-between',
+        borderBottomWidth: 0,
+        paddingVertical: hp('3%'),
+        backgroundColor: colors.green,
+        borderBottomLeftRadius: wp('8%'),
+        borderBottomRightRadius: wp('8%'),
+      }}
+    />
+    <ContentContainer containerStyle={{flex: 1}}>
+      <TitleSection>
+        <Title>{item.name}</Title>
+      </TitleSection>
+      <Row style={{marginHorizontal: wp('4%'), alignItems: 'center'}}>
+        <MaterialIcons style={styles.paste_icon_style} name="content-paste" />
+        <DescriptionHeader>Job Description</DescriptionHeader>
+        <TimeWrapper>{moment(item.updatedAt, "YYYYMMDD").fromNow() ||"5 min ago"}</TimeWrapper>
+      </Row>
+      <InnerContentContainer>
+        {/* <Sectiontitle>Description :</Sectiontitle> */}
+        <ProposalWrap>
+          <ProposalImage
+          onPress={()=>{
+            navigation.navigate('ProtisanProfile', {id: item.user_id})
+          }}
+           style={{}}>
+            <Image
+              source={{
+                uri: item && item.user ? item.user.avatar : defaultImage,
               }}
+              style={{...StyleSheet.absoluteFill, borderRadius: 50}}
             />
+          </ProposalImage>
 
-            <ProposalBody>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  flexWrap: 'wrap',
-                  flex: 1,
-                }}>
-                <FlatList
-                  data={item.attachments || [defaultImage,
-                    defaultImage,
-                    defaultImage,
-                    defaultImage,]}
-                  showsVerticalScrollIndicator={false}
-                  showsHorizontalScrollIndicator={false}
-                  bounces={false}
-                  decelerationRate={'normal'}
-                  scrollEnabled={true}
-                  //numColumns={2}
-                  horizontal={true}
-                  style={{marginTop: 10, flex: 1}}
-                  // renderItem={({item}) => _renderGalleryImage}
-                  renderItem={({item, index}) => (
-                    <ProposalImage style={{}}>
-                      <Image
-                        source={{
-                          uri: item.uri,
-                        }}
-                        style={{...StyleSheet.absoluteFill, borderRadius: 8}}
-                      />
-                    </ProposalImage>
-                  )}
-                  keyExtractor={(item, index) => index.toString()}
-                  //ItemSeparatorComponent={ListItemSeparator}
-                />
-                <StatusWrap style={{flex: 0}}>
-                  <Text
-                    style={{
-                      fontSize: wp('2.5%'),
-                      color: colors.grey,
-                      fontWeight: '300',
-                      marginLeft: 7,
-                    }}>
-                    {item.attachments && item.attachments.length > 3?`+${item.attachments.length}`: ''}
-                  </Text>
-                </StatusWrap>
-              </View>
-            </ProposalBody>
-          </ProposalWrap>
-
-          <ProposalWrap>
-            <MaterialIcons
-              name="location-pin"
+          <ProposalBody>
+            <ReadMore
+              numberOfLines={4}
+              renderTruncatedFooter={_renderTruncatedFooter}
+              renderRevealedFooter={_renderRevealedFooter}>
+              <JobDesc>{item.description}</JobDesc>
+            </ReadMore>
+            <View
               style={{
-                fontSize: wp('3.5%'),
-                color: colors.grey,
-                fontWeight: '500',
-                marginLeft: wp('10%'),
-              }}
-            />
-
-            <ProposalBody>
-              <DescriptionText>
-                {item.address_str || "No. 19 Nile Crescent, Sun City, Galadimawa, Abuja"}
-              </DescriptionText>
-            </ProposalBody>
-          </ProposalWrap>
-        </InnerContentContainer>
-
-        <InnerContentContainer>
-        <MapView
-            ref={mapRef}
-            provider={PROVIDER_GOOGLE}
-            style={{ flex: 1, height: hp('30%') }}
-            initialRegion={{
-              latitude: item.location && item.location.coordinates[1] || 0.0,
-              longitude: item.location && item.location.coordinates[0] || 0.0,
-              longitudeDelta: 0.05,
-            latitudeDelta: 0.05,
-            }}
-            region={{
-              latitude: item.location && item.location.coordinates[1] || 0.0,
-              longitude: item.location && item.location.coordinates[0] || 0.0,
-              longitudeDelta: 0.05,
-              latitudeDelta: 0.05,
-            }}
-            zoomEnabled={true}
-            showsUserLocation={true}
-            initialPosition={{
-              latitude: item.location && item.location.coordinates[1] || 0.0,
-              longitude: item.location && item.location.coordinates[0] || 0.0,
-              longitudeDelta: 0.05,
-              latitudeDelta: 0.05,
-            }}
-            minZoomLevel={2}
-        >
-        
-          <Marker
-            onSelect={ ()=>{}}
-            style={{width: 400, height: 400}}
-            identifier={item.id}
-            id={item.id}
-            draggable={false}
-            coordinate={{
-              latitude: item.location && item.location.coordinates[1] || 0.0,
-              longitude: item.location && item.location.coordinates[0] || 0.0,
-              longitudeDelta: 0.05,
-              latitudeDelta: 0.05,
-            }}
-            image={require('src/assets/marker.png')}
-          >
-           
-            <ImageBackground
-              source={require('src/assets/mark.png')}
-              style={{
-                width: 50,
-                height: 50,
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                flex: 1,
               }}>
-              <Image
-                source={{ uri: item && item.avatar ? item.avatar : defaultImage,}}
-                style={{
-                  width: 20,
-                  height: 20,
-                  borderRadius: 10,
-                  marginBottom: 10,
-                  borderWidth: 1.5,
-                  borderColor: '#fff',
-                  shadowColor: '#7F5DF0',
-                  shadowOffset: {
-                    width: 0,
-                    height: 10,
-                  },
-                  shadowOpacity: 0.25,
-                  shadowRadius: 3.5,
-                  elevation: 5,
-                }}
+              <FlatList
+                data={item.skill_set}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+                bounces={false}
+                decelerationRate={'normal'}
+                scrollEnabled={true}
+                //numColumns={2}
+                horizontal={true}
+                style={{marginTop: 10, flex: 1}}
+                // renderItem={({item}) => _renderGalleryImage}
+                renderItem={({item, index}) => (
+                  <View style={{flex: 1, width: '100%'}}>
+                    <SkillBadge key={index.toString()}>
+                      <BadgeText>{item}</BadgeText>
+                    </SkillBadge>
+                  </View>
+                )}
+                keyExtractor={(item, index) => index.toString()}
+                //ItemSeparatorComponent={ListItemSeparator}
               />
-            </ImageBackground>
-          </Marker>
-       
-      </MapView>
-        </InnerContentContainer>
+              <StatusWrap>
+                <Feather
+                  name="info"
+                  style={{
+                    fontSize: wp('4%'),
+                    color: colors.green,
+                    fontWeight: '500',
+                    marginLeft: wp('2%'),
+                  }}
+                />
+                <Text
+                  style={{
+                    fontSize: wp('3.5%'),
+                    color: colors.green,
+                    fontWeight: '500',
+                    marginLeft: wp('2%'),
+                  }}>
+                  {item.status || "Open"}
+                </Text>
+              </StatusWrap>
+            </View>
+          </ProposalBody>
+        </ProposalWrap>
+
+        <ProposalWrap>
+          <MaterialCommunityIcons
+            name="paperclip"
+            style={{
+              fontSize: wp('6%'),
+              color: colors.grey,
+              fontWeight: '500',
+              marginLeft: wp('10%'),
+            }}
+          />
+
+          <ProposalBody>
+            <View
+              style={{
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                flex: 1,
+              }}>
+              <FlatList
+                data={item.attachments || [defaultImage,
+                  defaultImage,
+                  defaultImage,
+                  defaultImage,]}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+                bounces={false}
+                decelerationRate={'normal'}
+                scrollEnabled={true}
+                //numColumns={2}
+                horizontal={true}
+                style={{marginTop: 10, flex: 1}}
+                // renderItem={({item}) => _renderGalleryImage}
+                renderItem={({item, index}) => (
+                  <ProposalImage style={{}}>
+                    <Image
+                      source={{
+                        uri: item.uri,
+                      }}
+                      style={{...StyleSheet.absoluteFill, borderRadius: 8}}
+                    />
+                  </ProposalImage>
+                )}
+                keyExtractor={(item, index) => index.toString()}
+                //ItemSeparatorComponent={ListItemSeparator}
+              />
+               {item.attachments && item.attachments.length > 3 &&
+              <CountWrap style={{flex: 0.2}}>
+                <Text
+                  style={{
+                    fontSize: wp('2.5%'),
+                    color: colors.grey,
+                    fontWeight: '300',
+                    // marginLeft: 7,
+                  }}>
+                  {item.attachments && item.attachments.length > 3?`+${item.attachments.length}`: ''}
+                </Text>
+              </CountWrap>
+             }
+            </View>
+          </ProposalBody>
+        </ProposalWrap>
+
+        <ProposalWrap>
+          <MaterialIcons
+            name="location-pin"
+            style={{
+              fontSize: wp('3.5%'),
+              color: colors.grey,
+              fontWeight: '500',
+              marginLeft: wp('10%'),
+            }}
+          />
+
+          <ProposalBody>
+            <DescriptionText>
+              {item.address_str || "No. 19 Nile Crescent, Sun City, Galadimawa, Abuja"}
+            </DescriptionText>
+          </ProposalBody>
+        </ProposalWrap>
+      </InnerContentContainer>
+
+      <MapContentContainer>
+      <MapView
+      ref={mapRef}
+      provider={PROVIDER_GOOGLE}
+      style={{ flex: 1, borderRadius: 10, height: hp('30%') }}
+     
+      
+      zoomEnabled={true}
+      showsUserLocation={true}
+      
+      minZoomLevel={0.5}>
+      
+        <Marker
+          onSelect={ ()=>{}}
+          style={{width: 600, height: 600}}
+          identifier={item.id}
+          id={item.id}
+          draggable={true}
+          coordinate={{
+            latitude: item.location && item.location.coordinates[1],
+            longitude: item.location && item.location.coordinates[0],
+           
+          }}
+          // image={require('src/assets/marker.png')}
+          // resizeMode="contain"
+        >
+         
+          <ImageBackground
+            source={require('src/assets/mark.png')}
+            resizeMode="contain"
+            style={{
+              width: 50,
+              height: 50,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Image
+              source={{ uri: item && item.avatar ? item.avatar : defaultImage,}}
+              // resizeMode="contain"
+              resizeMode="center"
+              style={{
+                width: 20,
+                height: 20,
+                borderRadius: 10,
+                marginBottom: 10,
+                borderWidth: 1.5,
+                borderColor: '#fff',
+                shadowColor: '#7F5DF0',
+                shadowOffset: {
+                  width: 0,
+                  height: 10,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.5,
+                elevation: 5,
+              }}
+            />
+          </ImageBackground>
+        </Marker>
+     
+    </MapView>
+      </MapContentContainer>
 
         <InnerContentContainer>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -689,6 +684,22 @@ const Container = styled.View`
   flex: 1;
   ${'' /* background-color: white; */}
 `;
+const MapContentContainer = styled.View`
+ 
+  background-color: #ffffff;
+  margin-vertical: ${hp('1%')};
+min-height: ${hp('10%')}
+  flex: 1;
+  border-radius: 10px;
+  ${'' /* align-items: center; */}
+`;
+
+const CountWrap = styled.View`
+flex: 0.25;
+  flex-direction: row;
+  align-items: center;
+  margin-right: ${wp('5%')}
+`;
 
 const ContentContainer = styled.ScrollView`
   padding-vertical: ${hp('1%')};
@@ -893,9 +904,10 @@ const ProposalContent = styled.Text`
 `;
 
 const StatusWrap = styled.View`
-  flex: 0.4;
-  flex-direction: row;
-  align-items: center;
+flex: 0.5;
+flex-direction: row;
+align-items: center;
+margin-right: ${wp('5%')}
 `;
 const DescriptionText = styled.Text`
 font-size: ${wp('3%')}

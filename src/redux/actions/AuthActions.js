@@ -25,6 +25,7 @@ import {BASEURL} from 'src/constants/Services';
 import {CometChat} from '@cometchat-pro/react-native-chat';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import storage from '@react-native-firebase/storage';
 
 
  export const getToken = async () => {
@@ -941,7 +942,33 @@ const saveAvatar= path => async dispatch =>{
         filepath: path,
       })}
 
+  const uploadImage = async (payload) => {
+    const { uri } = payload;
+    const filename = uri.substring(uri.lastIndexOf('/') + 1);
+    const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
+
+    // setUploading(true);
+    // setTransferred(0);
+
+    const reference = storage().ref(filename);
+    const task = reference.putFile(uploadUri);
+
+    task.on('state_changed', snapshot =>  {
+      setTransferred(
+        Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000
+      );
+    });
+    let downloadURL = "";
+    task.then(async () => {
+        downloadURL = await reference.getDownloadURL();
+      console.log("____FILE___URL___", downloadURL)
+    }).catch((e) => console.log('uploading image error => ', e));
+
+    return downloadURL
+  };
+
 export {
+  uploadImage,
   setToast,
   GetPortfolio,
   GetArtisanExperience,

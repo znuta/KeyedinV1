@@ -8,6 +8,7 @@ import {
   Alert,
   FlatList,
   ImageBackground,
+  Linking,
 } from 'react-native';
 import styled from 'styled-components';
 import {Header, Icon, Divider} from 'react-native-elements';
@@ -23,7 +24,7 @@ import Layout from 'src/constants/Layout';
 import {colors, fonts, hp, wp} from 'src/config/variables';
 import {BASEURL} from 'src/constants/Services';
 import {connect} from 'react-redux';
-import {styles} from './styles';
+import {InputLabel, styles} from './styles';
 import Loader from 'src/component/Loader';
 import Button from 'src/component/Button/index';
 import TextField from 'src/component/TextField';
@@ -49,7 +50,7 @@ const CompletedProjectDetail = props => {
     'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
   );
   const [value, setValue] = useState({...item});
-  const { due_date = new Date(), bid_amount = '', cover_letter = '' } = value;
+  const { due_date = new Date(), bid_amount = '', cover_letter = '', attachment = "" } = value;
   var num = parseFloat(bid_amount);
   var amountToReceived = num - (num * .20);
 const {params = {}} = props.route
@@ -363,17 +364,19 @@ const onChangeText = (key, data) => {
                   keyExtractor={(item, index) => index.toString()}
                   //ItemSeparatorComponent={ListItemSeparator}
                 />
-                <StatusWrap style={{flex: 0}}>
+                 {item.attachments && item.attachments.length > 3 &&
+                <CountWrap style={{flex: 0.2}}>
                   <Text
                     style={{
                       fontSize: wp('2.5%'),
                       color: colors.grey,
                       fontWeight: '300',
-                      marginLeft: 7,
+                      // marginLeft: 7,
                     }}>
                     {item.attachments && item.attachments.length > 3?`+${item.attachments.length}`: ''}
                   </Text>
-                </StatusWrap>
+                </CountWrap>
+               }
               </View>
             </ProposalBody>
           </ProposalWrap>
@@ -397,50 +400,36 @@ const onChangeText = (key, data) => {
           </ProposalWrap>
         </InnerContentContainer>
 
-        <InnerContentContainer>
+        <MapContentContainer>
         <MapView
         ref={mapRef}
         provider={PROVIDER_GOOGLE}
-        style={{ flex: 1, height: hp('30%') }}
-        initialRegion={{
-          latitude: item.location && item.location.coordinates[1],
-          longitude: item.location && item.location.coordinates[0],
-          longitudeDelta: 0.05,
-         latitudeDelta: 0.05,
-        }}
-        region={{
-          latitude: item.location && item.location.coordinates[1],
-          longitude: item.location && item.location.coordinates[0],
-          longitudeDelta: 0.05,
-          latitudeDelta: 0.05,
-        }}
+        style={{ flex: 1, borderRadius: 10, height: hp('30%') }}
+       
+        
         zoomEnabled={true}
         showsUserLocation={true}
-        initialPosition={{
-          latitude: item.location && item.location.coordinates[1],
-          longitude: item.location && item.location.coordinates[0],
-          longitudeDelta: 0.05,
-          latitudeDelta: 0.05,
-        }}
-        minZoomLevel={2}>
+        
+        minZoomLevel={5}>
         
           <Marker
             onSelect={ ()=>{}}
-            style={{width: 400, height: 400}}
+            style={{width: 600, height: 600}}
             identifier={item.id}
             id={item.id}
-            draggable={false}
+            draggable={true}
             coordinate={{
               latitude: item.location && item.location.coordinates[1],
               longitude: item.location && item.location.coordinates[0],
-              longitudeDelta: 0.05,
-              latitudeDelta: 0.05,
+             
             }}
-            image={require('src/assets/marker.png')}
+            // image={require('src/assets/marker.png')}
+            // resizeMode="contain"
           >
            
             <ImageBackground
               source={require('src/assets/mark.png')}
+              resizeMode="contain"
               style={{
                 width: 50,
                 height: 50,
@@ -451,6 +440,8 @@ const onChangeText = (key, data) => {
               }}>
               <Image
                 source={{ uri: item && item.avatar ? item.avatar : defaultImage,}}
+                // resizeMode="contain"
+                resizeMode="center"
                 style={{
                   width: 20,
                   height: 20,
@@ -472,7 +463,7 @@ const onChangeText = (key, data) => {
           </Marker>
        
       </MapView>
-        </InnerContentContainer>
+        </MapContentContainer>
 
         <InnerContentContainer>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -623,15 +614,30 @@ const onChangeText = (key, data) => {
               </ReadMore>
         </InnerContentContainer>
             
-            <TextField
-              additionalStyle={{
-                inputField: {
-                  backgroundColor: colors.layout,
-                },
-              }}
-              label="View Documents"
-              editable={false}
-              />
+        <TouchableOpacity
+            style={{flexDirection: 'row', marginVertical: hp('1%')}}
+            onPress={() => {
+              Linking.canOpenURL(attachment).then(supported => {
+                if (supported) {
+                  Linking.openURL(attachment);
+                } else {
+                  console.log("Don't know how to open URI: " + attachment);
+                }
+              })}
+            }>
+            <View style={styles.circle}>
+              <MaterialCommunityIcons name="plus" style={styles.white_plus} />
+            </View>
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Text style={styles.portfolio_text}>
+                <InputLabel>Download Attachment</InputLabel> {attachment? ``: " (No attachment included.)"}
+              </Text>
+            </View>
+          </TouchableOpacity>
              
             <ListItemSeparator />
             <View style={{width: '100%'}}>
@@ -694,6 +700,16 @@ min-height: ${hp('10%')}
   flex: 1;
   padding-horizontal: ${wp('4%')};
 
+  border-radius: 10px;
+  ${'' /* align-items: center; */}
+`;
+
+const MapContentContainer = styled.View`
+ 
+  background-color: #ffffff;
+  margin-vertical: ${hp('1%')};
+min-height: ${hp('10%')}
+  flex: 1;
   border-radius: 10px;
   ${'' /* align-items: center; */}
 `;
@@ -884,6 +900,13 @@ const ProposalContent = styled.Text`
 
 const StatusWrap = styled.View`
   flex: 0.5;
+  flex-direction: row;
+  align-items: center;
+  margin-right: ${wp('5%')}
+`;
+
+const CountWrap = styled.View`
+flex: 0.25;
   flex-direction: row;
   align-items: center;
   margin-right: ${wp('5%')}

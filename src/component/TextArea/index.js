@@ -63,7 +63,7 @@ const TextAreaWrap = styled.View`
   margin-vertical: 10px;
   width: 100%;
   background-color: #f2f3f4;
-  border-radius: ${wp('7%')};
+  border-radius: ${wp('5%')};
   flex-direction: row;
   padding-horizontal: 5px;
 `;

@@ -5,13 +5,14 @@ import styled from "styled-components";
 import colors from "../config/colors";
 import Colors from "../constants/Colors";
 
-export default function PaymentCard() {
+export default function PaymentCard({item={}}) {
+  const {card_number="",expire_month="",expire_year="",last_four_digits="",bank_name="",card_brand=""} = item
   return (
     <CardItemWrap>
       <CardBody>
         <CardDescription>
-          <CardNumber>**** **** **** {"6578"}</CardNumber>
-          <CardMeta><CardExp>EXP: 04/24 </CardExp> - CVV &bull; 345</CardMeta>
+          <CardNumber>**** **** **** {last_four_digits}</CardNumber>
+          <CardMeta><CardExp>EXP: {expire_month}/{expire_year} </CardExp> -  &bull; {card_brand}</CardMeta>
         </CardDescription>
       </CardBody>
       <CardSelect 

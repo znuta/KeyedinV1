@@ -13,6 +13,10 @@ const SplashScreen = props => {
   const {toast = {}} = auth
   const [loaded, setLoaded] = useState(false);
 
+  
+
+  
+
   useEffect(() => {
     StatusBar.setHidden(true);
     setTimeout(() => {

@@ -17,6 +17,7 @@ import Colors from 'src/constants/Colors';
 import {colors} from 'src/config/variables';
 import Feather from 'react-native-vector-icons/Feather'
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-picker';
 import DocumentPicker from 'react-native-document-picker'
 import {useNavigation} from '@react-navigation/native';
 import {Header} from 'react-native-elements';
@@ -35,8 +36,9 @@ import {BASEURL} from 'src/constants/Services';
 import {useNetInfo} from '@react-native-community/netinfo';
 import EditPen from 'src/assets/icons/edit.svg';
 import EditWhitePen from 'src/assets/icons/editwhitepen.svg';
-import { GetExpertiseFromApi, GetEducation, GetExperience } from 'src/redux/actions/AuthActions';
+import { GetExpertiseFromApi, GetEducation, GetExperience, uploadImage } from 'src/redux/actions/AuthActions';
 import axios from 'axios';
+
 
 function EditProfile(props) {
     const auth = useSelector(state => state.auth)
@@ -46,11 +48,13 @@ const dispatch = useDispatch()
   let netInfo = useNetInfo();
     const navigation = useNavigation();
     const [user, setUser] = useState(auth.userData);
- 
-  const [expertiseData, setExpertise] = useState({});
-  const [ educationData, setEducation] = useState({});
-  const [experienceData, setExperience] = useState({});
-  const [refreshing, setRefreshing] = useState(false);
+    const [expertiseData, setExpertise] = useState({});
+    const [ educationData, setEducation] = useState({});
+    const [experienceData, setExperience] = useState({});
+    const [refreshing, setRefreshing] = useState(false);
+    const [image, setImage] = useState(null);
+    const [uploading, setUploading] = useState(false);
+    const [transferred, setTransferred] = useState(0);
 
   const [avatar, setAvatar] = useState(auth.userData.avatar);
   useEffect(() => {
@@ -80,12 +84,8 @@ const dispatch = useDispatch()
 
   const UploadAvatarToApi = payload => {
 
-    let path = "avatar" 
-    const {type} = payload
-    if (!type.includes("image")) {
-     path = "video"
-    }
-    let uri = BASEURL + `/media/user/media/${auth.userData.id}`;
+   
+    let uri = BASEURL + `/media/upload/image/${auth.userData.id}`;
     const data = new FormData();
     data.append("files", payload);
 
@@ -93,7 +93,7 @@ const dispatch = useDispatch()
     axios.post(uri, payload, {
       
       headers: {
-        'Content-Type': 'application/json;charset=utf-8',
+        'Content-Type': 'multipart/form-data;',
         Authorization: 'Bearer' + ' ' + auth.token,
       },
 
@@ -125,10 +125,10 @@ const dispatch = useDispatch()
           name: name,
           uri: Platform.OS === 'android' ? result[0].uri : result[0].uri.replace("file://", ""),
       };
-
-      setAvatar(result[0])
-        dispatch(saveAvatar(uri));
-        UploadAvatarToApi(result[0]);
+        const uploadImage =  uploadImage(result[0])
+      setAvatar(uploadImage)
+        dispatch(saveAvatar(uploadImage));
+        UploadAvatarToApi(uploadImage);
       
     } catch (err) {
         if (DocumentPicker.isCancel(err)) {
@@ -139,6 +139,33 @@ const dispatch = useDispatch()
     }
   
   }
+
+  const selectImage = () => {
+    const options = {
+      maxWidth: 2000,
+      maxHeight: 2000,
+      storageOptions: {
+        skipBackup: true,
+        path: 'images'
+      }
+    };
+    ImagePicker.showImagePicker(options, response => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        const source = { uri: response.uri };
+        console.log(source);
+        setImage(source);
+        uploadImage()
+      }
+    });
+  };
+
+  
 
   const _pickAvatar = async () => {
     console.log('Open Image Picker');
@@ -151,15 +178,18 @@ const dispatch = useDispatch()
             quality: 0.4,
             //allowsMultipleSelection: false,
             includeBase64: true,
+            
           });
         if (!result.cancelled) {
            
           const { uri, type, base64, fileName, fileSize, width, height } = result.assets[0]
           const file = {uri, type, base64,name:fileName , size:fileSize, width, height }
           console.log("___IMAGE___", file)
-       setAvatar(file)
-        dispatch(saveAvatar(uri));
-        UploadAvatarToApi(file);
+          // uploadImage(file)
+          const imageUrl = await  uploadImage(result[0])
+          setAvatar(imageUrl)
+            dispatch(saveAvatar(imageUrl));
+            UploadAvatarToApi(imageUrl);
       }
       //console.log(result);
     } catch (E) {
@@ -221,7 +251,7 @@ const dispatch = useDispatch()
             activeOpacity={0.6}>
             <Image
               source={{
-                uri: avatar ? avatar.uri : auth.avatar,
+                uri: avatar ? avatar : auth.avatar,
                 // avatar,
                 // "https://static.dribbble.com/users/1304678/screenshots/7301908/media/3f91189797dd514eb6446b21a4faa209.png",
               }}
