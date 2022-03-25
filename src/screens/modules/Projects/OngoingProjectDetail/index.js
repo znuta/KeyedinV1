@@ -336,10 +336,7 @@ const OngoingProjectDetail = props => {
                 flex: 1,
               }}>
               <FlatList
-                data={item.attachments || [defaultImage,
-                  defaultImage,
-                  defaultImage,
-                  defaultImage,]}
+                data={item.attachments}
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
                 bounces={false}
@@ -353,7 +350,7 @@ const OngoingProjectDetail = props => {
                   <ProposalImage style={{}}>
                     <Image
                       source={{
-                        uri: item.uri,
+                        uri: item,
                       }}
                       style={{...StyleSheet.absoluteFill, borderRadius: 8}}
                     />
@@ -399,69 +396,80 @@ const OngoingProjectDetail = props => {
       </InnerContentContainer>
 
       <MapContentContainer>
-      <MapView
-      ref={mapRef}
-      provider={PROVIDER_GOOGLE}
-      style={{ flex: 1, borderRadius: 10, height: hp('30%') }}
-     
-      
-      zoomEnabled={true}
-      showsUserLocation={true}
-      
-      minZoomLevel={5}>
-      
-        <Marker
-          onSelect={ ()=>{}}
-          style={{width: 600, height: 600}}
-          identifier={item.id}
-          id={item.id}
-          draggable={true}
-          coordinate={{
-            latitude: item.location && item.location.coordinates[1],
-            longitude: item.location && item.location.coordinates[0],
+          
+          <MapView
+        ref={mapRef}
+        provider={PROVIDER_GOOGLE}
+        style={{ flex: 1, height: hp('30%') }}
+        initialRegion={{
+          latitude: item.location && item.location.coordinates[1],
+          longitude: item.location && item.location.coordinates[0],
+          longitudeDelta: 0.05,
+         latitudeDelta: 0.05,
+        }}
+        region={{
+          latitude: item.location && item.location.coordinates[1],
+          longitude: item.location && item.location.coordinates[0],
+          longitudeDelta: 0.05,
+          latitudeDelta: 0.05,
+        }}
+        zoomEnabled={true}
+        showsUserLocation={true}
+        initialPosition={{
+          latitude: item.location && item.location.coordinates[1],
+          longitude: item.location && item.location.coordinates[0],
+          longitudeDelta: 0.05,
+          latitudeDelta: 0.05,
+        }}
+        minZoomLevel={2}>
+        
+          <Marker
+            onSelect={ ()=>{}}
+            style={{width: 400, height: 400}}
+            identifier={item.id}
+            id={item.id}
+            draggable={false}
+            coordinate={{
+              latitude: item.location && item.location.coordinates[1],
+              longitude: item.location && item.location.coordinates[0],
+            }}
+          //   image={require('src/assets/marker.png')}
+          >
            
-          }}
-          // image={require('src/assets/marker.png')}
-          // resizeMode="contain"
-        >
-         
-          <ImageBackground
-            source={require('src/assets/mark.png')}
-            resizeMode="contain"
-            style={{
-              width: 50,
-              height: 50,
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Image
-              source={{ uri: item && item.avatar ? item.avatar : defaultImage,}}
-              // resizeMode="contain"
-              resizeMode="center"
+            <ImageBackground
+              source={require('src/assets/mark.png')}
               style={{
-                width: 20,
-                height: 20,
-                borderRadius: 10,
-                marginBottom: 10,
-                borderWidth: 1.5,
-                borderColor: '#fff',
-                shadowColor: '#7F5DF0',
-                shadowOffset: {
-                  width: 0,
-                  height: 10,
-                },
-                shadowOpacity: 0.25,
-                shadowRadius: 3.5,
-                elevation: 5,
-              }}
-            />
-          </ImageBackground>
-        </Marker>
-     
-    </MapView>
-      </MapContentContainer>
+                width: 50,
+                height: 50,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Image
+                source={{ uri: item && item.avatar ? item.avatar : defaultImage,}}
+                style={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: 10,
+                  marginBottom: 10,
+                  borderWidth: 1.5,
+                  borderColor: '#fff',
+                  shadowColor: '#7F5DF0',
+                  shadowOffset: {
+                    width: 0,
+                    height: 10,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 3.5,
+                  elevation: 5,
+                }}
+              />
+            </ImageBackground>
+          </Marker>
+       
+      </MapView>
+        </MapContentContainer>
 
 
         <InnerContentContainer>

@@ -27,6 +27,7 @@
 		B5D4CE3892B649E6924477A9 /* Poppins-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D3AA4A4A35447A9A72BDE50 /* Poppins-Italic.ttf */; };
 		C30ADFB762224370BD1CC237 /* Poppins-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1947E6E7E5CB4160A4B9330E /* Poppins-Black.ttf */; };
 		CB3DF9B0B013413EB1D961FD /* Poppins-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DFA45BD8536547FBAD9B16FB /* Poppins-LightItalic.ttf */; };
+		CE352F4B27D38B38003DED21 /* ringing_tone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CE352F4A27D38B38003DED21 /* ringing_tone.mp3 */; };
 		CE52A63E27B0F0B2000DAC06 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		CE52A63F27B0F0C9000DAC06 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		CEA6156C27AD2C72005A90A1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CEA6156B27AD2C72005A90A1 /* GoogleService-Info.plist */; };
@@ -86,6 +87,8 @@
 		BEBE258887D64D0785A3C928 /* Poppins-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Regular.ttf"; path = "../assets/fonts/Poppins-Regular.ttf"; sourceTree = "<group>"; };
 		C3561494089B4F9A840C795D /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-SemiBold.ttf"; path = "../assets/fonts/Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
 		CCA57215CF4D408BAAA32295 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
+		CE24BE1927D8490200D6B4BF /* KeyedinV1.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = KeyedinV1.entitlements; path = KeyedinV1/KeyedinV1.entitlements; sourceTree = "<group>"; };
+		CE352F4A27D38B38003DED21 /* ringing_tone.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ringing_tone.mp3; sourceTree = "<group>"; };
 		CEA6156B27AD2C72005A90A1 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "KeyedinV1/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		CEB2DC703925B54D61046056 /* libPods-KeyedinV1-KeyedinV1Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KeyedinV1-KeyedinV1Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3BBB3D9BB924279AA89A759 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
@@ -140,6 +143,7 @@
 		13B07FAE1A68108700A75B9A /* KeyedinV1 */ = {
 			isa = PBXGroup;
 			children = (
+				CE24BE1927D8490200D6B4BF /* KeyedinV1.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -222,6 +226,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				CE352F4A27D38B38003DED21 /* ringing_tone.mp3 */,
 				CEA6156B27AD2C72005A90A1 /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* KeyedinV1 */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -347,6 +352,7 @@
 				D5F56C4DE85D4AF592121A6A /* Poppins-BlackItalic.ttf in Resources */,
 				FCBBE737BABF4772AFD96852 /* Poppins-Bold.ttf in Resources */,
 				B21FF77E5DD44F44A3D2D5AF /* Poppins-BoldItalic.ttf in Resources */,
+				CE352F4B27D38B38003DED21 /* ringing_tone.mp3 in Resources */,
 				113DAA2453CF4F62A50BCCC8 /* Poppins-ExtraBold.ttf in Resources */,
 				6FA5D706B1974A58A32ABBCF /* Poppins-ExtraBoldItalic.ttf in Resources */,
 				440147713C6544C0BF867994 /* Poppins-ExtraLight.ttf in Resources */,
@@ -617,6 +623,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = KeyedinV1/KeyedinV1.entitlements;
 				CURRENT_PROJECT_VERSION = 2.1;
 				DEVELOPMENT_TEAM = 58NK93P6VT;
 				ENABLE_BITCODE = NO;
@@ -648,6 +655,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = KeyedinV1/KeyedinV1.entitlements;
 				CURRENT_PROJECT_VERSION = 2.1;
 				DEVELOPMENT_TEAM = 58NK93P6VT;
 				INFOPLIST_FILE = KeyedinV1/Info.plist;

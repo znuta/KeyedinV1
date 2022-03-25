@@ -244,7 +244,7 @@ function ProposalsList(props) {
              
               <Image
                 source={{
-                  uri: props.auth.avatar,
+                  uri: props.auth.userData.avatar,
                   // avatar,
                   // "https://static.dribbble.com/users/1304678/screenshots/7301908/media/3f91189797dd514eb6446b21a4faa209.png",
                 }}
@@ -264,19 +264,19 @@ function ProposalsList(props) {
             text: 'Proposals',
             style: {color: '#fff', fontWeight: 'bold', fontSize: 16},
           }}
-          rightComponent={
-            <TouchableOpacity
-              onPress={() => {
-                setIsProposal(false);
-              }}>
-              <MaterialCommunityIcons
-                name="chart-bar"
-                size={24}
-                color="white"
-                style={{opacity: 0.8}}
-              />
-            </TouchableOpacity>
-          }
+          // rightComponent={
+          //   <TouchableOpacity
+          //     onPress={() => {
+          //       setIsProposal(false);
+          //     }}>
+          //     <MaterialCommunityIcons
+          //       name="chart-bar"
+          //       size={24}
+          //       color="white"
+          //       style={{opacity: 0.8}}
+          //     />
+          //   </TouchableOpacity>
+          // }
           barStyle={'light-content'}
           containerStyle={{
             backgroundColor: Colors.primary,

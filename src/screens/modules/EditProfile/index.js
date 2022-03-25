@@ -56,7 +56,7 @@ const dispatch = useDispatch()
     const [uploading, setUploading] = useState(false);
     const [transferred, setTransferred] = useState(0);
 
-  const [avatar, setAvatar] = useState(auth.userData.avatar);
+  const [avatar, setAvatar] = useState(userData.avatar);
   useEffect(() => {
     // GetCategory();
     const {userData} = auth
@@ -82,18 +82,21 @@ const dispatch = useDispatch()
   }, []);
 
 
-  const UploadAvatarToApi = payload => {
+  const UploadAvatarToApi =async payload => {
 
-   
-    let uri = BASEURL + `/media/upload/image/${auth.userData.id}`;
-    const data = new FormData();
-    data.append("files", payload);
+    let uri = BASEURL + `/media/user/media/${auth.userData.id}`;
 
+    // const data = new FormData();
+    // data.append("files", payload);
+     const data = {
+       avatar: payload
+      }
+    console.log("___FILE__PAYLOAD__", payload)
     dispatch(setLoading(true));
-    axios.post(uri, payload, {
+    axios.put(uri,data, {
       
       headers: {
-        'Content-Type': 'multipart/form-data;',
+        'Content-Type': 'application/json;charset=utf-8',
         Authorization: 'Bearer' + ' ' + auth.token,
       },
 
@@ -109,63 +112,6 @@ const dispatch = useDispatch()
       });
    
   };
-
-  const _pickAvatar3 = async () => {
-
-    try {
-        const result = await DocumentPicker.pick({
-        type: [DocumentPicker.types.images],
-        })
-        console.log("___IMAGE___", result)
-      let name = result[0].name;
-      let uri = result[0].uri;
-      let lastIndexOf = uri.lastIndexOf(".");
-      let ext = uri.substr(lastIndexOf+1, uri.length-1);
-      var file = {
-          name: name,
-          uri: Platform.OS === 'android' ? result[0].uri : result[0].uri.replace("file://", ""),
-      };
-        const uploadImage =  uploadImage(result[0])
-      setAvatar(uploadImage)
-        dispatch(saveAvatar(uploadImage));
-        UploadAvatarToApi(uploadImage);
-      
-    } catch (err) {
-        if (DocumentPicker.isCancel(err)) {
-        // User cancelled the picker, exit any dialogs or menus and move on
-        } else {
-        throw err
-        }
-    }
-  
-  }
-
-  const selectImage = () => {
-    const options = {
-      maxWidth: 2000,
-      maxHeight: 2000,
-      storageOptions: {
-        skipBackup: true,
-        path: 'images'
-      }
-    };
-    ImagePicker.showImagePicker(options, response => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-      } else {
-        const source = { uri: response.uri };
-        console.log(source);
-        setImage(source);
-        uploadImage()
-      }
-    });
-  };
-
-  
 
   const _pickAvatar = async () => {
     console.log('Open Image Picker');
@@ -186,10 +132,14 @@ const dispatch = useDispatch()
           const file = {uri, type, base64,name:fileName , size:fileSize, width, height }
           console.log("___IMAGE___", file)
           // uploadImage(file)
-          const imageUrl = await  uploadImage(result[0])
-          setAvatar(imageUrl)
-            dispatch(saveAvatar(imageUrl));
-            UploadAvatarToApi(imageUrl);
+          dispatch(setLoading(true));
+        const imageUrl =  await uploadImage(file);
+        console.log("___IMAGE___", imageUrl)
+        setAvatar(imageUrl)
+        dispatch(saveAvatar(imageUrl));
+      await UploadAvatarToApi(imageUrl);
+         
+          
       }
       //console.log(result);
     } catch (E) {
@@ -251,7 +201,7 @@ const dispatch = useDispatch()
             activeOpacity={0.6}>
             <Image
               source={{
-                uri: avatar ? avatar : auth.avatar,
+                uri: avatar ? avatar : userData.avatar,
                 // avatar,
                 // "https://static.dribbble.com/users/1304678/screenshots/7301908/media/3f91189797dd514eb6446b21a4faa209.png",
               }}

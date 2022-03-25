@@ -79,7 +79,7 @@ const PhoneNumber = props => {
     let data = {
       phone: phone,
       country_code: country,
-      role: 'artisan'
+      role: 'protisan'
     };
     dispatch(setLoading(true));
       axios.post(uri, data).then(res => {
@@ -111,7 +111,12 @@ const PhoneNumber = props => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={{
+      flex: 1,
+     
+      paddingTop: hp('6%'),
+      backgroundColor: colors.green,
+    }}>
       <View style={styles.header_wrapper}>
         <HeaderLeft />
         <Text style={styles.header_text}>Get Started</Text>

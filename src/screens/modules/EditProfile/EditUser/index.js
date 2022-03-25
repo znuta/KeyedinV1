@@ -104,7 +104,7 @@ const {longitude="", latitude= ""} = value
   };
 
   const handleLocationAddress = (data, details) => {
-    const { description } = data;
+    const { description, terms } = data;
     const {
       geometry: {
         location: { lat, lng },
@@ -113,7 +113,7 @@ const {longitude="", latitude= ""} = value
     
     console.log("___LOcation",details,data)
 
-    setValue({ ...value, address_str: description, longitude: lng, latitude: lat });
+    setValue({ ...value, address_str: description, longitude: lng, latitude: lat, city: terms[2].value });
     
   };
 

@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
+  ImageBackground,
 } from 'react-native';
 import {
   Container,
@@ -43,7 +44,8 @@ import {BASEURL} from 'src/constants/Services';
 import {colors, hp, wp} from 'src/config/variables';
 import Button from 'src/component/Button/index';
 import axios from 'axios';
-import { setLoading, termsModalActive, privacyModalActive, } from 'src/redux/actions/AuthActions';
+import { setLoading, termsModalActive, privacyModalActive, uploadImage, setToast, } from 'src/redux/actions/AuthActions';
+import TextField from 'src/component/TextField';
 
 
 
@@ -51,15 +53,19 @@ const  GovernmentVerification = (props) => {
     const { auth, ui } = useSelector(state => state)
     const dispatch = useDispatch()
   const [avatar, setAvatar] = useState('');
-  const [govId, setGovId] = useState('');
+  const [avatarUri, setAvatarUri] = useState('');
+  const [govId, setGovId] = useState({});
+  const [cardUri, setCardUri] = useState("");
+  const [idType, setIdType] = useState('');
   const [terms, setTerms] = useState(false);
   const [agree1, setAgree1] = useState(false);
   const [agree2, setAgree2] = useState(false);
     const navigation = useNavigation();
-    
+   
 
   useEffect(() => {
-    dispatch(setLoading(false));
+    // dispatch(setLoading(false));
+   
     (async () => {
       if (Platform.OS === 'ios' && status === 'active') {
         const permissionC = await request(PERMISSIONS.IOS.CAMERA)
@@ -73,6 +79,8 @@ const  GovernmentVerification = (props) => {
       
      
     })();
+
+    getUserIdentity()
    
   }, []);
 
@@ -82,8 +90,10 @@ const  GovernmentVerification = (props) => {
       alert('Please add your Profile Picture');
     } else if (govId == '') {
       alert('Please add your Government ID');
+    }else if (idType == '') {
+      alert('Please enter the type of Government ID');
     } else {
-      next();
+      UploadGovIdToApi()
     }
 
     // props.next();
@@ -99,13 +109,11 @@ const  GovernmentVerification = (props) => {
             base64: true,
           });
       if (!result.cancelled) {
-        setAvatar(result.uri);
-        saveAvatar(result.uri);
-        UploadAvatarToApi(
-          `data:${result.type}/${
-            result.uri.split('.')[result.uri.split('.').length - 1]
-          };base64,${result.base64}`,
-        );
+       
+        const {uri} = result.assets[0]
+        setAvatar(result.assets[0]);
+        setAvatarUri(uri)
+        
       }
     
     } catch (E) {
@@ -124,15 +132,11 @@ const  GovernmentVerification = (props) => {
             base64: true,
           });
       if (!result.cancelled) {
-        console.log(result.type);
-        setGovId(result.uri);
-        
-        UploadGovIdToApi(
-          `data:${result.type}/${
-            result.uri.split('.')[result.uri.split('.').length - 1]
-          };base64,${result.base64}`,
-        );
       
+        const {uri} = result.assets[0]
+        setGovId(result.assets[0]);
+        setCardUri(uri)
+       
       }
 
     } catch (E) {
@@ -140,44 +144,57 @@ const  GovernmentVerification = (props) => {
     }
   };
 
-  const UploadAvatarToApi = text => {
-    let uri = BASEURL + '/media/upload-avatar';
+  const getUserIdentity = () => {
+    let uri = BASEURL + `/users/verify-identity/${auth.userData.id}`;
 
-    let data = {
-      image: text,
-    };
+   
     dispatch(setLoading(true));
-    axios.put(uri,JSON.stringify(data), {
+    axios.get(uri, {
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
         Authorization: 'Bearer' + ' ' + auth.token,
       },
     }).then(res => {
-        console.log(res);
+      
+        const {data} = res.data
+        const {id_card_url = "", passport_url = "", id_type = ""} = data
+        setAvatarUri(passport_url)
+        setCardUri(id_card_url)
+        setIdType(id_type)
         dispatch(setLoading(false));
       })
       .catch(error => {
-        console.log('Avatar could not be uploaded', error);
+        console.log('ERROR__ID__GET', error);
         dispatch(setLoading(false));
        
       });
    
   };
 
-  const UploadGovIdToApi = text => {
-    let uri = BASEURL + '/employer/government-id';
-
-    let data = {
-      government_id: text,
-    };
+  const UploadGovIdToApi = async () => {
     dispatch(setLoading(true));
-    axios.post(uri, JSON.stringify(data),{
+    let uri = BASEURL + `/users/verify-identity/${auth.userData.id}`;
+    const govIDUrl = await uploadImage(govId)
+    const avatarURL =  await uploadImage(avatar)
+   
+    let data = {
+      id_type: idType,
+      id_card_url: govIDUrl,
+      passport_url: avatarURL
+    };
+
+    axios.put(uri, data,{
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
         Authorization: 'Bearer' + ' ' + auth.token,
       },
-    }).then(res => console.log(res))
-      .catch(error => {
+    }).then(res =>{ 
+     
+      dispatch(setLoading(false));
+      dispatch(setToast({ title: "Submition Successful", message: `Submition of your government identity was successful.`, show: true, type:"success"}))
+    }).catch(error => {
+      console.log("___ERROR__ID",error)
+        dispatch(setToast({ title: "Submition Error", message: `Submition of your government identity was not successful.`, show: true, type:"error"}))
         dispatch(setLoading(false));
         
       });
@@ -245,92 +262,28 @@ const  GovernmentVerification = (props) => {
           <ContentWrap>
             <ImageWrap>
               <AvatarPlaceholder activeOpacity={0.6} onPress={_pickAvatar}>
-                {avatar != '' && (
+               
+              
                   <Image
-                    source={{uri: avatar}}
-                    // style={{ width: 200, height: 200, borderRadius: 100 }}
+                   resizeMode='contain'
+                    source={avatarUri?{uri:avatarUri}:require('src/assets/icons/passport.png')}
                     style={{
-                      ...StyleSheet.absoluteFillObject,
-                      borderRadius: (Layout.window.height * 0.2) / 2,
-                    }}
-                  />
-                )}
-                {avatar == '' && (
-                  <Image
-                    source={require('src/config/images/snap.jpeg')}
-                    style={{
-                      height: wp('30%'),
-                      width: wp('30%'),
+                      height: '100%',
+                      width: '100%',
                       borderRadius: 50,
                     }}
-                    // style={{
-                    //   ...StyleSheet.absoluteFillObject,
-                    //   borderRadius: (Layout.window.height * 0.2) / 2,
-                    // }}
+                   
                   />
-                  // <Feather name="plus" size={36} color="#4a3f35" />
-                )}
+             <Feather style={{
+               position: 'absolute',
+              //  bottom: -20,
+               color: colors.green
+            }} name="camera" size={36} />
+               
               </AvatarPlaceholder>
             </ImageWrap>
 
-            {/* <ImageWrap>
-              <View style={{}}>
-                <Text>Picture component</Text>
-              </View>
-              <AvaterPlaceholder activeOpacity={0.6} onPress={_pickAvatar}>
-                <Image
-                  source={
-                    avatar == ""
-                      ? require("../../config/images/noun.png")
-                      : { uri: avatar }
-                  }
-                  style={{
-                    backgroundColor: "red",
-                    ...StyleSheet.absoluteFillObject,
-                    borderRadius: (Layout.window.height * 0.2) / 2,
-                  }}
-                />
-              </AvaterPlaceholder>
-            </ImageWrap> 
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <TakePhotoButton onPress={_snapPicture}>
-                <Text
-                  style={{
-                    fontWeight: "500",
-                    fontSize: 14,
-                    color: Colors.secondary,
-                    letterSpacing: 0,
-                  }}
-                >
-                  Take a Photo
-                </Text>
-              </TakePhotoButton>
-              <Text>
-                {"  "}
-                {"  "}
-                {"  "}
-              </Text>
-              <TakePhotoButton onPress={_pickAvatar}>
-                <Text
-                  style={{
-                    fontWeight: "500",
-                    fontSize: 14,
-                    color: Colors.primary,
-                    letterSpacing: 0,
-                  }}
-                >
-                  Upload a Photo
-                </Text>
-              </TakePhotoButton>
-            </View>*/}
-
-            {/* Government ID section */}
+           
             <View
               style={{
                 width: '100%',
@@ -342,41 +295,38 @@ const  GovernmentVerification = (props) => {
               }}>
               <IDWrap>
                 <IDPlaceholder onPress={() => _pickId()}>
-                  {govId ? (
-                    <Image
-                      source={{uri: govId}}
-                      // style={{ width: 200, height: 200, borderRadius: 100 }}
-                      style={{
-                        ...StyleSheet.absoluteFillObject,
-                        borderRadius: 15,
-                        padding: hp('5%'),
-                      }}
-                      resizeMode="contain"
-                    />
-                  ) : (
-                    <>
-                      <Image
+                  
+                      <ImageBackground
+                      resizeMode='contain'
                         style={{
-                          width: '90%',
-                          height: hp('10%'),
-                          marginTop: hp('1%'),
+                          minWidth: '90%',
+                        
+                          flex: 1,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          
+                         
                         }}
-                        source={require('src/assets/icons/idskeleton.gif')}
-                      />
+                        source={cardUri ?{uri: cardUri} : require('src/assets/icons/idskeleton.gif')}
+                      >
                       <Button
                         type="primary"
                         text="Upload ID"
+                        onPress={() => _pickId()}
                         additionalStyle={{
                           button: {
-                            width: wp('30%'),
+                            width: wp('40%'),
                             paddingVertical: hp('1.5%'),
-                            marginTop: hp('2%'),
+                            // marginBottom: hp('4%'),
+                           backgroundColor: 'transparent'
                           },
-                          text: {fontSize: wp('3%'), fontWeight: '500'},
+                          text: {fontSize: wp('4%'), fontWeight: '700', color: colors.green2},
                         }}
                       />
-                    </>
-                  )}
+
+                      </ImageBackground>
+                  
+
                 </IDPlaceholder>
               </IDWrap>
               <Text>
@@ -389,9 +339,19 @@ const  GovernmentVerification = (props) => {
                   />
                 )} */}
               </Text>
-              <Text style={{fontWeight: '300', color: colors.grey}}>
+              <Text style={{fontWeight: '300',  color: colors.grey}}>
                 Upload a valid government issued ID
               </Text>
+
+              <TextField
+              additionalStyle={{inputField:{
+                backgroundColor: colors.white
+              }}}
+                value={idType}
+                label="ID type"
+                onChangeText={value => setIdType(value)}
+                placeholder="Type of government issued ID"
+              />
             </View>
             {/* Government ID section */}
 
@@ -434,22 +394,7 @@ const  GovernmentVerification = (props) => {
                   </Text>
                 </Text>
               </View>
-              {terms && (
-                <View>
-                  <ShadowBtn onPress={nextStep}>
-                    <View style={styles.shadowFirst} />
-                    <View style={styles.shadowSecond} />
-                    <View style={styles.shadowMain}>
-                      <AntDesign
-                        name="arrowright"
-                        color="white"
-                        size={24}
-                        style={{marginTop: -5}}
-                      />
-                    </View>
-                  </ShadowBtn>
-                </View>
-              )}
+             
             </View>
 
             <TouchableOpacity
@@ -462,7 +407,7 @@ const  GovernmentVerification = (props) => {
                 justifyContent: 'center',
                 borderRadius: 25,
               }}
-              onPress={() => navigation.goBack()}
+              onPress={() => nextStep()}
              
             >
               <Text

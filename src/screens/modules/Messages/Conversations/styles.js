@@ -75,7 +75,7 @@ import {colors, fonts, hp, wp} from 'src/config/variables';
     },
     messageSender: {
       fontWeight: "700",
-      fontSize: 16,
+      fontSize: wp('3.5%'),
       flex: 1,
       marginRight: 10,
       color: colors.green,
@@ -89,10 +89,10 @@ import {colors, fonts, hp, wp} from 'src/config/variables';
       alignItems: "center",
     },
     messageBody: {
-      color: Colors.mutedText,
+      color: colors.grey,
       lineHeight: 20,
       flex: 1,
-      fontSize: wp('3.4%')
+      fontSize: wp('3%')
     },
     messageHeader: {
       color: colors.black,

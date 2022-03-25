@@ -8,6 +8,7 @@
 
  import React, {useState, useEffect} from 'react';
  import {
+   Alert,
    SafeAreaView,
    ScrollView,
    StatusBar,
@@ -30,6 +31,18 @@
 import axios from 'axios';
 import SplashScreen from 'react-native-splash-screen';
 import { BASEURL } from 'src/constants/Services';
+import {decode, encode} from 'base-64';
+import Toast from 'src/component/Toast';
+import { createNotificationListeners, checkPermission } from 'src/redux/actions/Notification';
+
+
+if (!global.btoa) {
+  global.btoa = encode;
+}
+
+if (!global.atob) {
+  global.atob = decode;
+}
 
  let appID = '203940f744fdbcce';
  let region = 'us';
@@ -64,8 +77,11 @@ import { BASEURL } from 'src/constants/Services';
  );
  
  const persistedStore = persistStore(store);
+
+ var topics = [];
  
  const App = () => {
+  const [localToast, setLocalToast] = useState({});
    const STYLES = ['default', 'dark-content', 'light-content'];
    const TRANSITIONS = ['fade', 'slide', 'none'];
  
@@ -79,7 +95,14 @@ import { BASEURL } from 'src/constants/Services';
   useEffect(() => {
     
     const unsubscribe = messaging().onMessage(async remoteMessage => {
-      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+      // Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+      const {notification = {}} = remoteMessage;
+      const {title = "", body=""} = notification
+        setLocalToast({ title: title, message: body.substring(0,120), show: true, type:"success", callback: ()=>{
+        setLocalToast({})
+       
+       
+      }})
     });
 
     return unsubscribe;
@@ -87,10 +110,15 @@ import { BASEURL } from 'src/constants/Services';
  
 
    useEffect(() => {
-        SplashScreen.hide();
+       
+        setTimeout(() => {
+          SplashScreen.hide();
+        }, 3000);
+        checkPermission();
+       createNotificationListeners();
       }, []);
  
- 
+     
    return (
      <Provider store={store}>
        <PersistGate persistor={persistedStore} loading={false}>
@@ -103,6 +131,7 @@ import { BASEURL } from 'src/constants/Services';
          />
  
          <Splash />
+         <Toast {...localToast}/>
        </PersistGate>
      </Provider>
    );

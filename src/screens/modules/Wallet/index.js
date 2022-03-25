@@ -44,6 +44,7 @@ function Wallet(props) {
   const refDepositeSheet = useRef();
   const dispatch = useDispatch()
   const { auth, wallet } = useSelector(state => state)
+  const {userData = {}} = auth
   const [refreshing, setRefreshing] = useState(false);
   const [transactionHistory, setTransactionHistory] = useState([{},{}]);
   const [balance, setBalance] = useState(0);
@@ -169,7 +170,7 @@ function Wallet(props) {
             style={{paddingHorizontal: 10}}>
             <Image
               source={{
-                uri: auth.avatar,
+                uri: userData.avatar,
                 // avatar,
                 // "https://static.dribbble.com/users/1304678/screenshots/7301908/media/3f91189797dd514eb6446b21a4faa209.png",
               }}

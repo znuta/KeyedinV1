@@ -23,71 +23,19 @@ import TimeAgo from "react-native-timeago";
 import { useNavigation } from "@react-navigation/native";
 import styled from 'styled-components';
 import {colors, fonts, hp, wp} from 'src/config/variables';
-
+import { debounce } from "debounce";
 
 function Conversations(props) {
     const navigation = useNavigation();
     const dispatch = useDispatch()
     const {auth, chat} = useSelector(state=>state)
   const [refreshing, setRefreshing] = useState(false);
-  const [filterParam, setFilterParam] = useState("");
-  const [filterResult, setFilterResult] = useState([
-    // {
-    //   conversationWith: {
-    //     uid: "2383",
-    //     name: "Arisekola Atunde",
-    //     status: "online",
-    //     avatar: 'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80'
-    //   },
-    //   lastMessage: {
-    //     header: "Build an Online Shopping App",
-    //     text: "Hi, how ae you doing",
-    //     sentAt: 23313,
-    //     category: "message",
-    //     action: 'phone'
-    //   },
-    //   unreadMessageCount: 2,
-    //   conversationId: 2
-    // },
-    // {
-    //   conversationWith: {
-    //     uid: "233",
-    //     name: "Toyeeb Atunde",
-    //     status: "online",
-    //     avatar: 'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80'
-    //   },
-    //   lastMessage: {
-    //     text: "You: Alright then.. How about we set up a milestone for the....",
-    //     header: "Build an Online Shopping App",
-    //     sentAt: 2333,
-    //     category: "message",
-    //     action: 'phone'
-    //   },
-    //   unreadMessageCount: 2,
-    //   conversationId: 2
-    // },
-    // {
-    //   conversationWith: {
-    //     uid: "234",
-    //     name: "Ajibola A",
-    //     status: "offline",
-    //     avatar: 'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80'
-    //   },
-    //   lastMessage: {
-    //     header: "Build a Web App",
-    //     text: "You: Alright then.. How about we set up a milestone for the....",
-    //     sentAt: 23393,
-    //     category: "message",
-    //     action: 'phone'
-    //   },
-    //   unreadMessageCount: 2,
-    //   conversationId: 2
-    // }
-  ]);
+  const [filterParam, setFilterParam] = useState(null);
+  const [filterResult, setFilterResult] = useState([]);
 
   useEffect(() => {
     dispatch(getAllConversations((response) => {
-      console.log("___CONVERSTION__", response)
+     
       setFilterResult(response)
       setRefreshing(false)
     }));
@@ -96,20 +44,26 @@ function Conversations(props) {
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     dispatch(getAllConversations((response) => {
-      console.log("___CONVERSTION__", response)
+     
       setFilterResult(response)
       setRefreshing(false)
     }));
   }, refreshing);
 
-  const _filterMessages = (filter) => {
-    setFilterParam(filter);
-    const filtered = chat.conversations.filter((convo) => {
-      const convoData = `${convo.conversationWith.name.toLowerCase()}`;
-      const filterData = filter.toLowerCase();
-      return convoData.indexOf(filterData) > -1;
-    });
-    setFilterResult(filter);
+  const _filterMessages = (text) => {
+    
+    if (text) {
+      
+      const filtered = chat.conversations.filter((convo) => {
+        const convoData = `${convo.conversationWith.name.toLowerCase()}`;
+        const filterData = text.toLowerCase();
+        return convoData.indexOf(filterData) > -1;
+      });
+     
+      setFilterResult(filtered);
+
+    }
+   
   };
 
   const _resetFilter = () => {
@@ -117,9 +71,28 @@ function Conversations(props) {
     setFilterResult([]);
   };
 
+  const handler = useCallback(debounce((filterParam)=>_filterMessages(filterParam), 1000), []);
+  useEffect(() => {
+  
+    if (filterParam !== "") {
+      handler(filterParam)
+    }else{
+      if (filterParam !== null ) {
+
+        dispatch(getAllConversations((response) => {
+          
+          setFilterResult(response)
+          setRefreshing(false)
+        }));
+
+      }
+    }
+   
+},[filterParam])
+
   
   const MessageItem = ({ conversation }) => {
-    console.log("__CONVERSATION____",conversation)
+   
     let peerId = conversation.conversationWith.uid;
     let peerName = conversation.conversationWith.name;
     return (
@@ -287,7 +260,7 @@ function Conversations(props) {
 
                               <Image
                           source={{
-                            uri: auth.avatar,
+                            uri: auth.userData.avatar,
                             // avatar,
                             //"https://static.dribbble.com/users/1304678/screenshots/7301908/media/3f91189797dd514eb6446b21a4faa209.png",
                           }}
@@ -299,29 +272,29 @@ function Conversations(props) {
           text: "Messages",
           style: { color: "#fff", fontWeight: "500", fontSize: 18 },
         }}
-        rightComponent={ 
-              <TouchableOpacity
-              style={{
-                          justifyContent: "flex-end",
-                          alignItems: "center",
-                          //justifyContent: "center",
-                          // backgroundColor: "red",
-                          padding: 8,
-                          //paddingBottom: 5,
-                        }}
-              onPress={() => {
-                  //alert('to be implemented');
-                  //isProposal = false;
-                  //setIsProposal(false);
-                }}
-              >
-                  <Feather
-                      name="more-vertical"
-                      size={24}
-                      color="white"
-                      style={{ opacity: 0.8,  }}
-                    />
-                </TouchableOpacity>}
+        // rightComponent={ 
+        //       <TouchableOpacity
+        //       style={{
+        //                   justifyContent: "flex-end",
+        //                   alignItems: "center",
+        //                   //justifyContent: "center",
+        //                   // backgroundColor: "red",
+        //                   padding: 8,
+        //                   //paddingBottom: 5,
+        //                 }}
+        //       onPress={() => {
+        //           //alert('to be implemented');
+        //           //isProposal = false;
+        //           //setIsProposal(false);
+        //         }}
+        //       >
+        //           <Feather
+        //               name="more-vertical"
+        //               size={24}
+        //               color="white"
+        //               style={{ opacity: 0.8,  }}
+        //             />
+        //         </TouchableOpacity>}
         barStyle={"light-content"}
         containerStyle={{
           backgroundColor: colors.green,
@@ -332,7 +305,7 @@ function Conversations(props) {
           borderBottomRightRadius:50
         }}
       />
-      {filterResult.length !== 0 && (
+      
         <View style={styles.searchWrap}>
           <View style={styles.search}>
             <Feather name="search" size={20} color="grey" />
@@ -340,21 +313,23 @@ function Conversations(props) {
               placeholder="Search by name..."
               //placeholderTextColor="white"
               style={styles.searchInput}
-              onChangeText={(param) => _filterMessages(param)}
+              onChangeText={(param) =>{ 
+              
+                setFilterParam(param)}}
               value={filterParam}
               autoCorrect={false}
             />
-            {filterParam.length > 0 && (
+            {filterParam ? 
               <MaterialIcons
                 name="cancel"
-                color="#FFFFFF"
+                color="grey"
                 size={18}
                 onPress={() => _resetFilter()}
-              />
-            )}
+              />: null
+            }
           </View>
         </View>
-      )}
+     
 
       <View
         style={[
@@ -376,14 +351,14 @@ function Conversations(props) {
 
 
 const InnerContentContainer = styled.View`
-  padding-vertical: ${hp('1%')};
+  padding-vertical: ${hp('0.1%')};
   background-color: #ffffff;
   margin-vertical: ${hp('1%')};
 min-height: ${hp('10%')}
   flex: 1;
-  padding-horizontal: ${wp('2.5%')};
+  padding-horizontal: ${wp('2%')};
 
-  border-radius: ${wp('2%')};
+  border-radius: ${wp('4%')};
   ${'' /* align-items: center; */}
 `;
 

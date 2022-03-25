@@ -105,7 +105,7 @@ const UserDetails = props => {
       first_name: firstname,
       last_name: lastname,
       email: email,
-      role: 'artisan',
+      role: 'protisan',
       password: password,
       // city: "IKeja",
       // state: "Lagos",
@@ -125,11 +125,13 @@ const UserDetails = props => {
          
           if (res.status === 200) {
             const {data = {}} = res.data;
+            
             const {
               first_name = '',
               last_name = '',
               id = '',
             } = data;
+
             let fullname = first_name + ' ' + last_name;
             let uid = id;
            
@@ -151,6 +153,7 @@ const UserDetails = props => {
            
             dispatch(sendUserDetails({...data}))
             props.next();
+
           } 
         })
         .catch(error => {

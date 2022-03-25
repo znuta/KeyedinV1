@@ -101,7 +101,7 @@ function EditEmployment(props) {
   
     let data = {
       user_id: auth.userData.id,
-      role: 'artisan',
+      role: 'protisan',
       organizations
     };
     dispatch(setLoading(true));

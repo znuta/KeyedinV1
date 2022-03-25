@@ -9,6 +9,7 @@ import {
   Image,
   KeyboardAvoidingView,
   ScrollView,
+  Platform,
 } from 'react-native';
 import {
   Title,
@@ -45,6 +46,7 @@ import Toast from 'react-native-toast-message';
 import { privacyModalActive, setLocation, termsModalActive } from 'src/redux/actions/AuthActions';
 import TermsModal from 'src/component/TermsModal';
 import PrivacyModal from 'src/component/PrivacyModal';
+import { checkPermission, getFCMToken } from 'src/redux/actions/Notification';
 const UserLogin = props => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -57,7 +59,7 @@ const UserLogin = props => {
   let [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
   const [terms, setTerms] = useState(false);
   const [passwordReveal, setPasswordReveal] = useState(true);
-
+  var topics = [];
   const checkEmptyInput = () => {
     if (firstname == '' || firstname == undefined) {
       alert('Please fill in your name');
@@ -84,15 +86,22 @@ const UserLogin = props => {
 
   const sendFcmToken = async (id,authToken) => {
     try {
-      await messaging().registerDeviceForRemoteMessages();
-      const token = await messaging().getToken();
-console.log("___DEVICE__TOKEN___", token)
-    const res=  await axios.put(`${BASEURL}/users/device/${id}`, {device_token:token}, {
-        headers: {
-          'Content-Type': 'application/json;charset=utf-8',
-          Authorization: 'Bearer' + ' ' + authToken,
-        }});
-        console.log("___DEVICE__TOKEN__RES_", res)
+    
+      const token_permission = await checkPermission();
+     if (token_permission) {
+      const token = await getFCMToken()
+      if (token) {
+        await AsyncStorage.setItem("notification_token", token)
+        const res=  await axios.put(`${BASEURL}/users/device/${id}`, {device_token:token}, {
+          headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            Authorization: 'Bearer' + ' ' + authToken,
+          }});
+       }
+     }
+      
+        
+      
     } catch (err) {
       //Do nothing
       console.log("DEVICE_TOKEN___ERROR___",err);
@@ -100,6 +109,8 @@ console.log("___DEVICE__TOKEN___", token)
     }
   };
 
+
+  
   const login = () => {
     let uri = BASEURL + '/auth/login';
   
@@ -108,7 +119,7 @@ console.log("___DEVICE__TOKEN___", token)
     let data = {
       email: email,
       password: password,
-      role: 'artisan'
+      role: 'protisan'
     };
     
     
@@ -130,18 +141,18 @@ console.log("___DEVICE__TOKEN___", token)
          sendFcmToken(id,data.token)
         var user = new CometChat.User(uid.toString());
         user.setName(fullname);
-        CometChat.createUser(user, apikey).then(
-          user => {
-            console.log('Chat account created: ', user);
-            dispatch(setLoading(false));
-            AsyncStorage.setItem("token", data.token)
-            props.next();
-          },
-          error => {
-            console.log('Error creating chat account: ', error.response);
-            dispatch(setLoading(false));
-          },
-        );
+        // CometChat.createUser(user, apikey).then(
+        //   user => {
+        //     console.log('Chat account created: ', user);
+        //     dispatch(setLoading(false));
+        //     AsyncStorage.setItem("token", data.token)
+        //     props.next();
+        //   },
+        //   error => {
+        //     console.log('Error creating chat account: ', error.response);
+        //     dispatch(setLoading(false));
+        //   },
+        // );
         
             CometChat.getLoggedinUser().then(
               user => {
@@ -151,7 +162,21 @@ console.log("___DEVICE__TOKEN___", token)
               apikey,
             ).then(
               user => {
+               
                 console.log('Chat login successful: ', {user});
+                let isIOS = Platform.OS === 'ios';
+                var userTopic = appId + "_user_" + user.getUid();
+                if(isIOS){
+                  var userTopicIos = userTopic + "_ios";
+                  topics.push(userTopicIos);
+                }else{
+									var userTopicIos = userTopic + "_notification";
+                  topics.push(userTopic);
+                }
+                topics.forEach(async topic => {
+                  console.log('subscribing to topic => ', topic);
+                  await messaging.subscribeToTopic(topic);
+                });
               },
               error => {
                 console.log('Chat login failed with exception: ', {error});
@@ -220,7 +245,8 @@ console.log("___DEVICE__TOKEN___", token)
       <TouchableOpacity
         style={styles.header_left}
         onPress={() => navigation.goBack()}>
-        <MaterialIcons name="arrow-back" style={styles.header_icon} />
+
+        <MaterialIcons name="close" style={styles.header_icon} />
       
       </TouchableOpacity>
     );
@@ -348,7 +374,9 @@ console.log("___DEVICE__TOKEN___", token)
               style={{marginTop: 20, marginBottom: 0, alignItems: 'center'}}>
               <Text
                 style={{color: colors.green, fontWeight: 'bold'}}
-                onPress={() => navigation.navigate('ForgotPassword')}>
+                onPress={() =>{ 
+                  navigation.navigate('ForgotPassword')
+                  }}>
                 Forgotten Password ?
               </Text>
               <Text style={styles.agreement}>

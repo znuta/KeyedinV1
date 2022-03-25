@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Image,
   View,
@@ -13,7 +13,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Homebtn from 'src/assets/icons/homebtn.svg';
 import Homebtnalt from 'src/assets/icons/homebtnalt.svg';
-
+import { CommonActions } from '@react-navigation/native';
 import Projectbtn from 'src/assets/icons/projectbtn.svg';
 import Projectbtnalt from 'src/assets/icons/projectbtnalt.svg';
 
@@ -52,6 +52,10 @@ import EditUser from 'src/screens/modules/EditProfile/EditUser';
 import Conversations from 'src/screens/modules/Messages/Conversations';
 import {colors, hp,wp,fonts} from 'src/config/variables';
 import { CallingScreen } from 'src/screens/modules/Messages/CallingScreen';
+import { VideoCallScreen } from 'src/screens/modules/Messages/VideoCallScreen';
+import { CometChat } from '@cometchat-pro/react-native-chat';
+import { getUser } from 'src/redux/actions/AuthActions';
+
 
 
 const Tab = createBottomTabNavigator();
@@ -77,6 +81,85 @@ function InsightScreen() {
 }
 
 export function HomeTabs({navigation, route}) {
+
+  useEffect(()=>{
+    addCallListner()
+  },[])
+
+  const addCallListner = () =>{
+    var listnerID = "CHAT_SCREEN_CALL_LISTNER";
+  
+    CometChat.addCallListener(
+      listnerID,
+      new CometChat.CallListener({
+        onIncomingCallReceived(call) {
+          console.log("___CALL__HOME__LOG", call);
+          getUser(call.receiverId,({user = {}, expertise = {}, employment = {},education = {},comments = {}, rating=""})=>{
+
+            const defaultLayout = 1;
+            const isOutgoing = false;
+           navigation.navigate("CallingScreen", {
+              call: call,
+              enableDefaultLayout: defaultLayout,
+              isOutgoingCall: isOutgoing,
+              entity: call.getCallInitiator(),
+              entityType: "user",
+              acceptedFrom: "Chat",
+              callType: call.type,
+              userObject: user
+            });
+
+          })
+         
+        },
+        onOutgoingCallAccepted(call) {
+          console.log('Incoming Call Accepted__NAV_', call);
+        //   setCallObject(call)
+        // startCall();
+        getUser(call.receiverId,({user = {}, expertise = {}, employment = {},education = {},comments = {}, rating=""})=>{
+
+          const defaultLayout = 1;
+          const isOutgoing = true;
+        //  navigation.reset("CallingScreen", {
+        //     call: call,
+        //     enableDefaultLayout: defaultLayout,
+        //     isOutgoingCall: isOutgoing,
+        //     outgoingCallAccepted: true,
+        //     entity: call.getCallInitiator(),
+        //     entityType: "user",
+        //     acceptedFrom: "Chat",
+        //     callType: call.type,
+        //     userObject: user
+        //   });
+
+
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 1,
+              routes: [
+                {
+                  name: 'CallingScreen',
+                  params: {
+                    call: call,
+                    enableDefaultLayout: defaultLayout,
+                    isOutgoingCall: isOutgoing,
+                    outgoingCallAccepted: true,
+                    entity: call.getCallInitiator(),
+                    entityType: "user",
+                    acceptedFrom: "Chat",
+                    callType: call.type,
+                    userObject: user
+                  },
+                },
+              ],
+            })
+          );
+
+        })
+      },
+      })
+    );
+  }
 
 
   return (
@@ -187,6 +270,8 @@ export function HomeTabs({navigation, route}) {
 const Stack = createStackNavigator();
 const BottomTabComponent = reduxProps => {
   
+
+  
   return (
     <Stack.Navigator
     screenOptions={{
@@ -209,8 +294,10 @@ const BottomTabComponent = reduxProps => {
       <Stack.Screen name="EditEducation" component={EditEducation} />
       <Stack.Screen name="EditUser" component={EditUser} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
+     
       <Stack.Screen name="ChatScreen" component={ChatScreen} />
       <Stack.Screen name="CallingScreen" component={CallingScreen} />
+      <Stack.Screen name="VideoCallScreen" component={VideoCallScreen} />
       <Stack.Screen name="MainCallScreen" component={MainCallScreen} />
       {/* 
      

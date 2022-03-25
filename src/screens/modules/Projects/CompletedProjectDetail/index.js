@@ -355,7 +355,7 @@ const onChangeText = (key, data) => {
                     <ProposalImage style={{}}>
                       <Image
                         source={{
-                          uri: item.uri,
+                          uri: item,
                         }}
                         style={{...StyleSheet.absoluteFill, borderRadius: 8}}
                       />
@@ -401,35 +401,48 @@ const onChangeText = (key, data) => {
         </InnerContentContainer>
 
         <MapContentContainer>
-        <MapView
+          
+          <MapView
         ref={mapRef}
         provider={PROVIDER_GOOGLE}
-        style={{ flex: 1, borderRadius: 10, height: hp('30%') }}
-       
-        
+        style={{ flex: 1, height: hp('30%') }}
+        initialRegion={{
+          latitude: item.location && item.location.coordinates[1],
+          longitude: item.location && item.location.coordinates[0],
+          longitudeDelta: 0.05,
+         latitudeDelta: 0.05,
+        }}
+        region={{
+          latitude: item.location && item.location.coordinates[1],
+          longitude: item.location && item.location.coordinates[0],
+          longitudeDelta: 0.05,
+          latitudeDelta: 0.05,
+        }}
         zoomEnabled={true}
         showsUserLocation={true}
-        
-        minZoomLevel={5}>
+        initialPosition={{
+          latitude: item.location && item.location.coordinates[1],
+          longitude: item.location && item.location.coordinates[0],
+          longitudeDelta: 0.05,
+          latitudeDelta: 0.05,
+        }}
+        minZoomLevel={2}>
         
           <Marker
             onSelect={ ()=>{}}
-            style={{width: 600, height: 600}}
+            style={{width: 400, height: 400}}
             identifier={item.id}
             id={item.id}
-            draggable={true}
+            draggable={false}
             coordinate={{
               latitude: item.location && item.location.coordinates[1],
               longitude: item.location && item.location.coordinates[0],
-             
             }}
-            // image={require('src/assets/marker.png')}
-            // resizeMode="contain"
+         
           >
            
             <ImageBackground
               source={require('src/assets/mark.png')}
-              resizeMode="contain"
               style={{
                 width: 50,
                 height: 50,
@@ -440,8 +453,6 @@ const onChangeText = (key, data) => {
               }}>
               <Image
                 source={{ uri: item && item.avatar ? item.avatar : defaultImage,}}
-                // resizeMode="contain"
-                resizeMode="center"
                 style={{
                   width: 20,
                   height: 20,

@@ -49,6 +49,7 @@ import Empty from 'src/component/Empty';
 import EditProfilePen from 'src/assets/icons/editprofilepen.svg';
 import {hp, wp} from 'src/config/variables';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   setLoading,
   sendExpert,
@@ -56,6 +57,9 @@ import {
   GetExpertiseFromApi,
   GetPortfolio,
   uploadImage,
+  getUser,
+  sendEducationDetails,
+  sendWorkDetails,
 } from 'src/redux/actions/AuthActions';
 import ReviewItem from 'src/component/ReviewItem';
 
@@ -81,6 +85,8 @@ const images = {
 function ArtisanProfile(props) {
   const navigation = useNavigation();
   const dispatch = useDispatch()
+  const { auth  } = useSelector(state => state);
+  const {expertise = {}, userData = {}} = auth
   // const [reviews, setReviews] = useState(REVIEWS);
   const [reviewart, setReviewart] = useState('');
   const [activeGallery, setActiveGallery] = useState(null);
@@ -92,15 +98,14 @@ function ArtisanProfile(props) {
   const [preimage, setPreimage] = useState({});
   const [imchange, setImchange] = useState(true);
   const [expertises, setExpertises] = useState({});
-  const [videoUrl, setvideoUrl] = useState('https://vjs.zencdn.net/v/oceans.mp4');
+  const [videoUrl, setvideoUrl] = useState(userData.video || 'https://vjs.zencdn.net/v/oceans.mp4');
   const [rating, setRating] = useState({});
   const [jobInsight, setJobInsight] = useState({});
   const [average_rating, setAverage_rating] = useState('');
   const [quality, setQuality] = useState('');
   const [reviews, setReviews] = useState([]);
   const [view, setView] = useState({});
-  const { auth  } = useSelector(state => state);
-  const {expertise = {}} = auth
+ 
   const [play, setPlay] = useState(true)
   const defaultImg =
     'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80';
@@ -114,15 +119,27 @@ function ArtisanProfile(props) {
     const art = artisan.reviews ?? 0;
     setReviewart(art);
     //console.log(portfolio);
-    GetProfile();
-    dispatch(GetExpertiseFromApi(auth.userData.id))
-    GetRating();
-    GetInsights();
-    GetArtisanReview();
+    // GetProfile();
+    // dispatch(GetExpertiseFromApi(auth.userData.id))
+    // GetRating();
+    // GetInsights();
+    // GetArtisanReview();
+    getUser(auth.userData.id, ({user = {}, expertise = {}, employment = {},education = {},comments = {}, rating=""}) => {
+      console.log("___USER___LOG__+", user)
+      setArtisan(user);
+      setExpertises(expertise)
+      dispatch(sendWorkDetails(employment.organizations))
+      dispatch(sendExpert(expertise))
+      dispatch(sendEducationDetails(education.institutions));
+      setReviews(comments)
+      setRating(rating);
+    });
+   
     GetPortfolio(auth.userData.id,(res,err)=>{
       if (err !== null) {
         
       }else{
+        console.log("___PORTFOLIO___LOG__+", res)
         setPortfolio(res)
       }
     })
@@ -187,8 +204,9 @@ function ArtisanProfile(props) {
           includeBase64: true
         });
         if (!result.cancelled) {
-          console.log('duration');
+          console.log('___duration____',result);
           const duration = Math.round(result.duration / 1000);
+          const {assets} = result
           if (duration > 30) {
             alert('This video is more than 30 seconds');
           } else {
@@ -204,9 +222,13 @@ function ArtisanProfile(props) {
               {
                 text: 'Yes',
                 onPress: async () => {
-                  const imageUrl =  await uploadImage(result)
-            setvideoUpload(imageUrl);
-            UploadVideoApi(imageUrl);
+                  try {
+                   
+                    UploadVideoApi(assets[0]);
+                  } catch (error) {
+                    console.log("___LOG___EROR_SYS__", error)
+                  }
+                 
                 },
               },
             ]);
@@ -222,31 +244,34 @@ function ArtisanProfile(props) {
     
   };
 
-  const UploadVideoApi = item => {
+  const UploadVideoApi = async (item) => {
+   dispatch(setLoading(true));
+    const imageUrl =  await uploadImage(item)
+    setvideoUpload(imageUrl);
     let uri = BASEURL + `/media/user/media/${auth.userData.id}`;
     setVideoVisible(false);
 
     //const { status } = await Permissions.askAsync(Permissio);
 
     let data = {
-      video: item,
+      video: imageUrl,
     };
-    setLoading(true);
-    axios.post(uri, JSON.stringify(data),{
+   
+    axios.put(uri, data,{
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
-        Authorization: 'Bearer' + ' ' + auth.userData.token,
+        Authorization: 'Bearer' + ' ' + auth.token,
       },
     })
       .then(res => {
-        console.log('Look here', res.data); 
+        console.log('___VIDEO__UPLOAD', res.data); 
          dispatch(setLoading(false));
           setVideoVisible(false);
          
       })
       .catch(error => {
-        setLoading(false);
-        console.log('first', error);
+        dispatch(setLoading(false));
+        console.log('___VIDEO__UPLOAD__FAILED__', error);
        
       });
 
@@ -288,14 +313,9 @@ function ArtisanProfile(props) {
       .then(res => {
         //GetPortfolio();
         const { data = {} } = res.data
-        dispatch({type: 'API_PORTFOLIO_DATA', data:data.portfolio})
-        dispatch(saveAvatar(
-          res.data.image ??
-            'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
-        ));
-        if (res.data.profile_video != null) {
-          setvideoUrl(res.data.data.profile_video);
-        }
+        console.log('Profile___', res);
+       
+        setvideoUrl(data.user.video);
        
       })
       .catch(error => {
@@ -455,10 +475,10 @@ function ArtisanProfile(props) {
       },
       {
         text: 'Yes',
-        onPress: () => {
+        onPress: async() => {
           console.log('do logout');
         
-
+          await AsyncStorage.removeItem("artisan_notification_token")
           navigation.navigate('AuthNav');
 
           //setLoading(true);
@@ -492,18 +512,30 @@ function ArtisanProfile(props) {
    
   // };
 
-  const AddPortfoliod = text => {
+  const AddPortfoliod = async file => {
     let uri = BASEURL + '/portfolio';
-
+    Alert.alert('Upload', 'Are you sure you want to upload this Image ?', [
+      {
+        text: 'Cancel',
+        onPress: () => {
+          console.log('cancel logout');
+        },
+        style: 'cancel',
+      },
+      {
+        text: 'Yes',
+        onPress: async () => {
+          dispatch(setLoading(true));
+          const imageUrl =  await uploadImage(file);
     let data = {
-      portfolio: text,
+      portfolio: imageUrl,
       name: '',
       description:'',
       user_id: auth.userData.id,
       portfolio_type: "image",
-      portfolio_url:text
+      portfolio_url:imageUrl
     };
-    setLoading(true);
+  
     axios.post(uri,data, {
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
@@ -512,7 +544,7 @@ function ArtisanProfile(props) {
     }) .then(res => {
         console.log("New Port",res);
         const {data=[]} = res.data
-        setLoading(false);
+        dispatch(setLoading(false));
         GetPortfolio(auth.userData.id,(res,err)=>{
           if (err !== null) {
             
@@ -524,9 +556,14 @@ function ArtisanProfile(props) {
       })
       .catch(error => {
         console.log('the error', error);
-        setLoading(false);
+        dispatch(setLoading(false));
        
       });
+         
+        },
+      },
+    ]);
+   
     //setLoading(false);
   };
 
@@ -716,7 +753,7 @@ function ArtisanProfile(props) {
               }}>
               <Image
                 source={{
-                  uri: preimage.portfolio,
+                  uri: preimage.portfolio_url,
                 }}
                 style={{width: '100%', height: '100%'}}
                 resizeMode="contain"
@@ -939,7 +976,7 @@ function ArtisanProfile(props) {
                         fontWeight: 'bold',
                         fontSize: 28,
                       }}>
-                      {jobInsight && jobInsight.jobSuccessRate != null
+                      {rating && rating.jobSuccessRate != null
                         ? parseInt(Number(jobInsight.jobSuccessRate))
                         : 0}
                       {'%'}
@@ -1083,31 +1120,7 @@ function ArtisanProfile(props) {
 
                
           <FlatList
-            data={portfolio || [{
-              id: "3",
-              portfolio: defaultImg
-            },{
-              id: "4",
-              portfolio: defaultImg
-            },{
-              id: "5",
-              portfolio: defaultImg
-            },{
-              id: "6",
-              portfolio: defaultImg
-            },{
-              id: "7",
-              portfolio: defaultImg
-            },{
-              id: "5",
-              portfolio: defaultImg
-            },{
-              id: "5",
-              portfolio: defaultImg
-            },{
-              id: "5",
-              portfolio: defaultImg
-            }]}
+            data={portfolio}
            
             style={{ width: wp('100%'), marginTop: hp('3%')}}
             renderItem={({item}) => <PortfolioView  item={item} />}
@@ -1146,7 +1159,7 @@ function ArtisanProfile(props) {
               }}>
              
               <Image
-                source={{uri: item.portfolio}}
+                source={{uri: item.portfolio_url}}
                 resizeMode='contain'
                 style={{ borderRadius: 0, width: wp('32%'),
                 height: hp('20%'),}}

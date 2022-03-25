@@ -54,7 +54,7 @@ const Expertise = props => {
     
     let data = {
       user_id: auth.userData.id,
-      role: 'artisan',
+      role: 'protisan',
       bio: bio,
       category: service_category,
       skills: skills,

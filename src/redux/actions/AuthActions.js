@@ -943,7 +943,9 @@ const saveAvatar= path => async dispatch =>{
       })}
 
   const uploadImage = async (payload) => {
-    const { uri } = payload;
+    console.log("____FIL?E__")
+    try {
+      const { uri } = payload;
     const filename = uri.substring(uri.lastIndexOf('/') + 1);
     const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
 
@@ -951,20 +953,25 @@ const saveAvatar= path => async dispatch =>{
     // setTransferred(0);
 
     const reference = storage().ref(filename);
-    const task = reference.putFile(uploadUri);
+     await reference.putFile(uploadUri);
+     let downloadURL = await reference.getDownloadURL()
+     return downloadURL
+    // task.on('state_changed', snapshot =>  {
+    //   // setTransferred(
+    //   //   Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000
+    //   // );
+    // });
+    // let downloadURL = "";
+    // task.then( () => {
+    //     downloadURL =  reference.getDownloadURL();
+    //   console.log("____FILE___URL___", downloadURL)
+    // }).catch((e) => console.log('uploading image error => ', e));
+    } catch (error) {
+      console.log("___IMAGE__UPLOAD___ERROR__", error)
+    }
+    
 
-    task.on('state_changed', snapshot =>  {
-      setTransferred(
-        Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000
-      );
-    });
-    let downloadURL = "";
-    task.then(async () => {
-        downloadURL = await reference.getDownloadURL();
-      console.log("____FILE___URL___", downloadURL)
-    }).catch((e) => console.log('uploading image error => ', e));
-
-    return downloadURL
+    
   };
 
 export {

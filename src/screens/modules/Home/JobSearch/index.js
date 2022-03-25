@@ -80,7 +80,7 @@ const mapDispatchToProps = dispatch => {
 function JobSearch(props) {
   const navigation = useNavigation();
   const refRBSheet = useRef();
-  const [searchItem, setsearchItem] = useState('');
+  const [searchItem, setsearchItem] = useState(null);
   const [filters, setFilter] = useState({});
   const {priority = ""} = filters
   const [searchFocused, setSearchFocused] = useState(false);
@@ -201,18 +201,18 @@ function JobSearch(props) {
       });
   };
 
-  const JobsSearch = () => {
-    console.log("__SEARCH_PAYLOAD__",searchItem)
-    let uri = BASEURL + `/projects/find`;
+  const JobsSearch = (text) => {
+  
+    let uri = BASEURL + `/projects/all/search?user_id=${auth.userData.id}&title=${text}`;
 
     props.setLoading(true);
     let data = {
       longitude: auth.userData.location.lng,
       latitude: auth.userData.location.lat,
-      search: searchItem
+      search: text
     };
     axios.get(uri, 
-     JSON.stringify(data),
+    
       {
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
@@ -238,9 +238,16 @@ function JobSearch(props) {
       });
   };
 
-  const handler = useCallback(debounce(()=>JobsSearch(), 2000), []);
+  const handler = useCallback(debounce((text)=>JobsSearch(text), 2000), []);
   useEffect(() => {
-    handler()
+    if (searchItem !== "") {
+      handler(searchItem)
+    }else{
+      if (searchItem !== null ) {
+      GetJobs()
+      }
+    }
+   
 },[searchItem])
 
   return (
@@ -322,7 +329,7 @@ function JobSearch(props) {
                     {/* <EntypoIcon name="menu" size={27} style={{}} /> */}
                     <Image
                       source={{
-                        uri: props.auth.avatar,
+                        uri: props.auth.userData.avatar,
                         // avatar,
                         // "https://static.dribbble.com/users/1304678/screenshots/7301908/media/3f91189797dd514eb6446b21a4faa209.png",
                       }}

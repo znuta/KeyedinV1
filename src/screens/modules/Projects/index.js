@@ -54,7 +54,7 @@ function ProjectsList(props) {
 
   useEffect(() => {
      const loadData = async  () => {
-      props.setLoading(true);
+     
    await  GetJobOffers();
    await GetOngoingJobs();
   await  GetCompletedJobs();
@@ -96,16 +96,16 @@ function ProjectsList(props) {
         const {data=[]} = res.data
          setisFetching(false);
             setProposals(data);
-            // props.setLoading(false);
+            props.setLoading(false);
       }).catch(error => {
-        // props.setLoading(false);
+        props.setLoading(false);
         setisFetching(false);
       
       });
   };
 
   const GetOngoingJobs = async () => {
-    // props.setLoading(true);
+    props.setLoading(true);
     let uri = BASEURL + `/projects/all/status?user_id=${props.auth.userData.id}&status=ongoing`;
      axios.get(uri, {
       headers: {
@@ -118,18 +118,18 @@ function ProjectsList(props) {
         setisFetching(false);
         const {data=[]} = res.data
           setJobOngoing(data);
-          // props.setLoading(false);
+          props.setLoading(false);
       })
       .catch(error => {
         console.log('__ONGOING_ERROR__', error);
-        // props.setLoading(false);
+        props.setLoading(false);
         setisFetching(false);
        
       });
   };
 
   const GetCompletedJobs = async () => {
-    // props.setLoading(true);
+    props.setLoading(true);
     let uri = BASEURL + `/projects/all/status?status=completed&user_id=${props.auth.userData.id}`;
    axios.get(uri, {
       headers: {
@@ -247,7 +247,6 @@ function ProjectsList(props) {
        
       />
      
-
       <Header
         placement="center"
         leftComponent={
@@ -261,7 +260,7 @@ function ProjectsList(props) {
             }}>
             <Image
               source={{
-                uri: props.auth.avatar,
+                uri: props.auth.userData.avatar,
                 
               }}
               style={{

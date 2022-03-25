@@ -107,11 +107,11 @@ const ShadowBtn = styled.TouchableOpacity`
 `;
 
 const AvatarPlaceholder = styled.TouchableOpacity`
-  height: ${wp('30%')};
-  width: ${wp('30%')};
+  height: ${wp('40%')};
+  width: ${wp('40%')};
   margin-top: ${hp('5%')};
   border-radius: 50;
-  background-color: white;
+  
   align-items: center;
   justify-content: center;
 `;

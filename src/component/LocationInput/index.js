@@ -96,16 +96,16 @@ const LocationInput = ({
                 console.log("___LOCATION__", details)
                 handleLocationAddress(data, details);
               }}
-              fetchDetails={true}
+             
                   
               query={{
-                key: "AIzaSyD2kRP3CxmIxUvxf_E2BFUeBgQlGsVsJY0",
+                key: "AIzaSyB3x6J22pFG24tVkU_GguqIaqEIHU9joso",
                 language: "en",
                 // type: "geocode",
               }}
               currentLocation={true}
               currentLocationLabel="Current location"
-              autoFocus={true}
+             
       />
      
       

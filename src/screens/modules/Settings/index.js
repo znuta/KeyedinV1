@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import SettingsLobby from './SettingsLobby';
 // import EditProfile from './EditProfile';
 import GovernmentVerification from './IDVerification';
+import ChangePassword from './ChangePassword';
 import {createStackNavigator} from '@react-navigation/stack';
 // import EditUser from './EditUser';
 
@@ -30,6 +31,7 @@ const Settings = () => {
           name="GovernmentVerification"
           component={GovernmentVerification}
         />
+         <Stack.Screen name="ChangePassword" component={ChangePassword} />
         {/* <Stack.Screen name="EditProfile" component={EditProfile} />
        
         <Stack.Screen name="EditUser" component={EditUser} /> */}

@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   Alert,
   FlatList,
-  ImageBackground
+  ImageBackground,
+  Linking
 } from 'react-native';
 import styled from 'styled-components';
 import {Header, Icon, Divider} from 'react-native-elements';
@@ -23,7 +24,7 @@ import Layout from 'src/constants/Layout';
 import {colors, fonts, hp, wp} from 'src/config/variables';
 import {BASEURL} from 'src/constants/Services';
 import {connect} from 'react-redux';
-import {styles} from './styles';
+import {InputLabel, styles} from './styles';
 import Loader from 'src/component/Loader';
 import Button from 'src/component/Button/index';
 import TextField from 'src/component/TextField';
@@ -178,22 +179,14 @@ const {params = {}} = props.route
     })
       .then(res => {
        
-        Toast.show({
-          text1: 'Proposal Canceled',
-          buttonText: 'Continue',
-          type: 'success',
-        });
+       
         dispatch(setLoading(false));
         console.log('here3', res);
         navigation.goBack()
       })
       .catch(error => {
         console.log(error);
-        Toast.show({
-          text1: 'Could not cancel proposal',
-          buttonText: 'okay',
-          type: 'error',
-        });
+      
         dispatch(setLoading(false));
       });
   };
@@ -220,7 +213,7 @@ const {params = {}} = props.route
   };
 
   
-  const { due_date = new Date(), bid_amount = '', cover_letter = '' } = value;
+  const { due_date = new Date(), bid_amount = '', attachment = '', cover_letter = '' } = value;
   var num = parseFloat(bid_amount);
   var amountToReceived = num - (num * .20);
   return (
@@ -350,10 +343,7 @@ const {params = {}} = props.route
                 flex: 1,
               }}>
               <FlatList
-                data={item.attachments || [defaultImage,
-                  defaultImage,
-                  defaultImage,
-                  defaultImage,]}
+                data={item.attachments}
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
                 bounces={false}
@@ -367,7 +357,7 @@ const {params = {}} = props.route
                   <ProposalImage style={{}}>
                     <Image
                       source={{
-                        uri: item.uri,
+                        uri: item,
                       }}
                       style={{...StyleSheet.absoluteFill, borderRadius: 8}}
                     />
@@ -413,69 +403,80 @@ const {params = {}} = props.route
       </InnerContentContainer>
 
       <MapContentContainer>
-      <MapView
-      ref={mapRef}
-      provider={PROVIDER_GOOGLE}
-      style={{ flex: 1, borderRadius: 10, height: hp('30%') }}
-     
-      
-      zoomEnabled={true}
-      showsUserLocation={true}
-      
-      minZoomLevel={0.5}>
-      
-        <Marker
-          onSelect={ ()=>{}}
-          style={{width: 600, height: 600}}
-          identifier={item.id}
-          id={item.id}
-          draggable={true}
-          coordinate={{
-            latitude: item.location && item.location.coordinates[1],
-            longitude: item.location && item.location.coordinates[0],
+          
+          <MapView
+        ref={mapRef}
+        provider={PROVIDER_GOOGLE}
+        style={{ flex: 1, height: hp('30%') }}
+        initialRegion={{
+          latitude: item.location && item.location.coordinates[1],
+          longitude: item.location && item.location.coordinates[0],
+          longitudeDelta: 0.05,
+         latitudeDelta: 0.05,
+        }}
+        region={{
+          latitude: item.location && item.location.coordinates[1],
+          longitude: item.location && item.location.coordinates[0],
+          longitudeDelta: 0.05,
+          latitudeDelta: 0.05,
+        }}
+        zoomEnabled={true}
+        showsUserLocation={true}
+        initialPosition={{
+          latitude: item.location && item.location.coordinates[1],
+          longitude: item.location && item.location.coordinates[0],
+          longitudeDelta: 0.05,
+          latitudeDelta: 0.05,
+        }}
+        minZoomLevel={2}>
+        
+          <Marker
+            onSelect={ ()=>{}}
+            style={{width: 400, height: 400}}
+            identifier={item.id}
+            id={item.id}
+            draggable={false}
+            coordinate={{
+              latitude: item.location && item.location.coordinates[1],
+              longitude: item.location && item.location.coordinates[0],
+            }}
+          //   image={require('src/assets/marker.png')}
+          >
            
-          }}
-          // image={require('src/assets/marker.png')}
-          // resizeMode="contain"
-        >
-         
-          <ImageBackground
-            source={require('src/assets/mark.png')}
-            resizeMode="contain"
-            style={{
-              width: 50,
-              height: 50,
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Image
-              source={{ uri: item && item.avatar ? item.avatar : defaultImage,}}
-              // resizeMode="contain"
-              resizeMode="center"
+            <ImageBackground
+              source={require('src/assets/mark.png')}
               style={{
-                width: 20,
-                height: 20,
-                borderRadius: 10,
-                marginBottom: 10,
-                borderWidth: 1.5,
-                borderColor: '#fff',
-                shadowColor: '#7F5DF0',
-                shadowOffset: {
-                  width: 0,
-                  height: 10,
-                },
-                shadowOpacity: 0.25,
-                shadowRadius: 3.5,
-                elevation: 5,
-              }}
-            />
-          </ImageBackground>
-        </Marker>
-     
-    </MapView>
-      </MapContentContainer>
+                width: 50,
+                height: 50,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Image
+                source={{ uri: item && item.avatar ? item.avatar : defaultImage,}}
+                style={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: 10,
+                  marginBottom: 10,
+                  borderWidth: 1.5,
+                  borderColor: '#fff',
+                  shadowColor: '#7F5DF0',
+                  shadowOffset: {
+                    width: 0,
+                    height: 10,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 3.5,
+                  elevation: 5,
+                }}
+              />
+            </ImageBackground>
+          </Marker>
+       
+      </MapView>
+        </MapContentContainer>
 
         <InnerContentContainer>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -624,19 +625,30 @@ const {params = {}} = props.route
                 <JobDesc>{cover_letter}</JobDesc>
               </ReadMore>
         </InnerContentContainer>
-            <TouchableOpacity
-              onPress={() => documentPicker()}
-            >
-            <TextField
-              additionalStyle={{
-                inputField: {
-                  backgroundColor: colors.layout,
-                },
-              }}
-              label="View Documents"
-              
-              />
-              </TouchableOpacity>
+        <TouchableOpacity
+            style={{flexDirection: 'row', marginVertical: hp('1%')}}
+            onPress={() => {
+              Linking.canOpenURL(attachment).then(supported => {
+                if (supported) {
+                  Linking.openURL(attachment);
+                } else {
+                  console.log("Don't know how to open URI: " + attachment);
+                }
+              })}
+            }>
+            <View style={styles.circle}>
+              <MaterialCommunityIcons name="plus" style={styles.white_plus} />
+            </View>
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Text style={styles.portfolio_text}>
+                <InputLabel>Download Attachment</InputLabel> {attachment? ``: " (No attachment included.)"}
+              </Text>
+            </View>
+          </TouchableOpacity>
             <ListItemSeparator />
             <View style={{width: '100%'}}>
               <Label style={{color: colors.green, marginBottom: hp('0.3%')}}>

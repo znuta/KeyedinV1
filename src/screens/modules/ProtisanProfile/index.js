@@ -60,6 +60,7 @@ import {
   getArtisanExpertise,
   getArtisanEducation,
   GetArtisanExperience,
+  GetPortfolio,
 } from 'src/redux/actions/AuthActions';
 import ReviewItem from 'src/component/ReviewItem';
 import ReviewForm from 'src/component/ReviewForm';
@@ -98,7 +99,7 @@ function ProtisanProfile(props) {
   const [expertises, setExpertises] = useState({});
   const [experience, setExperience] = useState([]);
   const [education, setEducation] = useState([]);
-  const [videoUrl, setvideoUrl] = useState('https://vjs.zencdn.net/v/oceans.mp4');
+  const [videoUrl, setvideoUrl] = useState(artisan.video||'https://vjs.zencdn.net/v/oceans.mp4');
   const [rating, setRating] = useState({});
   const [jobInsight, setJobInsight] = useState({});
   const [average_rating, setAverage_rating] = useState('');
@@ -106,9 +107,10 @@ function ProtisanProfile(props) {
   const [play, setPlay] = useState(true)
   const [reviewsd, setReviewsd] = useState([]);
   const [view, setView] = useState({});
+  const [portfolio, setPortfolio] = useState([]);
   const { auth  } = useSelector(state => state);
   const { params = {} } = props.route || {}
-
+console.log("___PARAMAA___", params)
   
   const defaultImg =
     'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80';
@@ -116,28 +118,38 @@ function ProtisanProfile(props) {
 
   useEffect(() => {
     const {id} = params
-    
-    StatusBar.setHidden(true);
+    console.log("__ID", id)
+    // StatusBar.setHidden(true);
     //console.log(experti);
     // setArtisanImg(auth.avatar);
     // const art = artisan.reviews ?? 0;
     // setReviewart(art);
     //console.log(portfolio);
-    getUser(id, ({user}) => {
+    getUser(id, ({user = {}, expertise = {}, employment = {},education = {},comments = {}, rating=""}) => {
       console.log("___USER___LOG__+", user)
       setArtisan(user);
+      setExpertises(expertise)
+      setReviewsd(comments);
+      setRating(rating);
     });
-    getArtisanExpertise(id, (res) => {
-      console.log("+++++EXPET++", res)
-      setExpertises(res)
+    GetPortfolio(id,(res,err)=>{
+      if (err !== null) {
+        
+      }else{
+        setPortfolio(res)
+      }
     })
+    // getArtisanExpertise(id, (res) => {
+    //   console.log("+++++EXPET++", res)
+    //   setExpertises(res)
+    // })
     // getArtisanEducation(id,(res)=>{})
     // GetArtisanExperience(id,(res)=>{})
-    GetRating();
-    GetInsights();
-    GetArtisanReview();
+    // GetRating();
+    // GetInsights();
+    // GetArtisanReview();
     // setLoading(false);
-  }, []);
+  }, [params]);
 
  
 
@@ -280,7 +292,7 @@ function ProtisanProfile(props) {
         //GetPortfolio();
         const { data}=res.data
         setRating(data);
-        console.log('rating', res.data);
+        console.log('RATING___', res);
       })
       .catch(error => {
         setLoading(false);
@@ -356,34 +368,34 @@ function ProtisanProfile(props) {
       });
   };
 
-  const GetPortfolio = () => {
-    let uri = BASEURL + `/artisan/portfolio/`;
+  // const GetPortfolio = () => {
+  //   let uri = BASEURL + `/artisan/portfolio/`;
 
-    //setLoading(true);
-    axios(uri, {
+  //   //setLoading(true);
+  //   axios(uri, {
      
-      //body: JSON.stringify(data),
-      headers: {
-        //"Content-Type": "application/json;charset=utf-8",
-        Authorization: 'Bearer' + ' ' + auth.token,
-      },
-    })
+  //     //body: JSON.stringify(data),
+  //     headers: {
+  //       //"Content-Type": "application/json;charset=utf-8",
+  //       Authorization: 'Bearer' + ' ' + auth.token,
+  //     },
+  //   })
      
-      .then(res => {
+  //     .then(res => {
         
-        console.log('This is the portfolio', res.data);
-        if (res.data.error) {
-          alert('error');
-        } else {
-          const { data = {} } = res.data
-          dispatch({type: 'API_PORTFOLIO_DATA', data:data.portfolio})
-        }
-      })
-      .catch(error => {
-        //setLoading(false);
+  //       console.log('This is the portfolio', res.data);
+  //       if (res.data.error) {
+  //         alert('error');
+  //       } else {
+  //         const { data = {} } = res.data
+  //         dispatch({type: 'API_PORTFOLIO_DATA', data:data.portfolio})
+  //       }
+  //     })
+  //     .catch(error => {
+  //       //setLoading(false);
   
-      });
-  };
+  //     });
+  // };
 
   const _pickAvatar = async () => {
     let {saveAvatar} = props;
@@ -483,7 +495,7 @@ function ProtisanProfile(props) {
       })
       .then(res => {
         
-        navigation.navigate('ArtisanProfile');
+        navigation.navigate('ProtisanProfile');
       })
       .catch(error => {
         console.log('the error', error);
@@ -505,7 +517,7 @@ function ProtisanProfile(props) {
         onPress={() => navigation.goBack()}>
         <Feather name="arrow-left" size={25} color={colors.white} />
       </TouchableOpacity>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={styles.iconRight}
         onPress={_pickProfileVideo}
       >
@@ -523,7 +535,7 @@ function ProtisanProfile(props) {
                     color="white"
                   />
         </View>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   
 );
@@ -559,62 +571,62 @@ const _renderRevealedFooter = handlePress => {
   );
 };
 
-const _renderReviewItem = ({item, index}) => {
-  return (
-    <View>
-      <RatingWrap>
-        <RatingImage>
-          <Image
-            source={{
-              uri: item.user.avatar,
-            }}
-            style={{...StyleSheet.absoluteFill, borderRadius: 10}}
-          />
-        </RatingImage>
-        <RatingBody>
-        <View style={{marginVertical: hp('2%'), width: '50%'}}>
-                    <StarRating
-                      disabled={true}
-                      maxStars={5}
-                      rating={
-                       !item.rating ? 0
-                          : parseInt(Number(item.rating))
-                      }
-                      // emptyStar={"star-o"}
-                      fullStar={require('src/assets/icons/gold_key.png')}
-                      halfStar={require('src/assets/icons/gray_key.png')}
-                      emptyStar={require('src/assets/icons/gray_key.png')}
-                      fullStarColor={'#FFFFFF'}
-                      emptyStarColor={'#FFFFFF'}
-                      starSize={wp('5%')}
-                    />
-                  </View>
-          <RatingTitle>{`${item.user.first_name} ${item.user.last_name}`}</RatingTitle>
-          <RatingComment>Comment: {item.comment ?? 'Good'}</RatingComment>
-        </RatingBody>
-      </RatingWrap>
-    </View>
-  );
-};
+// const _renderReviewItem = ({item, index}) => {
+//   return (
+//     <View>
+//       <RatingWrap>
+//         <RatingImage>
+//           <Image
+//             source={{
+//               uri: item.user.avatar,
+//             }}
+//             style={{...StyleSheet.absoluteFill, borderRadius: 10}}
+//           />
+//         </RatingImage>
+//         <RatingBody>
+//         <View style={{marginVertical: hp('2%'), width: '50%'}}>
+//                     <StarRating
+//                       disabled={true}
+//                       maxStars={5}
+//                       rating={
+//                        !item.rating ? 0
+//                           : parseInt(Number(item.rating))
+//                       }
+//                       // emptyStar={"star-o"}
+//                       fullStar={require('src/assets/icons/gold_key.png')}
+//                       halfStar={require('src/assets/icons/gray_key.png')}
+//                       emptyStar={require('src/assets/icons/gray_key.png')}
+//                       fullStarColor={'#FFFFFF'}
+//                       emptyStarColor={'#FFFFFF'}
+//                       starSize={wp('5%')}
+//                     />
+//                   </View>
+//           <RatingTitle>{`${item.user.first_name} ${item.user.last_name}`}</RatingTitle>
+//           <RatingComment>Comment: {item.comment ?? 'Good'}</RatingComment>
+//         </RatingBody>
+//       </RatingWrap>
+//     </View>
+//   );
+// };
 
-const MessageFAB = () => {
-  return (
-    <Fab
-      // active={this.state.active}
-      // direction="up"
-      containerStyle={{}}
-      style={{backgroundColor: Colors.primary}}
-      position="bottomRight"
-      onPress={() => {
-        console.log('to send message');
-        navigation.navigate('Messages', {
-          nested: true,
-        });
-      }}>
-      <Feather name='chat' />
-    </Fab>
-  );
-};
+// const MessageFAB = () => {
+//   return (
+//     <Fab
+//       // active={this.state.active}
+//       // direction="up"
+//       containerStyle={{}}
+//       style={{backgroundColor: Colors.primary}}
+//       position="bottomRight"
+//       onPress={() => {
+//         console.log('to send message');
+//         navigation.navigate('Messages', {
+//           nested: true,
+//         });
+//       }}>
+//       <Feather name='chat' />
+//     </Fab>
+//   );
+// };
 
 
 
@@ -679,7 +691,7 @@ const GalleryModal = item => {
             }}>
             <Image
               source={{
-                uri: preimage.portfolio,
+                uri: preimage.portfolio_url,
               }}
               style={{width: '100%', height: '100%'}}
               resizeMode="contain"
@@ -873,9 +885,9 @@ const Tab1 = () => {
                       fontWeight: 'bold',
                       fontSize: 28,
                     }}>
-                    {!rating || !rating.average_rating 
+                    {!rating 
                       ? 0.0
-                      : Number(rating.average_rating)
+                      : Number(rating)
                           .toFixed(1)
                           .replace(/\d(?=(\d{3})+\.)/g, '$&,')}
                     {/* {parseInt(Number(rating.rating))} */}
@@ -1089,31 +1101,7 @@ const Tab3 = () => {
               </TouchableOpacity> */}
        
         <FlatList
-          data={[{
-            id: "3",
-            portfolio: defaultImg
-          },{
-            id: "4",
-            portfolio: defaultImg
-          },{
-            id: "5",
-            portfolio: defaultImg
-          },{
-            id: "6",
-            portfolio: defaultImg
-          },{
-            id: "7",
-            portfolio: defaultImg
-          },{
-            id: "5",
-            portfolio: defaultImg
-          },{
-            id: "5",
-            portfolio: defaultImg
-          },{
-            id: "5",
-            portfolio: defaultImg
-          }]}
+          data={portfolio}
          
           style={{ width: wp('100%'),marginTop: hp('3%')}}
           renderItem={({item}) => <PortfolioView  item={item} />}
@@ -1152,7 +1140,7 @@ const PortfolioView = ({item}) => {
       }}>
      
       <Image
-        source={{uri: item.portfolio}}
+        source={{uri: item.portfolio_url}}
         resizeMode='contain'
         style={{ borderRadius: 0, width: wp('32%'),
         height: hp('20%'),}}
@@ -1174,8 +1162,8 @@ const renderContent = () => {
               style={{flexDirection: 'row', alignItems: 'center', flex: 1}}>
               <Title>
                 
-                {auth.userData.first_name}{' '}
-                {auth.userData.last_name}
+                {artisan.first_name}{' '}
+                {artisan.last_name}
               </Title>
               {/* <View style={{marginLeft: 5}}>
                 {!auth.userData.verified && (
@@ -1226,7 +1214,7 @@ const renderContent = () => {
         >
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("EditProfile", { type: "ArtisanProfile" });
+              navigation.navigate("EditProfile", { type: "ProtisanProfile" });
             }}
             style={{
               alignItems: "center",
@@ -1311,8 +1299,8 @@ const renderContent = () => {
             paddingHorizontal: 20,
 
             paddingVertical: hp('2%'),
-          }}> */}
-          {/* <TouchableOpacity
+          }}>
+          <TouchableOpacity
             onPress={() => {
               navigation.navigate('CreateJobOffer', {...artisan});
             }}>
