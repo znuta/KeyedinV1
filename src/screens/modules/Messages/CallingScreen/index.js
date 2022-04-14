@@ -97,31 +97,33 @@ export const CallingScreen = (props) => {
 
    
   const addCallListner =()=>{
-        var listnerID = 'CALLING_SCREEN_CALL_LISTENER';
+        var listnerID = 'CALLING_SCREEN_CALL_LISTENER_2';
        
         CometChat.addCallListener(
             listnerID,
             new CometChat.CallListener({
-                onIncomingCallReceived(call) {
-                    console.log("___CALL__OBJECT___",call)
-                    var session_id = call.getSessionId();
-                    setSessionID(session_id)
-                    setCallObject(call)
-                    // acceptCall();
-                    // var status = CometChat.CALL_STATUS.BUSY;
-                    // CometChat.rejectCall(sessionID, status).then(
-                    //     rejectedCall => {
-                    //         console.log('Incoming Call rejected', rejectedCall);
-                    //     },
-                    //     error => {
-                    //         console.log('Call rejection failed with error:', error);
-                    //     }
-                    // );
-                },
+                // onIncomingCallReceived(call) {
+                //     console.log("___CALL__OBJECT___",call)
+                //     var session_id = call.getSessionId();
+                //     setSessionID(session_id)
+                //     setCallObject(call)
+                //     // acceptCall();
+                //     // var status = CometChat.CALL_STATUS.BUSY;
+                //     // CometChat.rejectCall(sessionID, status).then(
+                //     //     rejectedCall => {
+                //     //         console.log('Incoming Call rejected', rejectedCall);
+                //     //     },
+                //     //     error => {
+                //     //         console.log('Call rejection failed with error:', error);
+                //     //     }
+                //     // );
+                // },
                 onOutgoingCallAccepted(call) {
                     console.log('Incoming Call Accepted___', call);
+                    setSessionID(call.getSessionId())
                     setCallObject(call)
                   startCall();
+                  
                 },
                 onOutgoingCallRejected(call) {
                     console.log('OnOutgoing Call rejected', call);

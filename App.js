@@ -30,7 +30,7 @@
  import messaging from '@react-native-firebase/messaging';
 import axios from 'axios';
 import SplashScreen from 'react-native-splash-screen';
-import { BASEURL } from 'src/constants/Services';
+import { BASEURL, CometAppID } from 'src/constants/Services';
 import {decode, encode} from 'base-64';
 import Toast from 'src/component/Toast';
 import { createNotificationListeners, checkPermission } from 'src/redux/actions/Notification';
@@ -50,7 +50,7 @@ if (!global.atob) {
    .subscribePresenceForAllUsers()
    .setRegion(region)
    .build();
- CometChat.init(appID, appSetting).then(
+ CometChat.init(CometAppID, appSetting).then(
    () => {
      console.log('Initialization completed successfully');
    },

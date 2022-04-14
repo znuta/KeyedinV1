@@ -11,6 +11,7 @@ import linkReducer from "./linkReducer";
 import portfolioReducer from "./portfolioReducer";
 import milestoneReducer from "./milestoneReducer";
 import chatReducer from "./ChatReducer";
+import {AppNotification} from './Notification';
 
 const rootReducer = combineReducers({
   intro: introReducer,
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   portfolio: portfolioReducer,
   milestone: milestoneReducer,
   chat: chatReducer,
+  notification: AppNotification,
 });
 
 export default rootReducer;

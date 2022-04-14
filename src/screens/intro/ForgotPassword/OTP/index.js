@@ -30,6 +30,7 @@ import colors from 'src/config/colors';
 import {
   setLoading,
   sendOTPError,
+  setToast,
 } from 'src/redux/actions/AuthActions';
 import {hp, wp} from 'src/config/variables';
 import axios from 'axios';
@@ -55,26 +56,28 @@ const {email=""} = props.getState()
   };
 
   const _verifyOTP = () => {
-  
-    let uri = BASEURL + '/otp/verify-otp';
-    let data = {
-      email,
-      otp: otp,
-    };
+    const { next, saveState } = props;
+    let uri = `${BASEURL}/auth/verify-otp?email=${email}&otp_code=${otp}`;
+    // let data = {
+    //   email,
+    //   otp: otp,
+    // };
 
     dispatch(setLoading(true));
-    axios.post(uri, data).then(res => {
-      const { next, saveState } = props;
+    axios.get(uri).then(res => {
+      console.log("___OTP___", res)
+     
       const {data = {}} = res.data;
         dispatch(setLoading(false));
       // dispatch(sendUserDetails(data))
         next();
       })
       .catch(error => {
+       
+        // dispatch(setToast({ show: true, type: "error", message: "There is a problem with the otp !!!", title: "Verification failed"}));
+        // dispatch(setLoading(false));
+        // dispatch(sendOTPError(error));
         next();
-        console.log('Error', error);
-        dispatch(setLoading(false));
-        dispatch(sendOTPError(error));
       });
   };
 

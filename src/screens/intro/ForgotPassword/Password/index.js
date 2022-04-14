@@ -27,6 +27,7 @@ import axios from 'axios';
 import styles from './style';
 import TextField from 'src/component/TextField';
 import { hp } from 'src/config/variables';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const Password = props => {
   const navigation = useNavigation();
@@ -84,12 +85,13 @@ const Password = props => {
           'Content-Type': 'application/json;charset=utf-8',
         },
       }).then(res => {
+        console.log("____LOgo",res)
           dispatch(setLoading(false));
           
-          navigation.navigate('GetStarted')
+          navigation.navigate('UserLogin')
           
         }).catch(error => {
-        
+          console.log("____LOgoE",error)
           dispatch(setLoading(false));
           
         });
@@ -156,7 +158,7 @@ const Password = props => {
         <Title style={{color: colors.green}}>New Password</Title>
         <Subtitle>Please enter your new password to continue</Subtitle>
       </View>
-      <KeyboardAwareView>
+      <KeyboardAwareScrollView>
         <View
           style={{
             //backgroundColor: "yellow",
@@ -197,9 +199,7 @@ const Password = props => {
               //autoCapitalize="sentences"
               secureTextEntry={passwordReveal}
               value={password}
-              ref={ref => {
-                _passwordinput = ref;
-              }}
+             
               returnKeyType="done"
               onSubmitEditing={() => {
                 nextStep();
@@ -248,7 +248,7 @@ const Password = props => {
               secureTextEntry={confirmPassReveal}
               value={confirmPassword}
               ref={ref => {
-                _passwordinput = ref;
+              
               }}
               returnKeyType="done"
               onSubmitEditing={() => {
@@ -310,7 +310,7 @@ const Password = props => {
           </TouchableOpacity>
           
         </View>
-      </KeyboardAwareView>
+      </KeyboardAwareScrollView>
       {/* </Footer> */}
     </Container>
   );

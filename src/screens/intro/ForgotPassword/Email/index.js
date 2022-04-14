@@ -20,7 +20,7 @@ import {useNavigation} from '@react-navigation/native';
 import {KeyboardAwareView} from 'react-native-keyboard-aware-view';
 import {useSelector, useDispatch} from 'react-redux';
 import {
-  setLoading,
+  setLoading, setToast,
 } from 'src/redux/actions/AuthActions';
 import axios from 'axios';
 import styles from './style';
@@ -57,24 +57,24 @@ const Email = props => {
 
   const submitEmail = () => {
     dispatch(setLoading(true));
-      let uri = BASEURL + '/auth/password/forgot-password';
+      let uri = `${BASEURL}/auth/forgot-password/${email}`;
       props.saveState({email})
-    let data = {
-      email: email,
-    };
+   
       
       
-      axios.post(uri, JSON.stringify(data),{
+      axios.get(uri,{
         headers: {
           'Content-Type': 'application/json;charset=utf-8',
         },
       }).then(res => {
           dispatch(setLoading(false));
-          
+          console.log("___EMAIL__", res)
           props.next()
           
         }).catch(error => {
+        
           props.next()
+         
           dispatch(setLoading(false));
           
         });

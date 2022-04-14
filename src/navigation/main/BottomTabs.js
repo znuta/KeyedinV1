@@ -112,51 +112,51 @@ export function HomeTabs({navigation, route}) {
           })
          
         },
-        onOutgoingCallAccepted(call) {
-          console.log('Incoming Call Accepted__NAV_', call);
-        //   setCallObject(call)
-        // startCall();
-        getUser(call.receiverId,({user = {}, expertise = {}, employment = {},education = {},comments = {}, rating=""})=>{
+      //   onOutgoingCallAccepted(call) {
+      //     console.log('Incoming Call Accepted__NAV_', call);
+      //   //   setCallObject(call)
+      //   // startCall();
+      //   getUser(call.receiverId,({user = {}, expertise = {}, employment = {},education = {},comments = {}, rating=""})=>{
 
-          const defaultLayout = 1;
-          const isOutgoing = true;
-        //  navigation.reset("CallingScreen", {
-        //     call: call,
-        //     enableDefaultLayout: defaultLayout,
-        //     isOutgoingCall: isOutgoing,
-        //     outgoingCallAccepted: true,
-        //     entity: call.getCallInitiator(),
-        //     entityType: "user",
-        //     acceptedFrom: "Chat",
-        //     callType: call.type,
-        //     userObject: user
-        //   });
+      //     const defaultLayout = 1;
+      //     const isOutgoing = true;
+      //   //  navigation.reset("CallingScreen", {
+      //   //     call: call,
+      //   //     enableDefaultLayout: defaultLayout,
+      //   //     isOutgoingCall: isOutgoing,
+      //   //     outgoingCallAccepted: true,
+      //   //     entity: call.getCallInitiator(),
+      //   //     entityType: "user",
+      //   //     acceptedFrom: "Chat",
+      //   //     callType: call.type,
+      //   //     userObject: user
+      //   //   });
 
 
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 1,
-              routes: [
-                {
-                  name: 'CallingScreen',
-                  params: {
-                    call: call,
-                    enableDefaultLayout: defaultLayout,
-                    isOutgoingCall: isOutgoing,
-                    outgoingCallAccepted: true,
-                    entity: call.getCallInitiator(),
-                    entityType: "user",
-                    acceptedFrom: "Chat",
-                    callType: call.type,
-                    userObject: user
-                  },
-                },
-              ],
-            })
-          );
+      //     navigation.dispatch(
+      //       CommonActions.reset({
+      //         index: 1,
+      //         routes: [
+      //           {
+      //             name: 'CallingScreen',
+      //             params: {
+      //               call: call,
+      //               enableDefaultLayout: defaultLayout,
+      //               isOutgoingCall: isOutgoing,
+      //               outgoingCallAccepted: true,
+      //               entity: call.getCallInitiator(),
+      //               entityType: "user",
+      //               acceptedFrom: "Chat",
+      //               callType: call.type,
+      //               userObject: user
+      //             },
+      //           },
+      //         ],
+      //       })
+      //     );
 
-        })
-      },
+      //   })
+      // },
       })
     );
   }

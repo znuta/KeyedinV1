@@ -101,6 +101,7 @@ function ProtisanProfile(props) {
   const [education, setEducation] = useState([]);
   const [videoUrl, setvideoUrl] = useState(artisan.video||'https://vjs.zencdn.net/v/oceans.mp4');
   const [rating, setRating] = useState({});
+  const [jobsuccess, setJobSuccess] = useState({});
   const [jobInsight, setJobInsight] = useState({});
   const [average_rating, setAverage_rating] = useState('');
   const [quality, setQuality] = useState('');
@@ -125,12 +126,13 @@ console.log("___PARAMAA___", params)
     // const art = artisan.reviews ?? 0;
     // setReviewart(art);
     //console.log(portfolio);
-    getUser(id, ({user = {}, expertise = {}, employment = {},education = {},comments = {}, rating=""}) => {
+    getUser(id, ({user = {}, expertise = {}, employment = {},education = {},comments = {}, rating="",job_success_rate={}}) => {
       console.log("___USER___LOG__+", user)
       setArtisan(user);
       setExpertises(expertise)
       setReviewsd(comments);
       setRating(rating);
+      setJobSuccess(job_success_rate)
     });
     GetPortfolio(id,(res,err)=>{
       if (err !== null) {
@@ -914,9 +916,9 @@ const Tab1 = () => {
                       fontWeight: 'bold',
                       fontSize: 28,
                     }}>
-                    {jobInsight && jobInsight.jobSuccessRate != null
-                      ? parseInt(Number(jobInsight.jobSuccessRate))
-                      : 0}
+                    {jobsuccess && jobsuccess.job_success_rate != null
+                        ? parseInt(Number(jobsuccess.job_success_rate))
+                        : 0}
                     {'%'}
                   </Text>
                   <Text
@@ -1261,10 +1263,10 @@ const renderContent = () => {
       {/* <StatusBar hidden={false} /> */}
       <View style={{height: hp('30%')}}>
            {renderNavBar()}
-            {videoUrl !== '' ? (
+            {artisan.video  ? (
               
                   <Video
-                  source={{uri: videoUrl}}
+                  source={{uri: artisan.video}}
                   ref={(ref)=>{
                  
                 console.log("__PLAYER__REF__", ref)
@@ -1278,7 +1280,7 @@ const renderContent = () => {
                  
                 ) : (
                   <ImageBackground source={{
-                    uri: defaultImg
+                    uri: artisan.avatar || defaultImg
                   }} style={{height: hp('30%')}}>
 
                   </ImageBackground>

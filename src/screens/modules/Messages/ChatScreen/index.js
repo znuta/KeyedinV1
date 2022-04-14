@@ -377,6 +377,7 @@ export class ChatScreen extends Component {
   getLoggedInUser() {
     CometChat.getLoggedinUser().then(
       (user) => {
+        console.log("___cometuser__",user)
         myUserID = user.uid;
       },
       (error) => {
@@ -1176,39 +1177,7 @@ export class ChatScreen extends Component {
         />
         <View style={styles.container}>
           <FlatList
-            data={this.state.messages.length ? this.state.messages : [{
-              id: "ll",
-              category: 'message',
-              type: 'text',
-              receiverId: 'jjj',
-
-
-              data: {
-                text: `Alright then.. How about we set up a milestone for the project and we can get started`
-              }
-            },{
-              id: "ll",
-              category: 'message',
-              type: 'text',
-                receiverId: 'oo',
-                readAt: new Date(),
-
-
-              data: {
-                text: `Alright then.. How about we set up a milestone for the project and we can get started `
-              }
-            },{
-              id: "ll",
-              category: 'message',
-              type: 'text',
-                receiverId: 'jjj',
-               
-
-
-              data: {
-                text: "Hello how far"
-              }
-            },]}
+            data={this.state.messages.length ? this.state.messages : []}
             renderItem={this.renderItem}
             extraData={this.state.messages}
             keyExtractor={(item) => item.id}
@@ -1417,6 +1386,7 @@ export class ChatScreen extends Component {
   }
 
   sendMessage() {
+    console.log("____LOGMM?s",this.state.uid)
     var receiverType = CometChat.RECEIVER_TYPE.USER;
     console.log(receiverType);
     var textMessage = new CometChat.TextMessage(

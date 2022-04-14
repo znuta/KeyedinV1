@@ -49,7 +49,6 @@ import Empty from 'src/component/Empty';
 import EditProfilePen from 'src/assets/icons/editprofilepen.svg';
 import {hp, wp} from 'src/config/variables';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   setLoading,
   sendExpert,
@@ -60,8 +59,11 @@ import {
   getUser,
   sendEducationDetails,
   sendWorkDetails,
+  sendUserDetails,
+  saveToken,
 } from 'src/redux/actions/AuthActions';
 import ReviewItem from 'src/component/ReviewItem';
+import { CometChat } from '@cometchat-pro/react-native-chat';
 
 
 const SCREEN_HEIGHT = Layout.window.height;
@@ -100,6 +102,7 @@ function ArtisanProfile(props) {
   const [expertises, setExpertises] = useState({});
   const [videoUrl, setvideoUrl] = useState(userData.video || 'https://vjs.zencdn.net/v/oceans.mp4');
   const [rating, setRating] = useState({});
+  const [jobsuccess, setJobSuccess] = useState({});
   const [jobInsight, setJobInsight] = useState({});
   const [average_rating, setAverage_rating] = useState('');
   const [quality, setQuality] = useState('');
@@ -124,15 +127,17 @@ function ArtisanProfile(props) {
     // GetRating();
     // GetInsights();
     // GetArtisanReview();
-    getUser(auth.userData.id, ({user = {}, expertise = {}, employment = {},education = {},comments = {}, rating=""}) => {
+    getUser(auth.userData.id, ({user = {}, expertise = {}, employment = {},education = {},comments = {}, rating="", job_success_rate={}}) => {
       console.log("___USER___LOG__+", user)
       setArtisan(user);
+      dispatch(sendUserDetails(user))
       setExpertises(expertise)
       dispatch(sendWorkDetails(employment.organizations))
       dispatch(sendExpert(expertise))
       dispatch(sendEducationDetails(education.institutions));
       setReviews(comments)
       setRating(rating);
+      setJobSuccess(job_success_rate)
     });
    
     GetPortfolio(auth.userData.id,(res,err)=>{
@@ -265,6 +270,8 @@ function ArtisanProfile(props) {
     })
       .then(res => {
         console.log('___VIDEO__UPLOAD', res.data); 
+        setArtisan({...artisan, video: imageUrl });
+        dispatch(sendUserDetails({...artisan, video: imageUrl }))
          dispatch(setLoading(false));
           setVideoVisible(false);
          
@@ -475,10 +482,17 @@ function ArtisanProfile(props) {
       },
       {
         text: 'Yes',
-        onPress: async() => {
+        onPress: () => {
           console.log('do logout');
-        
-          await AsyncStorage.removeItem("artisan_notification_token")
+          CometChat.logout().then(
+            () => {
+              console.log("Logout completed successfully");
+            },error=>{
+              console.log("Logout failed with exception:",{error});
+            }
+          );
+          dispatch(saveToken(null));
+          dispatch(sendUserDetails({}))
           navigation.navigate('AuthNav');
 
           //setLoading(true);
@@ -947,9 +961,9 @@ function ArtisanProfile(props) {
                         fontWeight: 'bold',
                         fontSize: 28,
                       }}>
-                      {!rating || !rating.average_rating 
+                      {!rating 
                         ? 0.0
-                        : Number(rating.average_rating)
+                        : Number(rating)
                             .toFixed(1)
                             .replace(/\d(?=(\d{3})+\.)/g, '$&,')}
                       {/* {parseInt(Number(rating.rating))} */}
@@ -976,8 +990,8 @@ function ArtisanProfile(props) {
                         fontWeight: 'bold',
                         fontSize: 28,
                       }}>
-                      {rating && rating.jobSuccessRate != null
-                        ? parseInt(Number(jobInsight.jobSuccessRate))
+                      {jobsuccess && jobsuccess.job_success_rate != null
+                        ? parseInt(Number(jobsuccess.job_success_rate))
                         : 0}
                       {'%'}
                     </Text>

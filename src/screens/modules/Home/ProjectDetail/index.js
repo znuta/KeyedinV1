@@ -71,7 +71,7 @@ const ProjectApply = props => {
 const {params = {}} = props.route
   useEffect(() => {
     if (params) {
-      console.log(params);
+      console.log("__PHMHH___",params);
       setItem(params.data);
       
     }
@@ -388,8 +388,7 @@ const {params = {}} = props.route
       </InnerContentContainer>
 
       <MapContentContainer>
-          
-          <MapView
+       {item.location&& item.location.coordinates && item.location.coordinates.length > 0  &&<MapView
         ref={mapRef}
         provider={PROVIDER_GOOGLE}
         style={{ flex: 1, height: hp('30%') }}
@@ -460,7 +459,8 @@ const {params = {}} = props.route
             </ImageBackground>
           </Marker>
        
-      </MapView>
+      </MapView>}   
+          
         </MapContentContainer>
 
         <InnerContentContainer>

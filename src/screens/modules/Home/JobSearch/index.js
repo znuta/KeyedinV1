@@ -203,7 +203,8 @@ function JobSearch(props) {
 
   const JobsSearch = (text) => {
   
-    let uri = BASEURL + `/projects/all/search?user_id=${auth.userData.id}&title=${text}`;
+    if (text) {
+      let uri = BASEURL + `/projects/all/search?user_id=${auth.userData.id}&title=${text}`;
 
     props.setLoading(true);
     let data = {
@@ -236,6 +237,8 @@ function JobSearch(props) {
         props.setLoading(false);
         
       });
+    }
+    
   };
 
   const handler = useCallback(debounce((text)=>JobsSearch(text), 2000), []);
@@ -243,7 +246,7 @@ function JobSearch(props) {
     if (searchItem !== "") {
       handler(searchItem)
     }else{
-      if (searchItem !== null ) {
+      if (searchItem !== null || searchItem !== undefined ) {
       GetJobs()
       }
     }

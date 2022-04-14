@@ -206,7 +206,7 @@ const Payment = props => {
           backgroundColor: 'white',
           paddingVertical: wp('4%'),
         }}>
-        <Text
+        {/* <Text
           style={{
             color: colors.grey,
             fontSize: 15,
@@ -215,8 +215,8 @@ const Payment = props => {
             fontWeight: 'bold',
           }}>
           Add payment method
-        </Text>
-        <View
+        </Text> */}
+        {/* <View
           style={{
             borderWidth: StyleSheet.hairlineWidth,
             borderColor: colors.grey,
@@ -225,8 +225,8 @@ const Payment = props => {
             width: '90%',
 
           }}
-        />
-        <TouchableOpacity>
+        /> */}
+        {/* <TouchableOpacity>
           <Image
             source={require('src/assets/illustrations/paystack.png')}
             style={{ width: 150, height: 50, resizeMode: 'contain' }}
@@ -238,7 +238,7 @@ const Payment = props => {
             source={require('src/assets/illustrations/flutterwave.png')}
             style={{ width: 150, height: 90, resizeMode: 'contain' }}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         
         <View style={{ width: '90%' }}>
           <Text style={{ fontWeight: 'bold' }}>saved cards</Text>
@@ -296,7 +296,7 @@ const Payment = props => {
             width: '90%',
           }}
         />
-        <View
+        {/* <View
           style={{
             display: 'flex',
             flexDirection: 'row',
@@ -319,7 +319,7 @@ const Payment = props => {
             value={checked}
             onValueChange={value => setchecked(value)}
           />
-        </View>
+        </View> */}
       </View>
       <RBSheet
         ref={refDepositeSheet}

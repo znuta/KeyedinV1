@@ -21,12 +21,15 @@ import {useNavigation} from '@react-navigation/native';
 import {KeyboardAwareView} from 'react-native-keyboard-aware-view';
 import {useSelector, useDispatch} from 'react-redux';
 import {
+  saveToken,
+  sendUserDetails,
   setLoading, setToast,
 } from 'src/redux/actions/AuthActions';
 import axios from 'axios';
 import styles from './style';
 import TextField from 'src/component/TextField';
 import { hp } from 'src/config/variables';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const ChangePassword = props => {
   const navigation = useNavigation();
@@ -72,7 +75,7 @@ const ChangePassword = props => {
 
     dispatch(setLoading(true));
       let uri = BASEURL + '/auth/change-password';
-      const {email=""} = props.getState()
+     
     let data = {
       email: auth.userData.email,
       password,
@@ -84,12 +87,22 @@ const ChangePassword = props => {
           'Content-Type': 'application/json;charset=utf-8',
         },
       }).then(res => {
+        console.log("___FG+++", res)
           dispatch(setLoading(false));
           
-          navigation.navigate('GetStarted')
+          CometChat.logout().then(
+            () => {
+              console.log("Logout completed successfully");
+            },error=>{
+              console.log("Logout failed with exception:",{error});
+            }
+          );
+          dispatch(saveToken(null));
+          dispatch(sendUserDetails({}))
+          navigation.navigate('AuthNav');
           
         }).catch(error => {
-        
+          console.log("___FG++Error+", error)
           dispatch(setLoading(false));
           
         });
@@ -156,7 +169,7 @@ const ChangePassword = props => {
         <Title style={{color: colors.green}}>New Password</Title>
         <Subtitle>Please enter your new password to continue</Subtitle>
       </View>
-      <KeyboardAwareView>
+      <KeyboardAwareScrollView>
         <View
           style={{
             //backgroundColor: "yellow",
@@ -197,9 +210,7 @@ const ChangePassword = props => {
               //autoCapitalize="sentences"
               secureTextEntry={passwordReveal}
               value={password}
-              ref={ref => {
-                _passwordinput = ref;
-              }}
+              
               returnKeyType="done"
               onSubmitEditing={() => {
                 nextStep();
@@ -247,9 +258,7 @@ const ChangePassword = props => {
               //autoCapitalize="sentences"
               secureTextEntry={confirmPassReveal}
               value={confirmPassword}
-              ref={ref => {
-                _passwordinput = ref;
-              }}
+             
               returnKeyType="done"
               onSubmitEditing={() => {
                 nextStep();
@@ -310,7 +319,7 @@ const ChangePassword = props => {
           </TouchableOpacity>
           
         </View>
-      </KeyboardAwareView>
+      </KeyboardAwareScrollView>
       {/* </Footer> */}
     </Container>
   );

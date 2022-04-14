@@ -12,6 +12,10 @@ import {useSelector, useDispatch} from 'react-redux';
 const Stack = createStackNavigator();
 const Page = () =>{
   const navigation = useNavigation()
+  const dispatch = useDispatch();
+  const {auth, intro} = useSelector(state => state);
+  const {token = ""} = auth
+  console.log("__AUTH__LOG___", auth)
   useEffect(() => {
     // Assume a message-notification contains a "type" property in the data payload of the screen to open
 
@@ -44,8 +48,13 @@ const Page = () =>{
       headerShown: false,
       gestureEnabled: false,
     }}>
-    <Stack.Screen name="AuthNav" component={AuthNav} />
-    <Stack.Screen options={{ headerShown: false }} name="Main" component={Main} />
+      {
+      !token? <Stack.Screen name="AuthNav" component={AuthNav} />
+       : 
+        <Stack.Screen options={{ headerShown: false }} name="Main" component={Main} />
+        }
+   
+   
   </Stack.Navigator>
   )
 

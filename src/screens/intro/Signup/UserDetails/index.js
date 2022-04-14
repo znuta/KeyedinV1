@@ -5,7 +5,7 @@ import {wp, hp, fonts, colors} from 'src/config/variables';
 import {Title, Subtitle, styles} from 'src/screens/intro/Signup/styles';
 // import {styles} from 'src/screens/intro/Signup/styles';otp
 import Button from 'src/component/Button/index';
-import {BASEURL} from 'src/constants/Services';
+import {BASEURL, CometAuthKey} from 'src/constants/Services';
 import {CometChat} from '@cometchat-pro/react-native-chat';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useSelector, useDispatch} from 'react-redux';
@@ -98,7 +98,7 @@ const UserDetails = props => {
     let uri = BASEURL + '/auth/register';
     dispatch(setLoading(true));
     //const apikey = "73dc1cb067c39b8b3026859320a668770e064e2c";
-    const apikey = '9b276d509004d11955a380f29c65058679429862';
+    const apikey = '6686a7164e01892a097d097438a1d4d30be16bee';
 
     //console.log(auth);
     let data = {
@@ -137,7 +137,7 @@ const UserDetails = props => {
            
             var user = new CometChat.User(uid.toString());
             user.setName(fullname);
-            CometChat.createUser(user, apikey).then(
+            CometChat.createUser(user, CometAuthKey).then(
               user => {
                 console.log('Chat account created: ', user);
                 dispatch(setLoading(false));

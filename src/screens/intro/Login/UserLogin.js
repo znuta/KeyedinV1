@@ -22,7 +22,7 @@ import messaging from '@react-native-firebase/messaging';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useSelector, useDispatch} from 'react-redux';
-import {BASEURL} from 'src/constants/Services';
+import {BASEURL, CometAppID, CometAuthKey} from 'src/constants/Services';
 import Loader from 'src/component/Loader';
 import {CometChat} from '@cometchat-pro/react-native-chat';
 import colors from 'src/config/colors';
@@ -135,37 +135,39 @@ const UserLogin = props => {
           first_name = '',
           last_name = '',
           id = '',
+          avatar = ''
         } = data;
         let fullname = first_name + ' ' + last_name;
         let uid = id;
          sendFcmToken(id,data.token)
         var user = new CometChat.User(uid.toString());
+        user.setAvatar(avatar)
         user.setName(fullname);
-        // CometChat.createUser(user, apikey).then(
-        //   user => {
-        //     console.log('Chat account created: ', user);
-        //     dispatch(setLoading(false));
-        //     AsyncStorage.setItem("token", data.token)
-        //     props.next();
-        //   },
-        //   error => {
-        //     console.log('Error creating chat account: ', error.response);
-        //     dispatch(setLoading(false));
-        //   },
-        // );
+        CometChat.createUser(user, CometAuthKey).then(
+          user => {
+            console.log('Chat account created: ', user);
+            // dispatch(setLoading(false));
+            // AsyncStorage.setItem("token", data.token)
+            // props.next();
+          },
+          error => {
+            console.log('Error creating chat account: ', error.response);
+            // dispatch(setLoading(false));
+          },
+        );
         
             CometChat.getLoggedinUser().then(
               user => {
                 if(!user){
             CometChat.login(
               data.id,
-              apikey,
+              CometAuthKey,
             ).then(
               user => {
-               
+               user.setAvatar(avatar)
                 console.log('Chat login successful: ', {user});
                 let isIOS = Platform.OS === 'ios';
-                var userTopic = appId + "_user_" + user.getUid();
+                var userTopic = CometAppID + "_user_" + user.getUid();
                 if(isIOS){
                   var userTopicIos = userTopic + "_ios";
                   topics.push(userTopicIos);
