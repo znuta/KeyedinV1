@@ -45,8 +45,6 @@
 	<string>YOUR TEXT</string>
 	<key>NSCameraUsageDescription</key>
 	<string>YOUR TEXT</string>
-	<!-- <key>NSContactsUsageDescription</key>
-	<string>YOUR TEXT</string> -->
 	<key>NSFaceIDUsageDescription</key>
 	<string>YOUR TEXT</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -74,8 +72,6 @@
 	<string>YOUR TEXT</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>YOUR TEXT</string>
-	<!-- <key>NSUserTrackingUsageDescription</key>
-	<string>YOUR TEXT</string> -->
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

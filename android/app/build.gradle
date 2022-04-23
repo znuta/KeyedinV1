@@ -197,8 +197,8 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
-    // implementation 'com.cometchat:pro-android-chat-sdk:3.0.2'
-    // implementation 'com.cometchat:pro-android-calls-sdk:2.0.1'
+    implementation 'com.cometchat:pro-android-chat-sdk:3.0.2'
+    implementation 'com.cometchat:pro-android-calls-sdk:2.0.1'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
      implementation(project(':react-native-maps')){
        exclude group: 'com.google.android.gms', module: 'play-services-base'

@@ -99,7 +99,6 @@ function JobSearch(props) {
   const [distance, setDistance] = useState(1);
   const [editing, setEditing] = useState(false);
  
-
   const onChangeText = (key, data) => {
     setFilter({...filters, [key]: data});
   };
@@ -131,7 +130,6 @@ function JobSearch(props) {
     setsearchItem('');
   };
 
- 
   const _renderReviewItem = (props) => {
   const  { item, index} = props
     return (
@@ -142,8 +140,10 @@ function JobSearch(props) {
   };
 
   const GetJobs = () => {
-    const longitude = auth.userData.location.coordinates[0] === null ?"0.0": auth.userData.location.coordinates[0]
-    const latitude = auth.userData.location.coordinates[1] === null ? "0.0": auth.userData.location.coordinates[1]
+    const {location = {}} = auth.userData
+    const {coordinates = []} = location
+    const longitude = coordinates[0] === null ?"0.0": coordinates[0]
+    const latitude = coordinates[1] === null ? "0.0": coordinates[1]
     let uri = BASEURL + `/projects/location/find?longitude=${longitude}&latitude=${latitude}`;
     console.log("__Download___URL", uri)
     // props.setLoading(true);
@@ -191,7 +191,6 @@ function JobSearch(props) {
         setData(data);
         props.setLoading(false);
        
-       
       })
       .catch(error => {
         console.log('Job_filter_Fail', error.response);
@@ -206,10 +205,15 @@ function JobSearch(props) {
     if (text) {
       let uri = BASEURL + `/projects/all/search?user_id=${auth.userData.id}&title=${text}`;
 
+      const {location = {}} = auth.userData
+    const {coordinates = []} = location
+    const longitude = coordinates[0] === null ?"0.0": coordinates[0]
+    const latitude = coordinates[1] === null ? "0.0": coordinates[1]
+
     props.setLoading(true);
     let data = {
-      longitude: auth.userData.location.lng,
-      latitude: auth.userData.location.lat,
+      longitude: longitude,
+      latitude: latitude,
       search: text
     };
     axios.get(uri, 
@@ -220,7 +224,6 @@ function JobSearch(props) {
         Authorization: 'Bearer' + ' ' + auth.token,
       },
     })
-     
       .then(res => {
         const {data} = res.data
         console.log("__Download__SERACH_", res)
@@ -229,7 +232,6 @@ function JobSearch(props) {
         props.setLoading(false);
        
       })
-      
       .catch(error => {
         
         console.log('__SEARCH__JOB_FAIL', error.response);
@@ -512,7 +514,6 @@ function JobSearch(props) {
         )}
       </View>
       
-
       <RBSheet
         ref={refRBSheet}
         height={hp('70%')}
@@ -607,14 +608,10 @@ function JobSearch(props) {
   );
 }
 
-
 const GreenText = styled.Text`
   font-weight: 700;
   font-size: ${wp('5%')};
   color: ${colors.green};
 `;
-
-
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(JobSearch);
