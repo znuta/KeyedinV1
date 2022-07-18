@@ -8046,55 +8046,55 @@ Payload:
     "/var/folders/sb/l1lx2pb11n32291wdb0c_t8c0000gn/T/XcodeDistPipeline.~~~vv49QN/Root/Payload/KeyedinV1.app/Frameworks/libswiftos.dylib"
 )'>
 2022-02-05 23:33:40 +0000  codesign output: 
-2022-02-05 23:33:40 +0000  Entitlements for <IDEDistributionItem: 0x7fae74c916e0; bundleID='app.keyedin.artisan-app', path='<DVTFilePath:0x7fae992378c0:'/Users/user/Library/Developer/Xcode/Archives/2022-02-05/KeyedinV1 05-02-2022, 14.00.xcarchive/Products/Applications/KeyedinV1.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7faeb6808150; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7faef885a3d0; name='Apple Development: Toyeeb Atunde (P69P6A2NZM)', hash='5520AAE9BAA5D133331DA2E3A653EFF99FE1E4F3', serialNumber='5EEA6D33F898049344A3673E5EED9422', certificateKinds='(
+2022-02-05 23:33:40 +0000  Entitlements for <IDEDistributionItem: 0x7fae74c916e0; bundleID='app.keyedin.protisanapp', path='<DVTFilePath:0x7fae992378c0:'/Users/user/Library/Developer/Xcode/Archives/2022-02-05/KeyedinV1 05-02-2022, 14.00.xcarchive/Products/Applications/KeyedinV1.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7faeb6808150; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7faef885a3d0; name='Apple Development: Toyeeb Atunde (P69P6A2NZM)', hash='5520AAE9BAA5D133331DA2E3A653EFF99FE1E4F3', serialNumber='5EEA6D33F898049344A3673E5EED9422', certificateKinds='(
     "1.2.840.113635.100.6.1.12",
     "1.2.840.113635.100.6.1.2"
 ), issueDate='2022-02-03 13:20:32 +0000''>', entitlements='{
-    "application-identifier" = "58NK93P6VT.app.keyedin.artisan-app";
+    "application-identifier" = "58NK93P6VT.app.keyedin.protisanapp";
     "com.apple.developer.team-identifier" = 58NK93P6VT;
     "get-task-allow" = 1;
     "keychain-access-groups" =     (
-        "58NK93P6VT.app.keyedin.artisan-app"
+        "58NK93P6VT.app.keyedin.protisanapp"
     );
-}', teamID='58NK93P6VT', identifier='app.keyedin.artisan-app', executablePath='<DVTFilePath:0x7fae731d0e20:'/Users/user/Library/Developer/Xcode/Archives/2022-02-05/KeyedinV1 05-02-2022, 14.00.xcarchive/Products/Applications/KeyedinV1.app/KeyedinV1'>', hardenedRuntime='0'>'>: {
-    "application-identifier" = "58NK93P6VT.app.keyedin.artisan-app";
+}', teamID='58NK93P6VT', identifier='app.keyedin.protisanapp', executablePath='<DVTFilePath:0x7fae731d0e20:'/Users/user/Library/Developer/Xcode/Archives/2022-02-05/KeyedinV1 05-02-2022, 14.00.xcarchive/Products/Applications/KeyedinV1.app/KeyedinV1'>', hardenedRuntime='0'>'>: {
+    "application-identifier" = "58NK93P6VT.app.keyedin.protisanapp";
     "beta-reports-active" = 1;
     "com.apple.developer.team-identifier" = 58NK93P6VT;
     "get-task-allow" = 0;
     "keychain-access-groups" =     (
-        "58NK93P6VT.app.keyedin.artisan-app"
+        "58NK93P6VT.app.keyedin.protisanapp"
     );
 }
-2022-02-05 23:33:40 +0000  Entitlements for <IDEDistributionItem: 0x7fae74c916e0; bundleID='app.keyedin.artisan-app', path='<DVTFilePath:0x7fae992378c0:'/Users/user/Library/Developer/Xcode/Archives/2022-02-05/KeyedinV1 05-02-2022, 14.00.xcarchive/Products/Applications/KeyedinV1.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7faeb6808150; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fae74abe7c0; name='Apple Development: Toyeeb Atunde (P69P6A2NZM)', hash='5520AAE9BAA5D133331DA2E3A653EFF99FE1E4F3', serialNumber='5EEA6D33F898049344A3673E5EED9422', certificateKinds='(
+2022-02-05 23:33:40 +0000  Entitlements for <IDEDistributionItem: 0x7fae74c916e0; bundleID='app.keyedin.protisanapp', path='<DVTFilePath:0x7fae992378c0:'/Users/user/Library/Developer/Xcode/Archives/2022-02-05/KeyedinV1 05-02-2022, 14.00.xcarchive/Products/Applications/KeyedinV1.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7faeb6808150; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fae74abe7c0; name='Apple Development: Toyeeb Atunde (P69P6A2NZM)', hash='5520AAE9BAA5D133331DA2E3A653EFF99FE1E4F3', serialNumber='5EEA6D33F898049344A3673E5EED9422', certificateKinds='(
     "1.2.840.113635.100.6.1.12",
     "1.2.840.113635.100.6.1.2"
 ), issueDate='2022-02-03 13:20:32 +0000''>', entitlements='{
-    "application-identifier" = "58NK93P6VT.app.keyedin.artisan-app";
+    "application-identifier" = "58NK93P6VT.app.keyedin.protisanapp";
     "com.apple.developer.team-identifier" = 58NK93P6VT;
     "get-task-allow" = 1;
     "keychain-access-groups" =     (
-        "58NK93P6VT.app.keyedin.artisan-app"
+        "58NK93P6VT.app.keyedin.protisanapp"
     );
-}', teamID='58NK93P6VT', identifier='app.keyedin.artisan-app', executablePath='<DVTFilePath:0x7fae731d0e20:'/Users/user/Library/Developer/Xcode/Archives/2022-02-05/KeyedinV1 05-02-2022, 14.00.xcarchive/Products/Applications/KeyedinV1.app/KeyedinV1'>', hardenedRuntime='0'>'> are: {
-    "application-identifier" = "58NK93P6VT.app.keyedin.artisan-app";
+}', teamID='58NK93P6VT', identifier='app.keyedin.protisanapp', executablePath='<DVTFilePath:0x7fae731d0e20:'/Users/user/Library/Developer/Xcode/Archives/2022-02-05/KeyedinV1 05-02-2022, 14.00.xcarchive/Products/Applications/KeyedinV1.app/KeyedinV1'>', hardenedRuntime='0'>'> are: {
+    "application-identifier" = "58NK93P6VT.app.keyedin.protisanapp";
     "beta-reports-active" = 1;
     "com.apple.developer.team-identifier" = 58NK93P6VT;
     "get-task-allow" = 0;
     "keychain-access-groups" =     (
-        "58NK93P6VT.app.keyedin.artisan-app"
+        "58NK93P6VT.app.keyedin.protisanapp"
     );
 }
-2022-02-05 23:33:40 +0000  Writing entitlements for <IDEDistributionItem: 0x7fae74c916e0; bundleID='app.keyedin.artisan-app', path='<DVTFilePath:0x7fae992378c0:'/Users/user/Library/Developer/Xcode/Archives/2022-02-05/KeyedinV1 05-02-2022, 14.00.xcarchive/Products/Applications/KeyedinV1.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7faeb6808150; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fae9514b420; name='Apple Development: Toyeeb Atunde (P69P6A2NZM)', hash='5520AAE9BAA5D133331DA2E3A653EFF99FE1E4F3', serialNumber='5EEA6D33F898049344A3673E5EED9422', certificateKinds='(
+2022-02-05 23:33:40 +0000  Writing entitlements for <IDEDistributionItem: 0x7fae74c916e0; bundleID='app.keyedin.protisanapp', path='<DVTFilePath:0x7fae992378c0:'/Users/user/Library/Developer/Xcode/Archives/2022-02-05/KeyedinV1 05-02-2022, 14.00.xcarchive/Products/Applications/KeyedinV1.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7faeb6808150; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fae9514b420; name='Apple Development: Toyeeb Atunde (P69P6A2NZM)', hash='5520AAE9BAA5D133331DA2E3A653EFF99FE1E4F3', serialNumber='5EEA6D33F898049344A3673E5EED9422', certificateKinds='(
     "1.2.840.113635.100.6.1.12",
     "1.2.840.113635.100.6.1.2"
 ), issueDate='2022-02-03 13:20:32 +0000''>', entitlements='{
-    "application-identifier" = "58NK93P6VT.app.keyedin.artisan-app";
+    "application-identifier" = "58NK93P6VT.app.keyedin.protisanapp";
     "com.apple.developer.team-identifier" = 58NK93P6VT;
     "get-task-allow" = 1;
     "keychain-access-groups" =     (
-        "58NK93P6VT.app.keyedin.artisan-app"
+        "58NK93P6VT.app.keyedin.protisanapp"
     );
-}', teamID='58NK93P6VT', identifier='app.keyedin.artisan-app', executablePath='<DVTFilePath:0x7fae731d0e20:'/Users/user/Library/Developer/Xcode/Archives/2022-02-05/KeyedinV1 05-02-2022, 14.00.xcarchive/Products/Applications/KeyedinV1.app/KeyedinV1'>', hardenedRuntime='0'>'> to: /var/folders/sb/l1lx2pb11n32291wdb0c_t8c0000gn/T/XcodeDistPipeline.~~~vv49QN/entitlements~~~HeHKPk
+}', teamID='58NK93P6VT', identifier='app.keyedin.protisanapp', executablePath='<DVTFilePath:0x7fae731d0e20:'/Users/user/Library/Developer/Xcode/Archives/2022-02-05/KeyedinV1 05-02-2022, 14.00.xcarchive/Products/Applications/KeyedinV1.app/KeyedinV1'>', hardenedRuntime='0'>'> to: /var/folders/sb/l1lx2pb11n32291wdb0c_t8c0000gn/T/XcodeDistPipeline.~~~vv49QN/entitlements~~~HeHKPk
 2022-02-05 23:33:40 +0000  Sending request 58A9D49E-C652-4EAD-B38B-275CB53A2F5B to <https://developerservices2.apple.com/services/QH65B2/listTeams.action?clientId=XABBG36SBA> for session <DVTServicesAccountBasedSession: 0x7fae96c876c0; account='<DVTAppleIDBasedDeveloperAccount: 0x7faf7594e9d0; username='atundearisekola@gmail.com'>'>.
 Method: POST
 
@@ -8261,7 +8261,7 @@ Payload:
     "--entitlements",
     "/var/folders/sb/l1lx2pb11n32291wdb0c_t8c0000gn/T/XcodeDistPipeline.~~~vv49QN/entitlements~~~HeHKPk",
     "--requirements",
-    "=designated => anchor apple generic and identifier \"app.keyedin.artisan-app\" and certificate leaf[subject.CN] = \"Apple Distribution: KeyedIn Service Providers LTD (58NK93P6VT)\" and certificate 1[field.1.2.840.113635.100.6.2.1] /* exists */",
+    "=designated => anchor apple generic and identifier \"app.keyedin.protisanapp\" and certificate leaf[subject.CN] = \"Apple Distribution: KeyedIn Service Providers LTD (58NK93P6VT)\" and certificate 1[field.1.2.840.113635.100.6.2.1] /* exists */",
     "--preserve-metadata=identifier,flags,runtime",
     "--omit-adhoc-flag",
     "--team-identifier",
@@ -8271,7 +8271,7 @@ Payload:
     "/var/folders/sb/l1lx2pb11n32291wdb0c_t8c0000gn/T/XcodeDistPipeline.~~~vv49QN/Root/Payload/KeyedinV1.app"
 )'>
 2022-02-05 23:33:42 +0000  codesign output: /var/folders/sb/l1lx2pb11n32291wdb0c_t8c0000gn/T/XcodeDistPipeline.~~~vv49QN/Root/Payload/KeyedinV1.app: replacing existing signature
-/var/folders/sb/l1lx2pb11n32291wdb0c_t8c0000gn/T/XcodeDistPipeline.~~~vv49QN/Root/Payload/KeyedinV1.app: signed app bundle with Mach-O thin (arm64) [app.keyedin.artisan-app]
+/var/folders/sb/l1lx2pb11n32291wdb0c_t8c0000gn/T/XcodeDistPipeline.~~~vv49QN/Root/Payload/KeyedinV1.app: signed app bundle with Mach-O thin (arm64) [app.keyedin.protisanapp]
 2022-02-05 23:33:42 +0000  Remote code signing '/var/folders/sb/l1lx2pb11n32291wdb0c_t8c0000gn/T/XcodeDistPipeline.~~~vv49QN/Root/Payload/KeyedinV1.app' with signature slices '[<DVTCodeSignatureSlice: 0x7fae74cb7370; architecture='arm64', cmsDigest='<DVTCodeSignatureHash: 0x7faeb2b31430; digestAlgorithmDescription='sha256', cdHashHexEncoded='e903f28887b29670f81a9449b6aeaeba99660e79e11398b0c5cff49865879587'>', codeSignatureHashes='{(
     <DVTCodeSignatureHash: 0x7fae5fea8840; digestAlgorithmDescription='sha256', cdHashHexEncoded='e903f28887b29670f81a9449b6aeaeba99660e79e11398b0c5cff49865879587'>
 )}', cmsHexEncoded=''>]' and configuration 'RemoteSigningToolConfiguration(path: <DVTFilePath:0x7faeb6cabe70:'/var/folders/sb/l1lx2pb11n32291wdb0c_t8c0000gn/T/XcodeDistPipeline.~~~vv49QN/Root/Payload/KeyedinV1.app'>, signingCertificate: <DVTSigningCertificate: 0x7fae733eb290; name='Apple Distribution: KeyedIn Service Providers LTD (58NK93P6VT)', hash='3D7D7C45687122EB0827AB68D7DA8D8778B67B1B', serialNumber='75D61D69F6B63AC397FB93585399D1DD', certificateKinds='(

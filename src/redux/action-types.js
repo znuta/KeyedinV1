@@ -10,6 +10,7 @@ export const LOADING = "LOADING";
 export const SEND_OTP_ERROR = "SEND_OTP_ERROR";
 export const SET_USER_DETAILS = "SET_USER_DETAILS";
 export const SAVE_TOKEN = "SAVE_TOKEN";
+export const SAVE_ZEGO_TOKEN = "SAVE_ZEGO_TOKEN";
 export const SAVE_ID = "SAVE_ID";
 export const SAVE_AVATAR = "SAVE_AVATAR";
 export const SET_EDUCATION_DETAILS = "SET_EDUCATION_DETAILS";

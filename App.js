@@ -15,7 +15,7 @@
    StyleSheet,
    Text,
    useColorScheme,
-   View,
+   View
  } from 'react-native';
  import Splash from './src/screens/intro/SplashScreen/SplashScreen';
  import rootReducer from './src/redux/reducers';

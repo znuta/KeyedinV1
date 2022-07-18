@@ -201,6 +201,8 @@ const {params = {}} = props.route
   const { due_date = new Date(), bid_amount = '', cover_letter = '', attachment = "" } = value;
   var num = parseFloat(bid_amount);
   var amountToReceived = num - (num * .20);
+
+  
   return (
     <Container>
     <Header

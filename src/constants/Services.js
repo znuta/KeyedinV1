@@ -3,7 +3,13 @@
 //   };
 
 const BASEURL = "https://keyedin-nodejs.herokuapp.com/api/v1";
-const CometAppID = "206143375b8d8a36"
-const CometAuthKey = "6686a7164e01892a097d097438a1d4d30be16bee"
+const CometAppID = "2122744531932364"
+const CometAuthKey = "24a0b8569fd83f97a8b536f38fc448ea63f9463b"
+// Heroku server url for example
+  // Get the server from: https://github.com/ZEGOCLOUD/easy_example_call_server_nodejs
+  // e.g. https://xxx.herokuapp.com
+const ZEGO_SERVER_URL = "https://keyedin.herokuapp.com"
+// Get your AppID from ZEGOCLOUD Console [My Projects] : https://console.zegocloud.com/project
+const ZEGO_APPID = "2093930525"
 //const BASEURL = "https://1721e2880fc0.ngrok.io/api/v1";
-export { BASEURL,CometAppID, CometAuthKey };
+export { BASEURL,CometAppID, CometAuthKey,ZEGO_SERVER_URL,ZEGO_APPID };

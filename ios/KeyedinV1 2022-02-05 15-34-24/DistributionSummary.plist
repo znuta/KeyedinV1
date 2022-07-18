@@ -60,7 +60,7 @@
 			<key>entitlements</key>
 			<dict>
 				<key>application-identifier</key>
-				<string>58NK93P6VT.app.keyedin.artisan-app</string>
+				<string>58NK93P6VT.app.keyedin.protisanapp</string>
 				<key>beta-reports-active</key>
 				<true/>
 				<key>com.apple.developer.team-identifier</key>
@@ -69,7 +69,7 @@
 				<false/>
 				<key>keychain-access-groups</key>
 				<array>
-					<string>58NK93P6VT.app.keyedin.artisan-app</string>
+					<string>58NK93P6VT.app.keyedin.protisanapp</string>
 				</array>
 			</dict>
 			<key>name</key>
@@ -81,7 +81,7 @@
 				<key>dateExpires</key>
 				<string>05/02/2023</string>
 				<key>name</key>
-				<string>iOS Team Store Provisioning Profile: app.keyedin.artisan-app</string>
+				<string>iOS Team Store Provisioning Profile: app.keyedin.protisanapp</string>
 			</dict>
 			<key>symbols</key>
 			<true/>

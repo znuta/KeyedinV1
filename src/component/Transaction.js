@@ -12,7 +12,7 @@ export default function Transaction({ item }) {
       <TransactionBody>
         <TransactionImage>
           <Image
-            source={require("../config/images/ben.png")}
+            source={require("../config/images/Group_680.png")}
             style={{ width: "100%", height: "100%", borderRadius: 10 }}
           />
         </TransactionImage>

@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "839790591852",
-    "project_id": "keyedin-d3114",
-    "storage_bucket": "keyedin-d3114.appspot.com"
+    "project_number": "277998012438",
+    "project_id": "keyedin-protisan",
+    "storage_bucket": "keyedin-protisan.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:839790591852:android:96db5228990e9d40e93d49",
+        "mobilesdk_app_id": "1:277998012438:android:5653a1c229f267af958d37",
         "android_client_info": {
-          "package_name": "com.keyedinv1"
+          "package_name": "app.keyedin.protisanapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "839790591852-bpsvo9o8o3csc6mf8du9usqpk3d35kpd.apps.googleusercontent.com",
+          "client_id": "277998012438-lpo9s6bq5tvcpht9oenmh5216isoubl0.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyACCwFw608CO-dTa_C0U1tb17F5I3Cq0iU"
+          "current_key": "AIzaSyDqQrVQAB1yqrkwaM_gBvLFFiMmyiUHtyM"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "839790591852-bpsvo9o8o3csc6mf8du9usqpk3d35kpd.apps.googleusercontent.com",
+              "client_id": "277998012438-lpo9s6bq5tvcpht9oenmh5216isoubl0.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

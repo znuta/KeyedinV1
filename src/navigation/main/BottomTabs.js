@@ -13,7 +13,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Homebtn from 'src/assets/icons/homebtn.svg';
 import Homebtnalt from 'src/assets/icons/homebtnalt.svg';
-import { CommonActions } from '@react-navigation/native';
+import { CommonActions, createNavigationContainerRef, StackActions } from '@react-navigation/native';
 import Projectbtn from 'src/assets/icons/projectbtn.svg';
 import Projectbtnalt from 'src/assets/icons/projectbtnalt.svg';
 
@@ -35,7 +35,8 @@ import Settings from 'src/screens/modules/Settings';
 import Proposals from 'src/screens/modules/Proposal';
 import ProposalDetail from 'src/screens/modules/Proposal/ProposalDetail';
 import Insight from 'src/screens/modules/Insight';
-import { ChatScreen } from "src/screens/modules/Messages/ChatScreen";
+import  ChatScreen  from "src/screens/modules/Messages/ChatScreen";
+import  CallPage  from "src/screens/modules/Messages/CallPage";
 import { MainCallScreen } from "src/screens/modules/Messages/MainCallScreen";
 import Profile from 'src/screens/modules/Profile/';
 import ProtisanProfile from 'src/screens/modules/ProtisanProfile';
@@ -294,7 +295,7 @@ const BottomTabComponent = reduxProps => {
       <Stack.Screen name="EditEducation" component={EditEducation} />
       <Stack.Screen name="EditUser" component={EditUser} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
-     
+      <Stack.Screen name="CallPage" component={CallPage} />
       <Stack.Screen name="ChatScreen" component={ChatScreen} />
       <Stack.Screen name="CallingScreen" component={CallingScreen} />
       <Stack.Screen name="VideoCallScreen" component={VideoCallScreen} />
@@ -308,5 +309,19 @@ const BottomTabComponent = reduxProps => {
     </Stack.Navigator>
   );
 };
+
+const navigationRef = createNavigationContainerRef()
+
+ function pushToScreen(...args) {
+  if (navigationRef.isReady()) {
+    navigationRef.dispatch(StackActions.push(...args));
+  }
+}
+
+export {
+  
+  navigationRef,
+  pushToScreen
+}
 
 export default BottomTabComponent;

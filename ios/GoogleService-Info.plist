@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>839790591852-0l0ocdh4gvv64krlq5d1j633nj53uoit.apps.googleusercontent.com</string>
+	<string>277998012438-qlcj1vvcd5sbmenm6u2p65ummkns8r7t.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.839790591852-0l0ocdh4gvv64krlq5d1j633nj53uoit</string>
+	<string>com.googleusercontent.apps.277998012438-qlcj1vvcd5sbmenm6u2p65ummkns8r7t</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCL381Fx7_9Por4dP3CANV4B4T4cGdH4CY</string>
+	<string>AIzaSyAmUOl-RK_3r1iOjDhgQjk-iZjrc4jWAfQ</string>
 	<key>GCM_SENDER_ID</key>
-	<string>839790591852</string>
+	<string>277998012438</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>app.keyedin.artisan-app</string>
+	<string>app.keyedin.protisanapp</string>
 	<key>PROJECT_ID</key>
-	<string>keyedin-d3114</string>
+	<string>keyedin-protisan</string>
 	<key>STORAGE_BUCKET</key>
-	<string>keyedin-d3114.appspot.com</string>
+	<string>keyedin-protisan.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:839790591852:ios:ea42fbfd951ff0cae93d49</string>
+	<string>1:277998012438:ios:2327b6a147338928958d37</string>
 </dict>
 </plist>

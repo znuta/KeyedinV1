@@ -5,7 +5,7 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 pod 'react-native-video', :path => '../node_modules/react-native-video/react-native-video.podspec'
 # pod 'FirebaseCore', :git => 'https://github.com/firebase/firebase-ios-sdk.git', 
-platform :ios, '11.0'
+platform :ios, '12.0'
 
 # disable_input_output_paths: true
 
@@ -48,6 +48,9 @@ target 'KeyedinV1' do
 
 
   pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+
+
+  # pod 'react-native-cometchat-rtc', :path => '../node_modules/@cometchat-pro/react-native-calls'
 
   target 'KeyedinV1Tests' do
     inherit! :complete

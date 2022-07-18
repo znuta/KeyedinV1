@@ -35,6 +35,8 @@ import Colors from "src/constants/Colors";
 import { Header, Icon } from "react-native-elements";
 import {colors, fonts, hp, wp} from 'src/config/variables';
 import { getUser } from "src/redux/actions/AuthActions";
+import { ZEGO_APPID, ZEGO_SERVER_URL } from "src/constants/Services";
+import { connect } from "react-redux";
 
 
 let uid, messagelist, typingNotification, status, myUserID, username, avatar;
@@ -94,9 +96,12 @@ const PreviewModal = ({ showmodal, onClose, imguri, sendMediaMessage }) => {
   );
 };
 
-export class ChatScreen extends Component {
+ class ChatScreen extends Component {
   messagesRequest = null;
-
+  currentUserID;
+  currentUserName;
+  currentUserIcon = "https://img.icons8.com/color/48/000000/avatar.png"; // TODO for test only
+  appData;
   constructor(props) {
     super(props);
     this.state = {
@@ -114,8 +119,19 @@ export class ChatScreen extends Component {
       keyboardOffset: 0,
       showModal: false,
       ismediasent: false,
-      userObject: {}
+      userObject: {},
+      targetUserID: ''
+
     };
+    this.appData = {
+      appID: ZEGO_APPID,
+      serverUrl: ZEGO_SERVER_URL,
+      userID: this.props.auth.userData.id,
+      zegoToken: this.props.auth.zego_token,
+   }
+    this.currentUserID = this.props.auth.userData.id;
+    this.currentUserName = this.props.auth.userData.first_name; // TODO user name for test only
+    this.currentUserIcon = this.props.auth.userData.avatar;
     this.sendMessage = this.sendMessage.bind(this);
     this.sendMediaMessage = this.sendMediaMessage.bind(this);
     this.sendMsg = this.sendMsg.bind(this);
@@ -129,7 +145,7 @@ export class ChatScreen extends Component {
   }
  
   componentWillMount() {
-    this.props.navigation.setParams({ initiateCall: this.initiateCall() });
+    this.props.navigation.setParams({ initiateCall: this.startCall("Audio") });
     this.props.navigation.setParams({ navigation: this.props.navigation });
     // this.uid = this.props.route.params.uid;
     // this.username = this.props.route.params.username;
@@ -234,116 +250,6 @@ export class ChatScreen extends Component {
     CometChat.removeCallListener("CHAT_SCREEN_CALL_LISTNER");
     CometChat.removeMessageListener("CHAT_SCREEN_MESSAGE_LISTENER");
   }
-
-
-  
-  // static navigationOptions = ({ navigation }) => {
-  //   // console.log(navigation);
-
-  //   uid = this.state.uid;
-
-  //   username = this.props.route.params.username;
-
-  //   status = this.props.route.params.status;
-
-  //   avatar = this.props.route.params.avatar;
-
-  //   const { state } = navigation;
-  //   // console.log("navigation state")
-  //   // console.log(navigation);
-  //   return {
-  //     headerTitle: (
-  //       <View style={{ flex: 1 }}>
-  //         <View
-  //           style={{ flexDirection: "row", justifyContent: "space-between" }}
-  //         >
-  //           <View
-  //             style={{
-  //               flexDirection: "row",
-  //               alignSelf: "center",
-  //               justifyContent: "space-between",
-  //             }}
-  //           >
-  //             {avatar === "user" ? (
-  //               <FontAwesome
-  //                 style={[
-  //                   {
-  //                     height: 48,
-  //                     width: 48,
-  //                     borderRadius: 24,
-  //                     marginRight: 16,
-  //                   },
-  //                 ]}
-  //                 name="user"
-  //                 size={48}
-  //                 color="#fff"
-  //               />
-  //             ) : (
-  //               <Image
-  //                 style={{
-  //                   height: 48,
-  //                   width: 48,
-  //                   borderRadius: 24,
-  //                   marginRight: 16,
-  //                 }}
-  //                 source={{ uri: avatar }}
-  //               />
-  //             )}
-
-  //             <View style={{ alignSelf: "flex-start" }}>
-  //               <Text
-  //                 style={{ fontSize: 20, fontWeight: "bold", color: "#FFF" }}
-  //               >
-  //                 {username}
-  //               </Text>
-
-  //               <Text
-  //                 style={{ fontSize: 15, fontStyle: "italic", color: "#FFF" }}
-  //               >
-  //                 {state.params.title}
-  //               </Text>
-  //             </View>
-  //           </View>
-  //         </View>
-  //       </View>
-  //     ),
-  //     headerRight: (
-  //       <View style={{ flex: 1 }}>
-  //         <View style={{ flexDirection: "row" }}>
-  //           <TouchableOpacity
-  //             onPress={() => {
-  //               state.params.initiateCall(CometChat.CALL_TYPE.VIDEO, state.params.navigation);
-  //             }}
-  //           >
-  //             <MaterialCommunityIcons
-  //               style={{ padding: 8 }}
-  //               name="video"
-  //               size={32}
-  //               color="white"
-  //             />
-  //           </TouchableOpacity>
-
-  //           <TouchableOpacity
-  //             onPress={() => {
-  //               state.params.initiateCall(CometChat.CALL_TYPE.AUDIO, state.params.navigation);
-  //             }}
-  //           >
-  //             <MaterialCommunityIcons
-  //               style={{ padding: 8 }}
-  //               name="phone"
-  //               size={32}
-  //               color="white"
-  //             />
-  //           </TouchableOpacity>
-  //         </View>
-  //       </View>
-  //     ),
-  //     headerStyle: {
-  //       backgroundColor: "#3f51b5",
-  //     },
-  //     headerTintColor: "#fff",
-  //   };
-  // };
 
   initiateCall = (type) => {
     var callType = CometChat.CALL_TYPE.VIDEO;
@@ -991,6 +897,41 @@ export class ChatScreen extends Component {
     });
   }
 
+    // Post a request to backend service will the targetUserID
+  // Because every device(FCM token) has been binding with a specific user id at APP launched, 
+  // so the server can find out who you are trying to call
+  async sendCallInvite(roomID,callType) {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        targetUserID: this.state.uid,
+        callerUserID: this.currentUserID,
+        callerUserName: this.currentUserName,
+        callerIconUrl: this.currentUserIcon,
+        roomID: roomID,
+        callType: callType // TODO For test only
+      })
+    };
+    const reps = await fetch(`${ZEGO_SERVER_URL}/call_invite`, requestOptions);
+    console.log('Send call invite reps: ', reps);
+  }
+  jumpToCallPage(roomID, callType) {
+    console.log("___PAMR__", { appData: this.appData, roomID: roomID, userName: this.currentUserName, callType })
+    this.props.navigation.navigate('CallPage', { appData: this.appData, roomID: roomID, userName: this.currentUserName, callType });
+  }
+  // Start call by click the call button
+  startCall(callType) {
+    if (this.state.uid == '') {
+      console.warn('Invalid user id');
+      return;
+    }
+    // TODO the caller use he/her own user id to join room, for test only
+    this.jumpToCallPage(this.currentUserID,callType);
+    this.sendCallInvite(this.currentUserID,callType);
+  }
+
+
   render() {
     const { ismediasent } = this.state;
     // console.log(this.state.messages)
@@ -1038,13 +979,14 @@ export class ChatScreen extends Component {
                         padding: 8,
                       }}
             onPress={() => {
-              this.props.navigation.navigate("CallingScreen",
-              {enableDefaultLayout: true, 
-                callType: CometChat.CALL_TYPE.AUDIO,
-                 isOutgoingCall: true, 
-                 userObject: this.state.userObject,
-                 entity: {name: 'user',username: this.state.username, status: this.state.status, avatar: this.state.avatar, uid: this.state.uid,},
-                  entityType:''});
+              this.startCall("Audio")
+              // this.props.navigation.navigate("CallingScreen",
+              // {enableDefaultLayout: true, 
+              //   callType: CometChat.CALL_TYPE.AUDIO,
+              //    isOutgoingCall: true, 
+              //    userObject: this.state.userObject,
+              //    entity: {name: 'user',username: this.state.username, status: this.state.status, avatar: this.state.avatar, uid: this.state.uid,},
+              //     entityType:''});
               }}
             >
                 <Feather
@@ -1061,13 +1003,14 @@ export class ChatScreen extends Component {
                         padding: 8,
                       }}
                       onPress={() => {
-                        this.props.navigation.navigate("CallingScreen",
-                        {enableDefaultLayout: true,
-                           callType: CometChat.CALL_TYPE.VIDEO,
-                           isOutgoingCall: true, 
-                           userObject: this.state.userObject,
-                           entity: {name: 'user',username: this.state.username, status: this.state.status, avatar: this.state.avatar, uid: this.state.uid,},
-                            entityType:''});
+                        this.startCall("Video")
+                        // this.props.navigation.navigate("CallingScreen",
+                        // {enableDefaultLayout: true,
+                        //    callType: CometChat.CALL_TYPE.VIDEO,
+                        //    isOutgoingCall: true, 
+                        //    userObject: this.state.userObject,
+                        //    entity: {name: 'user',username: this.state.username, status: this.state.status, avatar: this.state.avatar, uid: this.state.uid,},
+                        //     entityType:''});
                         }}
             >
                 <Feather
@@ -1083,45 +1026,7 @@ export class ChatScreen extends Component {
     }
     return (
       <KeyboardAwareView animated={true}>
-        {/* <Header
-        placement="center"
-          leftComponent={
-            () => {
-              return (
-          <View >
-            <TouchableOpacity
-            style={{
-            justifyContent: "flex-end",
-            alignItems: "center", 
-                padding: 8,    
-            
-            }}
-              onPress={() => {
-              this.props.navigation.goBack()
-            }}
-            >
-                <Feather
-                    name="arrow-left"
-                    size={24}
-                    color="white"
-                    style={{ opacity: 0.8,  }}
-                  />
-              </TouchableOpacity>
-              </View>
-              )}
-              }
-             
-          rightComponent={ rightComponent}
-        barStyle={"light-content"}
-        containerStyle={{
-          backgroundColor: colors.green,
-          justifyContent: "space-between",
-          borderBottomWidth: 0,
-          height:110,
-          borderBottomLeftRadius:30,
-          borderBottomRightRadius:30
-        }}
-      /> */}
+       
        <SafeAreaView
         style={{
           backgroundColor: colors.green,
@@ -1509,6 +1414,12 @@ export class ChatScreen extends Component {
       });
   }
 }
+const mapStateToProps = (state) =>{
+  return{
+    auth: state.auth
+  }
+}
+export default connect(mapStateToProps, null)(ChatScreen)
 
 const ShadowBtn = styled.TouchableOpacity`
   flex-direction: row;
