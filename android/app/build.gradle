@@ -136,11 +136,12 @@ android {
 //   }
 
     defaultConfig {
+        
         applicationId "app.keyedin.protisanapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3
-        versionName "1.1"
+        versionCode 2
+        versionName "1.0"
     }
     splits {
         abi {
@@ -157,14 +158,14 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
-        release {
+         release {
             if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
                 storeFile file(MYAPP_UPLOAD_STORE_FILE)
                 storePassword MYAPP_UPLOAD_STORE_PASSWORD
                 keyAlias MYAPP_UPLOAD_KEY_ALIAS
                 keyPassword MYAPP_UPLOAD_KEY_PASSWORD
             }
-        }
+    }
     }
     buildTypes {
         debug {
@@ -205,19 +206,15 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
-    implementation 'com.cometchat:pro-android-chat-sdk:3.0.2'
-    // implementation 'com.cometchat:pro-android-calls-sdk:2.2.0'
-    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
-     implementation(project(':react-native-maps')){
-       exclude group: 'com.google.android.gms', module: 'play-services-base'
-       exclude group: 'com.google.android.gms', module: 'play-services-maps'
-       
-   }
-    // implementation('com.cometchat:pro-android-calls-sdk'){
+    // implementation 'com.cometchat:pro-android-chat-sdk:3.0.2'
+    // implementation 'com.cometchat:pro-android-calls-sdk:2.0.1'
+    //  implementation('com.cometchat:pro-android-calls-sdk'){
     //     exclude group:'com.facebook.react',module:'react-native-async-storage'
     //      exclude group:'com.facebook.react',module:'react-native-async-storage/async-storage'
     //       exclude group: 'com.facebook.react',module:'react-native-svg'
-    //     exclude group: 'com.facebook',module:'hermes'
+    //        exclude group: 'com.facebook',module:'@react-native-community-netinfo'
+    //     exclude group: 'com.facebook',module:'react-native-netinfo'
+    //      exclude group: 'com.facebook',module:'hermes'
     //     exclude group: 'com.facebook.react',module:'react-native-community-async-storage'
     //     transitive = true
     // }
@@ -227,30 +224,26 @@ dependencies {
     //       exclude group: 'com.facebook.react',module:'react-native-svg'
     //     exclude group: 'com.facebook',module:'hermes'
     //     exclude group: 'com.facebook.react',module:'react-native-community-async-storage'
+    //      exclude group: 'com.facebook',module:'@react-native-community-netinfo'
+    //     exclude group: 'com.facebook',module:'react-native-netinfo'
     //     transitive = true
     // }
-  
-
-   
-//     implementation(project('com.reactnativecommunity/async-storage')){
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+    implementation(project(':react-native-maps')){
+       exclude group: 'com.google.android.gms', module: 'play-services-base'
+       exclude group: 'com.google.android.gms', module: 'play-services-maps'
        
-//        exclude group: 'com.facebook.react',module:'@react-native-async-storage'
-//    }
+   }
 
-   // Import the BoM for the Firebase platform
+    // Import the BoM for the Firebase platform
     implementation platform('com.google.firebase:firebase-bom:29.0.3')
 
-   // Declare the dependencies for the Firebase Cloud Messaging and Analytics libraries
+    // Declare the dependencies for the Firebase Cloud Messaging and Analytics libraries
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.android.gms:play-services-base:18.0.1'
     implementation 'com.google.android.gms:play-services-maps:18.0.1'
     implementation 'com.google.firebase:firebase-messaging:20.1.0'
-    implementation 'com.google.firebase:firebase-database:20.0.3'
-    implementation 'com.android.support:support-annotations:28.0.0'
-    // build.gradle 
-    implementation "androidx.annotation:annotation:1.1.0"
-
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.fbjni'

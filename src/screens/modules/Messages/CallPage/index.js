@@ -156,9 +156,9 @@ export default class CallPage extends Component {
             this.joinRoom();
         });
     }
-    componentWillUnmount() {
-        ZegoExpressManager.instance().leaveRoom();
-    }
+    // componentWillUnmount() {
+    //     ZegoExpressManager.instance().leaveRoom();
+    // }
 
     registerCallback() {
         // When other user join in the same room, this method will get call
@@ -167,13 +167,17 @@ export default class CallPage extends Component {
             (updateType, userList, roomID) => {
                 console.warn('out roomUserUpdate', updateType, userList, roomID);
                 if (updateType == ZegoUpdateType.Add) {
-                    console.log("&&&&&&&&&", this.remoteViewRef.current, findNodeHandle(this.remoteViewRef.current))
+                    console.log("&&&&&&&&&Add", this.remoteViewRef.current, findNodeHandle(this.remoteViewRef.current))
                     userList.forEach(userID => {
                         ZegoExpressManager.instance().setRemoteVideoView(
                             userID,
                             findNodeHandle(this.remoteViewRef.current),
                         );
                     });
+                }else if (updateType == ZegoUpdateType.Delete) {
+                    console.log("Cancel call", updateType)
+                    this.leaveRoom.bind(this)
+                   
                 }
             },
         );
@@ -187,6 +191,13 @@ export default class CallPage extends Component {
                 console.warn('out roomTokenWillExpire', roomID, remainTimeInSecond);
                 const token = (await this.generateToken()).token;
                 ZegoExpressEngine.instance().renewToken(roomID, token);
+            },
+        );
+        ZegoExpressManager.instance().onRoomStateUpdate(
+            async (roomID, state, errorCode, extendedData) => {
+                console.log('roomState', state, remainTimeInSecond);
+
+               
             },
         );
     }
@@ -270,7 +281,7 @@ export default class CallPage extends Component {
             .then(() => {
                 console.warn('Leave successful');
                 // Back to home page
-                this.props.navigation.goBack();
+                this.props.navigation.navigate("Home");
             });
     };
 

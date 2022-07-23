@@ -15,6 +15,7 @@ import { saveZegoToken } from 'src/redux/actions/AuthActions';
 import messaging from '@react-native-firebase/messaging';
 import { Platform, Alert } from 'react-native'
 import notifee, { AuthorizationStatus, EventType, AndroidImportance, AndroidVisibility } from '@notifee/react-native';
+
 //\/\/\/\/\/\/\/\/\/\/\/\/\/ 👉👉👉👉 READ THIS IF YOU WANT TO DO MORE 👈👈👈 \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 // For how to use Firebase in ReactNative: https://rnfirebase.io/
 // For how to display notification in ReactNative: https://notifee.app/react-native/docs/overview
@@ -87,6 +88,7 @@ async function setCategories() {
 // Then you can read it on App component call 'componentDidMount', if this variable with an empty value means it launches by the user, otherwise, launch by FCM notification.
 var killedIncomingCallRoomId = '';
 var killedIncomingCallType = '';
+var entity = '';
 
 // Display a message while APP has been killed, trigger by FCM
 async function onBackgroundMessageReceived(message) {
@@ -117,6 +119,8 @@ async function onBackgroundMessageReceived(message) {
   console.log(">>>>>>>>>>Message: ", message, message.data.callerUserName);
   killedIncomingCallRoomId = message.data.roomID;
   killedIncomingCallType = message.data.callType;
+  entity = message.data;
+  
   notifee.displayNotification({
      title: '<p style="color: #4caf50;"><b>' + '📞 ' + message.data.callerUserName + ' incoming call..' + '</span></p></b></p>',
      body: 'Tap to view contact.',
@@ -214,9 +218,9 @@ class Main extends Component {
      this.messageListener;
   }
 
-  handleIncomingCall(roomID,callType) {
+  handleIncomingCall(roomID,callType, entity) {
      console.log('Navigate to home with incoming call..........');
-     pushToScreen('CallingScreen', { 'roomID': roomID, 'callType': callType })
+     pushToScreen('CallingScreen', { 'roomID': roomID, 'callType': callType, entity })
   }
 
   async onAppBootstrap() {
@@ -228,7 +232,7 @@ class Main extends Component {
 
      // If this variable comes with a non-empty value, means the APP launched by FCM notification. Then jump to incoming call logic
      if (killedIncomingCallRoomId != '') {
-        this.handleIncomingCall(killedIncomingCallRoomId, killedIncomingCallType);
+        this.handleIncomingCall(killedIncomingCallRoomId, killedIncomingCallType, entity );
      }
   }
 
@@ -240,13 +244,13 @@ class Main extends Component {
         if (type === EventType.PRESS) {
            console.log('User press on froeground event: ', detail)
            console.log('Accept the call...', detail.notification.data.roomID)
-           pushToScreen('CallingScreen', { 'callingID': detail.notification.data.roomID, 'callType': detail.notification.data.callType })
+           pushToScreen('CallingScreen', { 'callingID': detail.notification.data.roomID, 'callType': detail.notification.data.callType, entity: detail.notification.data})
           //  this.handleIncomingCall(detail.notification.data.roomID, detail.notification.data.callType);
            await notifee.cancelAllNotifications();
         } else if (type == EventType.ACTION_PRESS && detail.pressAction.id) {
            if (detail.pressAction.id == 'accept') {
               console.log('Accept the call...', detail.notification.data.roomID)
-              this.handleIncomingCall(detail.notification.data.roomID, detail.notification.data.callType);
+              this.handleIncomingCall(detail.notification.data.roomID, detail.notification.data.callType, detail.notification.data);
            }
            
            await notifee.cancelAllNotifications();
@@ -257,26 +261,31 @@ class Main extends Component {
      notifee.onBackgroundEvent(async ({ type, detail }) => {
         if (type === EventType.PRESS) {
            console.log('User press on background event: ', detail)
-           pushToScreen('CallingScreen', { 'callingID': detail.notification.data.roomID, 'callType': detail.notification.data.callType })
+           pushToScreen('CallingScreen', { 'callingID': detail.notification.data.roomID, 'callType': detail.notification.data.callType,  entity: detail.notification.data })
            // await notifee.cancelNotification(detail.notification.id);
            await notifee.cancelAllNotifications();
         } else if (type == EventType.ACTION_PRESS && detail.pressAction.id) {
            if (detail.pressAction.id == 'accept') {
               console.log('Accept the call...', detail.notification.data.roomID)
-              this.handleIncomingCall(detail.notification.data.roomID,detail.notification.data.callType );
+              this.handleIncomingCall(detail.notification.data.roomID,detail.notification.data.callType, detail.notification.data );
            }
            await notifee.cancelAllNotifications();
         }
      });
-
-     // Binding FCM message callback for APP in foreground
-     this.messageListener = messaging().onMessage(this.onMessageReceived);
+     
+         try {
+            // Binding FCM message callback for APP in foreground
+            this.messageListener = messaging().onMessage(this.onMessageReceived);
+         } catch (error) {
+            console.log("___ERRRROR___", error)
+         }
+    
   }
 
   // Receive message from FCM and display the notification
   async onMessageReceived(message) {
      // invokeApp();
-     pushToScreen('CallingScreen', { 'callingID': message.data.roomID, 'callType': message.data.callType })
+     pushToScreen('CallingScreen', { 'callingID': message.data.roomID, 'callType': message.data.callType,  entity: message.data })
      console.log(">>>>>>>>>>Foreground Message: ", message, message.data.callerUserName);
      notifee.displayNotification({
         title:  message.data.callerUserName + ' incoming call..',

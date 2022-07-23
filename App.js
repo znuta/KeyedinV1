@@ -92,21 +92,21 @@ if (!global.atob) {
    );
 
   
-  useEffect(() => {
+  // useEffect(() => {
     
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      // Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-      const {notification = {}} = remoteMessage;
-      const {title = "", body=""} = notification
-        setLocalToast({ title: title, message: body.substring(0,120), show: true, type:"success", callback: ()=>{
-        setLocalToast({})
+  //   const unsubscribe = messaging().onMessage(async remoteMessage => {
+  //     // Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+  //     const {notification = {}} = remoteMessage;
+  //     const {title = "", body=""} = notification
+  //       setLocalToast({ title: title, message: body.substring(0,120), show: true, type:"success", callback: ()=>{
+  //       setLocalToast({})
        
        
-      }})
-    });
+  //     }})
+  //   });
 
-    return unsubscribe;
-  }, []);
+  //   return unsubscribe;
+  // }, []);
  
 
    useEffect(() => {

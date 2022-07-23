@@ -1,34 +1,77 @@
 {
   "project_info": {
-    "project_number": "277998012438",
-    "project_id": "keyedin-protisan",
-    "storage_bucket": "keyedin-protisan.appspot.com"
+    "project_number": "924579769424",
+    "project_id": "keyedin-client",
+    "storage_bucket": "keyedin-client.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:277998012438:android:5653a1c229f267af958d37",
+        "mobilesdk_app_id": "1:924579769424:android:d9d707dcf591448182b555",
         "android_client_info": {
-          "package_name": "app.keyedin.protisanapp"
+          "package_name": "app.keyedin.clientapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "277998012438-lpo9s6bq5tvcpht9oenmh5216isoubl0.apps.googleusercontent.com",
+          "client_id": "924579769424-7hdolsu9s7k3t6jlcqklq8tk3pajbka6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDqQrVQAB1yqrkwaM_gBvLFFiMmyiUHtyM"
+          "current_key": "AIzaSyD-QJvzAdcWm4g3vlBZEKpEfduQF865xz4"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "277998012438-lpo9s6bq5tvcpht9oenmh5216isoubl0.apps.googleusercontent.com",
+              "client_id": "924579769424-7hdolsu9s7k3t6jlcqklq8tk3pajbka6.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "924579769424-71nd6ad7046l3111agg55imfnle6s1vb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "app.keyedin.protisanapp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:924579769424:android:22ccf72502652e9982b555",
+        "android_client_info": {
+          "package_name": "app.keyedin.protisanapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "924579769424-7hdolsu9s7k3t6jlcqklq8tk3pajbka6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-QJvzAdcWm4g3vlBZEKpEfduQF865xz4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "924579769424-7hdolsu9s7k3t6jlcqklq8tk3pajbka6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "924579769424-71nd6ad7046l3111agg55imfnle6s1vb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "app.keyedin.protisanapp"
+              }
             }
           ]
         }

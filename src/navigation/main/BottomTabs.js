@@ -83,9 +83,9 @@ function InsightScreen() {
 
 export function HomeTabs({navigation, route}) {
 
-  useEffect(()=>{
-    addCallListner()
-  },[])
+  // useEffect(()=>{
+  //   addCallListner()
+  // },[])
 
   const addCallListner = () =>{
     var listnerID = "CHAT_SCREEN_CALL_LISTNER";

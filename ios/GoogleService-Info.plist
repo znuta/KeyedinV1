@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>277998012438-qlcj1vvcd5sbmenm6u2p65ummkns8r7t.apps.googleusercontent.com</string>
+	<string>924579769424-71nd6ad7046l3111agg55imfnle6s1vb.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.277998012438-qlcj1vvcd5sbmenm6u2p65ummkns8r7t</string>
+	<string>com.googleusercontent.apps.924579769424-71nd6ad7046l3111agg55imfnle6s1vb</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAmUOl-RK_3r1iOjDhgQjk-iZjrc4jWAfQ</string>
+	<string>AIzaSyAfjEZ55crseZkv7-14waHTprPTrsveW0A</string>
 	<key>GCM_SENDER_ID</key>
-	<string>277998012438</string>
+	<string>924579769424</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>app.keyedin.protisanapp</string>
 	<key>PROJECT_ID</key>
-	<string>keyedin-protisan</string>
+	<string>keyedin-client</string>
 	<key>STORAGE_BUCKET</key>
-	<string>keyedin-protisan.appspot.com</string>
+	<string>keyedin-client.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:277998012438:ios:2327b6a147338928958d37</string>
+	<string>1:924579769424:ios:9b3f539e214088fe82b555</string>
 </dict>
 </plist>
