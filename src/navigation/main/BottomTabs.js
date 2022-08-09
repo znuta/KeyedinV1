@@ -295,8 +295,8 @@ const BottomTabComponent = reduxProps => {
       <Stack.Screen name="EditEducation" component={EditEducation} />
       <Stack.Screen name="EditUser" component={EditUser} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
-      <Stack.Screen name="CallPage" component={CallPage} />
       <Stack.Screen name="ChatScreen" component={ChatScreen} />
+      <Stack.Screen name="CallPage" component={CallPage} />
       <Stack.Screen name="CallingScreen" component={CallingScreen} />
       <Stack.Screen name="VideoCallScreen" component={VideoCallScreen} />
       <Stack.Screen name="MainCallScreen" component={MainCallScreen} />
@@ -313,6 +313,7 @@ const BottomTabComponent = reduxProps => {
 const navigationRef = createNavigationContainerRef()
 
  function pushToScreen(...args) {
+  console.log("________NAVO____")
   if (navigationRef.isReady()) {
     navigationRef.dispatch(StackActions.push(...args));
   }

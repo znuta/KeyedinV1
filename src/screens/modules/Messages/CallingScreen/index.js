@@ -54,22 +54,22 @@ export const CallingScreen = (props) => {
         //     });
         // },[isSpeaker])
 
-        useEffect(()=>{
+        // useEffect(()=>{
 
-            if (roomID && roomID !=="") {
+        //     if (roomID && roomID !=="") {
                 
-                handleIncomingCall(roomID)
+        //         handleIncomingCall(roomID)
                
-            }else{
+        //     }else{
     
                 
-            }
+        //     }
     
-            return () => {
-                ding.release();
-              };
+        //     return () => {
+        //         ding.release();
+        //       };
            
-        },[])
+        // },[])
    
     
     const renderVideoCallScreen = () => {
@@ -145,7 +145,7 @@ export const CallingScreen = (props) => {
                     <View style={{ flexDirection: 'row',  marginBottom: hp('3%')}}>
 
                         {!isOutgoingCall &&  <TouchableOpacity style={styles.answerButton} onPress={()=>{
-                             handleIncomingCall(callingID)
+                             handleIncomingCall(roomID)
                         
                             }}>
                             <MaterialCommunityIcons  name="phone" size={32} color="white"/>
@@ -246,7 +246,7 @@ export const CallingScreen = (props) => {
 
                     {!isOutgoingCall &&  <TouchableOpacity style={styles.answerButton} onPress={()=>{
                         // acceptCall()
-                        handleIncomingCall(callingID)
+                        handleIncomingCall(roomID)
                       
                         }}>
                         <MaterialCommunityIcons  name="phone" size={32} color="white"/>

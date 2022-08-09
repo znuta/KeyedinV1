@@ -470,7 +470,7 @@ PODS:
     - React-Core
   - react-native-webview (11.17.1):
     - React-Core
-  - react-native-zego-express-engine (0.17.3):
+  - react-native-zego-express-engine (0.18.1):
     - React
     - ZegoExpressEngine (= 2.18.1)
   - React-perflogger (0.66.4)
@@ -969,7 +969,7 @@ SPEC CHECKSUMS:
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   react-native-video: a4c2635d0802f983594b7057e1bce8f442f0ad28
   react-native-webview: 162b6453d074e0b1c7025242bb7a939b6f72b9e7
-  react-native-zego-express-engine: d94d4cf425b44cce6395039a0ab934c9bc5e6fd3
+  react-native-zego-express-engine: b42d226bebc74bdf8cb583b4a2b71b1685d8a5d4
   React-perflogger: 93075d8931c32cd1fce8a98c15d2d5ccc4d891bd
   React-RCTActionSheet: 7d3041e6761b4f3044a37079ddcb156575fb6d89
   React-RCTAnimation: 743e88b55ac62511ae5c2e22803d4f503f2a3a13

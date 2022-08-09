@@ -18,8 +18,8 @@ import ZegoExpressEngine, {
     ZegoScenario,
     ZegoUpdateType,
 } from 'zego-express-engine-reactnative';
-import { ZegoExpressManager } from '../../../../../ZegoExpressManager';
-import { ZegoMediaOptions } from '../../../../../ZegoExpressManager/index.entity';
+import { ZegoExpressManager } from 'src/screens/modules/Messages/ZegoExpressManager';
+import { ZegoMediaOptions } from 'src/screens/modules/Messages/ZegoExpressManager/index.entity';
 
 
 const styles = StyleSheet.create({
@@ -128,7 +128,7 @@ export default class CallPage extends Component {
         this.remoteViewRef = React.createRef();
         this.appID = parseInt(this.appData.appID);
         this.token = this.appData.zegoToken;
-        this.roomID = props.route.params.roomID;
+        this.roomID =333 //props.route.params.roomID;
         this.userID = this.appData.userID;
         this.userName = props.route.params.userName;
         
@@ -149,11 +149,14 @@ export default class CallPage extends Component {
         };
         ZegoExpressManager.createEngine(profile).then(async () => {
             console.warn('ZegoExpressEngine created!')
+
             // Register callback
             this.registerCallback();
 
-            // Join room and wait...
-            this.joinRoom();
+             // Join room and wait...
+             this.joinRoom();
+
+            
         });
     }
     // componentWillUnmount() {
@@ -167,17 +170,13 @@ export default class CallPage extends Component {
             (updateType, userList, roomID) => {
                 console.warn('out roomUserUpdate', updateType, userList, roomID);
                 if (updateType == ZegoUpdateType.Add) {
-                    console.log("&&&&&&&&&Add", this.remoteViewRef.current, findNodeHandle(this.remoteViewRef.current))
+                    console.log("&&&&&&&&&", this.remoteViewRef.current, findNodeHandle(this.remoteViewRef.current))
                     userList.forEach(userID => {
                         ZegoExpressManager.instance().setRemoteVideoView(
                             userID,
                             findNodeHandle(this.remoteViewRef.current),
                         );
                     });
-                }else if (updateType == ZegoUpdateType.Delete) {
-                    console.log("Cancel call", updateType)
-                    this.leaveRoom.bind(this)
-                   
                 }
             },
         );
@@ -191,13 +190,6 @@ export default class CallPage extends Component {
                 console.warn('out roomTokenWillExpire', roomID, remainTimeInSecond);
                 const token = (await this.generateToken()).token;
                 ZegoExpressEngine.instance().renewToken(roomID, token);
-            },
-        );
-        ZegoExpressManager.instance().onRoomStateUpdate(
-            async (roomID, state, errorCode, extendedData) => {
-                console.log('roomState', state, remainTimeInSecond);
-
-               
             },
         );
     }
@@ -281,7 +273,7 @@ export default class CallPage extends Component {
             .then(() => {
                 console.warn('Leave successful');
                 // Back to home page
-                this.props.navigation.navigate("Home");
+                this.props.navigation.navigate('Home', {appData: this.appData});
             });
     };
 
@@ -318,9 +310,7 @@ export default class CallPage extends Component {
                     <TouchableOpacity
                         style={styles.micCon}
                         onPress={this.enableMic.bind(this)}>
-                            
                         <Image style={styles.image} source={require('../../../../assets/img/mic.png')} />
-                        
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.phoneCon}

@@ -9182,7 +9182,7 @@ yocto-queue@^0.1.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
-zego-express-engine-reactnative@^0.17.3:
-  version "0.17.3"
-  resolved "https://registry.yarnpkg.com/zego-express-engine-reactnative/-/zego-express-engine-reactnative-0.17.3.tgz#fbe5699252e28d2ef1f46fb7570adab5b6f455cc"
-  integrity sha512-mwM2VRogxvX3s//8h70xUh3Q32VlBNJq856XQ3slMuiFVgHot/LT5K5roe/vJpiDQJl1uDzeU4sX4nTdMdJocA==
+zego-express-engine-reactnative@^0.18.0:
+  version "0.18.1"
+  resolved "https://registry.yarnpkg.com/zego-express-engine-reactnative/-/zego-express-engine-reactnative-0.18.1.tgz#66aef4466a84dc548ebf625369172b97310c01c8"
+  integrity sha512-4v9N8aZnUrzhLLglz8gxx0ZQK6G9qAMnvtPdYR6yDHqyyiwSghYVbbFt5b2rJ3+UUn5nMfXWTq2TkQLFntACdg==

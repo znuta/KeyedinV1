@@ -83,7 +83,7 @@
     "@notifee/react-native": "^5.2.1",
     "notifee": "^0.0.1",
     "react-native-router-flux": "^4.3.1",
-    "zego-express-engine-reactnative": "^0.17.3"
+    "zego-express-engine-reactnative": "^0.18.0"
   },
   "devDependencies": {
     "@babel/core": "^7.16.5",

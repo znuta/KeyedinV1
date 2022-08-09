@@ -8,6 +8,7 @@ import Main from './main/Main';
 import AuthNav from './Intro/AuthNav';
 
 import {useSelector, useDispatch} from 'react-redux';
+import { navigationRef } from './main/BottomTabs';
 
 const Stack = createStackNavigator();
 const Page = () =>{
@@ -16,31 +17,31 @@ const Page = () =>{
   const {auth, intro} = useSelector(state => state);
   const {token = ""} = auth
   console.log("__AUTH__LOG___", auth)
-  useEffect(() => {
-    // Assume a message-notification contains a "type" property in the data payload of the screen to open
+  // useEffect(() => {
+  //   // Assume a message-notification contains a "type" property in the data payload of the screen to open
 
-    messaging().onNotificationOpenedApp(remoteMessage => {
-      console.log(
-        'Notification caused app to open from background state:',
-        remoteMessage.notification,
-      );
-      // navigation.navigate(remoteMessage.data.type);
-    });
+  //   messaging().onNotificationOpenedApp(remoteMessage => {
+  //     console.log(
+  //       'Notification caused app to open from background state:',
+  //       remoteMessage.notification,
+  //     );
+  //     // navigation.navigate(remoteMessage.data.type);
+  //   });
 
-    // Check whether an initial notification is available
-    messaging()
-      .getInitialNotification()
-      .then(remoteMessage => {
-        if (remoteMessage) {
-          console.log(
-            'Notification caused app to open from quit state:',
-            remoteMessage.notification,
-          );
-          // setInitialRoute(remoteMessage.data.type); // e.g. "Settings"
-        }
-        setLoading(false);
-      });
-  }, []);
+  //   // Check whether an initial notification is available
+  //   messaging()
+  //     .getInitialNotification()
+  //     .then(remoteMessage => {
+  //       if (remoteMessage) {
+  //         console.log(
+  //           'Notification caused app to open from quit state:',
+  //           remoteMessage.notification,
+  //         );
+  //         // setInitialRoute(remoteMessage.data.type); // e.g. "Settings"
+  //       }
+  //       setLoading(false);
+  //     });
+  // }, []);
 
   return(
     <Stack.Navigator
@@ -63,7 +64,7 @@ function Navigation() {
   const dispatch = useDispatch();
   const {auth, intro} = useSelector(state => state);
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
      <Page />
     </NavigationContainer>
   );

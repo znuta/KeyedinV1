@@ -22,16 +22,6 @@ import notifee, { AuthorizationStatus, EventType, AndroidImportance, AndroidVisi
 // For how to use ZEGOCLOUD's API: https://docs.zegocloud.com/article/6674
 ///\/\/\/\/\/\/\/\/\/\/\/\/\ 👉👉👉👉 READ THIS IF YOU WANT TO DO MORE 👈👈👈 /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
 
-//\/\/\/\/\/\/\/\/\/\/\/\/\/ 🔔🔔🔔 FILL THE INFORMATION BELOW BEFORE YOU DO ANYTHING 🔔🔔🔔 \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
-// 🔔🔔🔔 Any code mark with TODO is for test only, you should change it with your requirement.
-const config = {
-  // Get your AppID from ZEGOCLOUD Console [My Projects] : https://console.zegocloud.com/project
-  appID: 2093930525,
-  // Heroku server url for example
-  // Get the server from: https://github.com/ZEGOCLOUD/easy_example_call_server_nodejs
-  // e.g. https://xxx.herokuapp.com
-  serverUrl: "https://keyedin.herokuapp.com"
-}
 
 ///\/\/\/\/\/\/\/\/\/\/\/\/\ 🔔🔔🔔 READ THIS IF YOU WANT TO DO MORE 🔔🔔🔔 /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
 
@@ -52,35 +42,45 @@ notifee.createChannel({
 });
 
 notifee.onBackgroundEvent(async ({ type, detail }) => {
-  if (type === EventType.ACTION_PRESS && detail.pressAction.id === 'accept') {
+   if (type === EventType.PRESS) {
+      console.log('User press on background event: ', detail)
+      pushToScreen('CallingScreen', { 'roomID': detail.notification.data.roomID, 'callType': detail.notification.data.callType,  entity: detail.notification.data })
+      // await notifee.cancelNotification(detail.notification.id);
+      await notifee.cancelAllNotifications();
+   } else if (type === EventType.ACTION_PRESS && detail.pressAction.id) {
     console.log('User pressed the "Mark as read" action.');
+    if (detail.pressAction.id == 'accept') {
+      console.log('Accept the call...', detail.notification.data.roomID)
+      this.handleIncomingCall(detail.notification.data.roomID,detail.notification.data.callType, detail.notification.data );
+   }
+   await notifee.cancelAllNotifications();
   }
 });
 
-async function setCategories() {
-  await notifee.setNotificationCategories([
-    {
-      id: 'message',
-      actions: [
-        {
-          id: 'accept',
-          title: 'Accept',
-          pressAction: {
-           id: 'accept',
-        },
-        },
-        {
-           title: 'Denied',
-           id: 'denied',
-           //   icon: 'https://my-cdn.com/icons/snooze.png',
-           pressAction: {
-              id: 'denied',
-           },
-        },
-      ],
-    },
-  ]);
-}
+// async function setCategories() {
+//   await notifee.setNotificationCategories([
+//     {
+//       id: 'message',
+//       actions: [
+//         {
+//           id: 'accept',
+//           title: 'Accept',
+//           pressAction: {
+//            id: 'accept',
+//         },
+//         },
+//         {
+//            title: 'Denied',
+//            id: 'denied',
+//            //   icon: 'https://my-cdn.com/icons/snooze.png',
+//            pressAction: {
+//               id: 'denied',
+//            },
+//         },
+//       ],
+//     },
+//   ]);
+// }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/ Code for APP been killed \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
@@ -122,7 +122,7 @@ async function onBackgroundMessageReceived(message) {
   entity = message.data;
   
   notifee.displayNotification({
-     title: '<p style="color: #4caf50;"><b>' + '📞 ' + message.data.callerUserName + ' incoming call..' + '</span></p></b></p>',
+   title:  message.data.callerUserName + ' incoming call..',
      body: 'Tap to view contact.',
      data: { "roomID": message.data.roomID, "callType": message.data.callType },
      android: {
@@ -212,6 +212,7 @@ class Main extends Component {
 
   componentDidMount() {
      this.onAppBootstrap();
+    
   }
 
   componentWillUnmount() {
@@ -219,7 +220,7 @@ class Main extends Component {
   }
 
   handleIncomingCall(roomID,callType, entity) {
-     console.log('Navigate to home with incoming call..........');
+     console.log('Navigate to home with incoming call..........', roomID);
      pushToScreen('CallingScreen', { 'roomID': roomID, 'callType': callType, entity })
   }
 
@@ -244,7 +245,8 @@ class Main extends Component {
         if (type === EventType.PRESS) {
            console.log('User press on froeground event: ', detail)
            console.log('Accept the call...', detail.notification.data.roomID)
-           pushToScreen('CallingScreen', { 'callingID': detail.notification.data.roomID, 'callType': detail.notification.data.callType, entity: detail.notification.data})
+         //   pushToScreen('CallingScreen', { 'callingID': detail.notification.data.roomID, 'callType': detail.notification.data.callType, entity: detail.notification.data})
+         this.handleIncomingCall(detail.notification.data.roomID, detail.notification.data.callType, detail.notification.data);
           //  this.handleIncomingCall(detail.notification.data.roomID, detail.notification.data.callType);
            await notifee.cancelAllNotifications();
         } else if (type == EventType.ACTION_PRESS && detail.pressAction.id) {
@@ -261,7 +263,8 @@ class Main extends Component {
      notifee.onBackgroundEvent(async ({ type, detail }) => {
         if (type === EventType.PRESS) {
            console.log('User press on background event: ', detail)
-           pushToScreen('CallingScreen', { 'callingID': detail.notification.data.roomID, 'callType': detail.notification.data.callType,  entity: detail.notification.data })
+           this.handleIncomingCall(detail.notification.data.roomID, detail.notification.data.callType, detail.notification.data);
+         //   pushToScreen('CallingScreen', { 'callingID': detail.notification.data.roomID, 'callType': detail.notification.data.callType,  entity: detail.notification.data })
            // await notifee.cancelNotification(detail.notification.id);
            await notifee.cancelAllNotifications();
         } else if (type == EventType.ACTION_PRESS && detail.pressAction.id) {
@@ -273,19 +276,19 @@ class Main extends Component {
         }
      });
      
-         try {
+         // try {
             // Binding FCM message callback for APP in foreground
             this.messageListener = messaging().onMessage(this.onMessageReceived);
-         } catch (error) {
-            console.log("___ERRRROR___", error)
-         }
+         // } catch (error) {
+         //    console.log("___ERRRROR___", error)
+         // }
     
   }
 
   // Receive message from FCM and display the notification
   async onMessageReceived(message) {
      // invokeApp();
-     pushToScreen('CallingScreen', { 'callingID': message.data.roomID, 'callType': message.data.callType,  entity: message.data })
+     pushToScreen('CallingScreen', { 'roomID': message.data.roomID, 'callType': message.data.callType,  entity: message.data })
      console.log(">>>>>>>>>>Foreground Message: ", message, message.data.callerUserName);
      notifee.displayNotification({
         title:  message.data.callerUserName + ' incoming call..',
