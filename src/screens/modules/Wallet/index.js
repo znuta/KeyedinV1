@@ -51,8 +51,6 @@ function Wallet(props) {
   const rotateValue = new Animated.Value(0);
   const [localToast, setLocalToast] = useState({});
     
-
-
   useEffect(() => {
     StatusBar.setHidden(false);
     setBalance(auth.wallet_balance);
@@ -65,8 +63,6 @@ function Wallet(props) {
    
   }, [auth.wallet_balance]);
   
-
-
   Animated.loop(
     Animated.timing(rotateValue, {
       toValue: 1,
@@ -137,8 +133,6 @@ function Wallet(props) {
         
       });
   };
-
-
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -222,10 +216,10 @@ function Wallet(props) {
       />
      
       <BalanceContainer>
-        <View style={{ paddingLeft: 15 }}>
+        <View style={{ paddingLeft: 15, minWidth: wp('60%') }}>
           <WalletBalanceWrap>
             <WalletBalance>
-              &#8358;{' '}
+              &#8358;
               {Number(balance)
                 .toFixed(2)
                 .replace(/\d(?=(\d{3})+\.)/g, '$&,')}
@@ -542,12 +536,16 @@ const WalletBalanceWrap = styled.View`
 `;
 
 const WalletBalance = styled.Text`
+  flex: 1;
+  flex-wrap: wrap;
   font-size: ${wp('8%')};
   font-weight: 900;
   color: white;
 `;
 
 const EarningBalance = styled.Text`
+  flex: 1;
+  flex-wrap: wrap;
   font-size: ${wp('5.5%')};
   font-weight: 900;
   color: white;

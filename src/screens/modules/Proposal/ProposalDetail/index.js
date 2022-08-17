@@ -75,6 +75,12 @@ const ProjectApply = props => {
    
       mapRef.current.fitToSuppliedMarkers([item.id]);
     }
+    setCordinate({
+      latitude: item.location && item.location.coordinates[1],
+      longitude: item.location && item.location.coordinates[0],
+      longitudeDelta: 0.05,
+      latitudeDelta: 0.05,
+    })
   }, [item]);
  
   const onChangeText = (key, data) => {
@@ -408,26 +414,10 @@ const {params = {}} = props.route
         ref={mapRef}
         provider={PROVIDER_GOOGLE}
         style={{ flex: 1, height: hp('30%') }}
-        initialRegion={{
-          latitude: item.location && item.location.coordinates[1],
-          longitude: item.location && item.location.coordinates[0],
-          longitudeDelta: 0.05,
-         latitudeDelta: 0.05,
-        }}
-        region={{
-          latitude: item.location && item.location.coordinates[1],
-          longitude: item.location && item.location.coordinates[0],
-          longitudeDelta: 0.05,
-          latitudeDelta: 0.05,
-        }}
+        initialRegion={cordinate}
+        region={cordinate}
         zoomEnabled={true}
         showsUserLocation={true}
-        initialPosition={{
-          latitude: item.location && item.location.coordinates[1],
-          longitude: item.location && item.location.coordinates[0],
-          longitudeDelta: 0.05,
-          latitudeDelta: 0.05,
-        }}
         minZoomLevel={2}>
         
           <Marker
@@ -510,69 +500,6 @@ const {params = {}} = props.route
             </View>
           </View>
 
-          {/* {type == 'Home' && (
-            <CTAWrap>
-              <CTAButton
-                onPress={() => {
-                  navigation.navigate('Send Proposal', {
-                    item: item,
-                    from: 'Home',
-                    //image: artisan.image_url,
-                  });
-                }}>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontWeight: '600',
-                  }}>
-                  Send Proposal
-                </Text>
-              </CTAButton>
-              <CTAButton
-                style={{backgroundColor: Colors.primary + 15}}
-                onPress={() => _handleRejectProposal()}>
-                <Text
-                  style={{
-                    color: Colors.primary,
-                    fontWeight: '600',
-                  }}>
-                  Decline Job
-                </Text>
-              </CTAButton>
-            </CTAWrap>
-          )}
-          {type == 'Offer' && (
-            <CTAWrap>
-              <CTAButton
-                onPress={() => {
-                  _handleAcceptance(items.id);
-                  console.log('accept', items.id);
-                  // navigation.navigate("Send Proposal", {
-                  //   item:item
-                  //   //image: artisan.image_url,
-                  // });
-                }}>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontWeight: '600',
-                  }}>
-                  Accept Offer
-                </Text>
-              </CTAButton>
-              <CTAButton
-                style={{backgroundColor: Colors.primary + 15}}
-                onPress={() => _handleReject(item.id)}>
-                <Text
-                  style={{
-                    color: Colors.primary,
-                    fontWeight: '600',
-                  }}>
-                  Decline Offer
-                </Text>
-              </CTAButton>
-            </CTAWrap>
-          )} */}
         </InnerContentContainer>
 
         
@@ -670,10 +597,10 @@ const {params = {}} = props.route
                 {amountToReceived||"N38,000"}
               </DescriptionText>
             </View>
+           
           </View>
-        
 
-        <View style={styles.actionBox}>
+          <View style={styles.actionBox}>
           <Button
             text="Cancel Proposal"
             type="primary"
@@ -687,7 +614,9 @@ const {params = {}} = props.route
             }}
           />
         </View>
+         
       </ContentContainer>
+      
     </Container>
   );
 };
@@ -714,9 +643,9 @@ flex: 0.25;
 `;
 
 const ContentContainer = styled.ScrollView`
-  padding-vertical: ${hp('1%')};
+    flex: 1;
+  
   background-color: #ebf1f2;
-  flex: 1;
   padding-horizontal: ${wp('5%')};
 `;
 const InnerContentContainer = styled.View`

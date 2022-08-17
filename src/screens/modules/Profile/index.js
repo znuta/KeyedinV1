@@ -127,7 +127,7 @@ function ArtisanProfile(props) {
     // GetRating();
     // GetInsights();
     // GetArtisanReview();
-    getUser(auth.userData.id, ({user = {}, expertise = {}, employment = {},education = {},comments = {}, rating="", job_success_rate={}}) => {
+    dispatch(getUser(auth.userData.id, ({user = {}, expertise = {}, employment = {},education = {},comments = {}, rating="", job_success_rate={}}) => {
       console.log("___USER___LOG__+", user)
       setArtisan(user);
       dispatch(sendUserDetails(user))
@@ -138,7 +138,7 @@ function ArtisanProfile(props) {
       setReviews(comments)
       setRating(rating);
       setJobSuccess(job_success_rate)
-    });
+    }));
    
     GetPortfolio(auth.userData.id,(res,err)=>{
       if (err !== null) {

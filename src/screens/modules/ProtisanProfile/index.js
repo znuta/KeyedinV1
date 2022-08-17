@@ -95,45 +95,31 @@ function ProtisanProfile(props) {
   const [artisan, setArtisan] = useState({});
   const [artisanImg, setArtisanImg] = useState(images.background);
   const [preimage, setPreimage] = useState({});
-  const [imchange, setImchange] = useState(true);
   const [expertises, setExpertises] = useState({});
-  const [experience, setExperience] = useState([]);
-  const [education, setEducation] = useState([]);
   const [videoUrl, setvideoUrl] = useState(artisan.video||'https://vjs.zencdn.net/v/oceans.mp4');
   const [rating, setRating] = useState({});
   const [jobsuccess, setJobSuccess] = useState({});
-  const [jobInsight, setJobInsight] = useState({});
-  const [average_rating, setAverage_rating] = useState('');
-  const [quality, setQuality] = useState('');
   const [play, setPlay] = useState(true)
   const [reviewsd, setReviewsd] = useState([]);
   const [view, setView] = useState({});
   const [portfolio, setPortfolio] = useState([]);
   const { auth  } = useSelector(state => state);
   const { params = {} } = props.route || {}
-console.log("___PARAMAA___", params)
-  
   const defaultImg =
     'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80';
   
-
   useEffect(() => {
     const {id} = params
     console.log("__ID", id)
     // StatusBar.setHidden(true);
-    //console.log(experti);
-    // setArtisanImg(auth.avatar);
-    // const art = artisan.reviews ?? 0;
-    // setReviewart(art);
-    //console.log(portfolio);
-    getUser(id, ({user = {}, expertise = {}, employment = {},education = {},comments = {}, rating="",job_success_rate={}}) => {
-      console.log("___USER___LOG__+", user)
+    dispatch(getUser(id, ({user = {}, expertise = {}, employment = {},education = {},comments = {}, rating="",job_success_rate={}}) => {
+    
       setArtisan(user);
       setExpertises(expertise)
       setReviewsd(comments);
       setRating(rating);
       setJobSuccess(job_success_rate)
-    });
+    }));
     GetPortfolio(id,(res,err)=>{
       if (err !== null) {
         
@@ -141,21 +127,8 @@ console.log("___PARAMAA___", params)
         setPortfolio(res)
       }
     })
-    // getArtisanExpertise(id, (res) => {
-    //   console.log("+++++EXPET++", res)
-    //   setExpertises(res)
-    // })
-    // getArtisanEducation(id,(res)=>{})
-    // GetArtisanExperience(id,(res)=>{})
-    // GetRating();
-    // GetInsights();
-    // GetArtisanReview();
     // setLoading(false);
   }, [params]);
-
- 
-
-  const [videoUpload, setvideoUpload] = useState(null);
 
   const _handleDeletePortfolio = _id => {
     Alert.alert(
@@ -181,50 +154,6 @@ console.log("___PARAMAA___", params)
         },
       ],
     );
-  };
-
-  const _pickProfileVideo = async () => {
-    let {saveAvatar} = props;
-    // const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    let status = null
-    if (Platform.OS === 'ios' && status === 'active') {
-      const permission = await request(PERMISSIONS.IOS.CAMERA)
-      status = permission.status
-
-    } else {
-      const permission  = await request(PERMISSIONS.ANDROID.CAMERA)
-      status = permission.status
-    }
-   
-    if (status != 'granted') {
-      alert('You did not grant KeyedIn the permission');
-    } else {
-      try {
-        let result = await launchImageLibrary({
-          mediaType: 'video',
-          //allowsEditing: true,
-          aspect: [4, 3],
-          quality: 0.4,
-          //allowsMultipleSelection: false,
-          base64: true,
-        });
-        if (!result.cancelled) {
-          console.log('duration');
-          const duration = Math.round(result.duration / 1000);
-          if (duration > 30) {
-            alert('This video is more than 30 seconds');
-          } else {
-            setvideoUpload(result);
-            UploadVideoApi(result);
-            
-          }
-          
-        }
-        console.log(result);
-      } catch (E) {
-        console.log(E);
-      }
-    }
   };
 
   const UploadVideoApi = item => {
@@ -258,71 +187,6 @@ console.log("___PARAMAA___", params)
    
   };
 
- 
-  const _pickPortfolio = async () => {
-    const {saveGovId} = props;
-
-    try {
-      let result = await launchImageLibrary({
-        mediaType: 'photo',
-        aspect: [4, 3],
-        quality: 0.4,
-        base64: true,
-      });
-      if (!result.cancelled) {
-        AddPortfoliod(
-          `data:${result.type}/${
-            result.uri.split('.')[result.uri.split('.').length - 1]
-          };base64,${result.base64}`,
-        );
-      }
-
-    } catch (E) {
-      console.log(E);
-    }
-  };
-
-  const GetRating = () => {
-    let uri = BASEURL + '/artisan/ratings';
-    setLoading(true);
-    axios.get(uri, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-        Authorization: 'Bearer' + ' ' + auth.token,
-      },
-    }).then(res => {
-        //GetPortfolio();
-        const { data}=res.data
-        setRating(data);
-        console.log('RATING___', res);
-      })
-      .catch(error => {
-        setLoading(false);
-        
-      });
-  };
-
-  const GetInsights = () => {
-    let uri = BASEURL + '/artisan/job-insight';
-      axios.get(uri, {
-        headers: {
-          "Content-Type": "application/json;charset=utf-8",
-          Authorization: 'Bearer' + ' ' + auth.token,
-        },
-      }).then(res => {
-         
-          try {
-            console.log('Insight', res.data);
-            setJobInsight(res.data);
-          } catch (error) {
-            setJobInsight({});
-          }
-
-        });
-
-
-  };
-
   const DeletePortfolio = id => {
     let uri = BASEURL + `/artisan/portfolio/${id}`;
     //setLoading(true);
@@ -349,167 +213,6 @@ console.log("___PARAMAA___", params)
       });
   };
 
-  const GetArtisanReview = () => {
-    let uri = BASEURL + `/ratings/${params.id}`;
-
-    setLoading(true);
-    axios.get(uri, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-        Authorization: 'Bearer' + ' ' + auth.token,
-      },
-    }).then(res => {
-        console.log('___REVIEWS___OO', res);
-        const {data=[]}= res.data
-          setReviewsd(data);
-        
-      })
-      .catch(error => {
-        console.log("____REVIEW__ERROR___", error)
-        setLoading(false);
-      });
-  };
-
-  // const GetPortfolio = () => {
-  //   let uri = BASEURL + `/artisan/portfolio/`;
-
-  //   //setLoading(true);
-  //   axios(uri, {
-     
-  //     //body: JSON.stringify(data),
-  //     headers: {
-  //       //"Content-Type": "application/json;charset=utf-8",
-  //       Authorization: 'Bearer' + ' ' + auth.token,
-  //     },
-  //   })
-     
-  //     .then(res => {
-        
-  //       console.log('This is the portfolio', res.data);
-  //       if (res.data.error) {
-  //         alert('error');
-  //       } else {
-  //         const { data = {} } = res.data
-  //         dispatch({type: 'API_PORTFOLIO_DATA', data:data.portfolio})
-  //       }
-  //     })
-  //     .catch(error => {
-  //       //setLoading(false);
-  
-  //     });
-  // };
-
-  const _pickAvatar = async () => {
-    let {saveAvatar} = props;
-    try {
-      let result = await launchImageLibrary({
-        mediaType: 'photo',
-        //allowsEditing: true,
-        aspect: [4, 3],
-        quality: 0.4,
-        //allowsMultipleSelection: false,
-        base64: true,
-      });
-      if (!result.cancelled) {
-        // console.log(detectFaces(result.uri));
-
-        saveAvatar(result.uri);
-        UploadAvatarToApi(
-          `data:${result.type}/${
-            result.uri.split('.')[result.uri.split('.').length - 1]
-          };base64,${result.base64}`,
-        );
-      }
-      //console.log(Object.keys(result));
-    } catch (E) {
-      console.log(E);
-    }
-  };
-
-  const _handleLogout = () => {
-    Alert.alert('Logout', 'Are you sure you want to logout ?', [
-      {
-        text: 'Cancel',
-        onPress: () => {
-          console.log('cancel logout');
-        },
-        style: 'cancel',
-      },
-      {
-        text: 'Yes',
-        onPress: () => {
-          console.log('do logout');
-        
-
-          navigation.navigate('AuthNav');
-
-          //setLoading(true);
-          //navigation.goBack();
-        },
-      },
-    ]);
-  };
-
- 
-
-  const UploadAvatarToApi = text => {
-    let uri = BASEURL + `/media/user/${auth.userData.id}`;
-    let data = {
-      image: text,
-    };
-    setLoading(true);
-    axios.post(uri, data,{
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8',
-        Authorization: 'Bearer' + ' ' + auth.token,
-      },
-    }).then(res => {
-        console.log({res});
-        setLoading(false);
-        
-      }) .catch(error => {
-        setLoading(false);
-       
-      });
-   
-  };
-
-  const AddPortfoliod = text => {
-    let uri = BASEURL + '/artisan/portfolio';
-
-    let data = {
-      portfolio: text,
-    };
-    setLoading(true);
-    axios.post(uri, {
-      
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8',
-        Authorization: 'Bearer' + ' ' + auth.token,
-      },
-    })
-      .then(res => res.json())
-      .then(res => {
-        console.log({res});
-        setLoading(false);
-        //setImchange(!imchange);
-      })
-      .then(res => {
-        
-        navigation.navigate('ProtisanProfile');
-      })
-      .catch(error => {
-        console.log('the error', error);
-        setLoading(false);
-       
-      });
-    //setLoading(false);
-  };
-
- 
-  var CANCEL_INDEX = 2;
-
   const renderNavBar = () => (
     
     
@@ -519,25 +222,7 @@ console.log("___PARAMAA___", params)
         onPress={() => navigation.goBack()}>
         <Feather name="arrow-left" size={25} color={colors.white} />
       </TouchableOpacity>
-      {/* <TouchableOpacity
-        style={styles.iconRight}
-        onPress={_pickProfileVideo}
-      >
-        <View
-          style={{
-            //backgroundColor: colors.disabled,
-            backgroundColor: 'transparent',
-            padding: 5,
-            borderRadius: 12,
-           
-          }}>
-           <MaterialCommunityIcons
-                    name='camera'
-                    size={32}
-                    color="white"
-                  />
-        </View>
-      </TouchableOpacity> */}
+     
     </View>
   
 );
@@ -572,65 +257,6 @@ const _renderRevealedFooter = handlePress => {
     </Text>
   );
 };
-
-// const _renderReviewItem = ({item, index}) => {
-//   return (
-//     <View>
-//       <RatingWrap>
-//         <RatingImage>
-//           <Image
-//             source={{
-//               uri: item.user.avatar,
-//             }}
-//             style={{...StyleSheet.absoluteFill, borderRadius: 10}}
-//           />
-//         </RatingImage>
-//         <RatingBody>
-//         <View style={{marginVertical: hp('2%'), width: '50%'}}>
-//                     <StarRating
-//                       disabled={true}
-//                       maxStars={5}
-//                       rating={
-//                        !item.rating ? 0
-//                           : parseInt(Number(item.rating))
-//                       }
-//                       // emptyStar={"star-o"}
-//                       fullStar={require('src/assets/icons/gold_key.png')}
-//                       halfStar={require('src/assets/icons/gray_key.png')}
-//                       emptyStar={require('src/assets/icons/gray_key.png')}
-//                       fullStarColor={'#FFFFFF'}
-//                       emptyStarColor={'#FFFFFF'}
-//                       starSize={wp('5%')}
-//                     />
-//                   </View>
-//           <RatingTitle>{`${item.user.first_name} ${item.user.last_name}`}</RatingTitle>
-//           <RatingComment>Comment: {item.comment ?? 'Good'}</RatingComment>
-//         </RatingBody>
-//       </RatingWrap>
-//     </View>
-//   );
-// };
-
-// const MessageFAB = () => {
-//   return (
-//     <Fab
-//       // active={this.state.active}
-//       // direction="up"
-//       containerStyle={{}}
-//       style={{backgroundColor: Colors.primary}}
-//       position="bottomRight"
-//       onPress={() => {
-//         console.log('to send message');
-//         navigation.navigate('Messages', {
-//           nested: true,
-//         });
-//       }}>
-//       <Feather name='chat' />
-//     </Fab>
-//   );
-// };
-
-
 
 const GalleryModal = item => {
   // var images = portfolio.map((image) => ({
@@ -1084,23 +710,6 @@ const Tab2 = () => {
 const Tab3 = () => {
   return (
     <Animatable.View style={{paddingTop: 0}} animation="fadeInLeft">
-     {/* <TouchableOpacity
-                onPress={_pickPortfolio}
-                style={{
-                  width: '32%',
-                  height: 100,
-                  backgroundColor: 'transparent',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexDirection: 'row',
-                  marginHorizontal: 2,
-                  position: 'absolute',
-                  bottom: 10,
-                  right: 10,
-                  zIndex: 1000
-                }}>
-                <MaterialCommunityIcons name="camera" style={{color: colors.green, fontSize: wp('8%')}} />
-              </TouchableOpacity> */}
        
         <FlatList
           data={portfolio}
@@ -1207,32 +816,6 @@ const renderContent = () => {
           </Subtitle>
         </TitleSection>
 
-        {/* <TouchableOpacity
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-            marginBottom: 10,
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("EditProfile", { type: "ProtisanProfile" });
-            }}
-            style={{
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: Colors.secondary,
-              width: "80%",
-              height: 30,
-              marginHorizontal: 10,
-              borderRadius: 10,
-              //borderWidth: 0.2,
-            }}
-          >
-            <Text style={{ color: "#B2B2B3" }}>Edit Your Profile</Text>
-          </TouchableOpacity>
-        </TouchableOpacity> */}
-
         <Tabs
           initiaTab={0}
           setView={setView}
@@ -1292,49 +875,6 @@ const renderContent = () => {
       {auth.loading && <Loader />}
       <GalleryModal />
       <GalleryVideoModal />
-      {/* <MessageFAB /> */}
-      {/* <SafeAreaView style={{}}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            paddingHorizontal: 20,
-
-            paddingVertical: hp('2%'),
-          }}>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('CreateJobOffer', {...artisan});
-            }}>
-            <View style={{flowDirection: 'row'}}>
-              <MaterialIcons
-
-                name="assignment-ind"
-                size={25}
-                color={colors.green}
-                style={{marginBottom: -23}}
-              />
-              <Text style={{color: colors.green, left: 28}}>Assign Job</Text>
-            </View>
-          </TouchableOpacity> */}
-
-          {/* <TouchableOpacity
-            onPress={() => {
-              _handleLogout(auth.token);
-              //logout(auth.token);
-            }}>
-            <View
-              style={{
-                flowDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <Text style={{color: colors.green, right: 40}}>Log out</Text>
-              <LogoutIcon style={{marginTop: -20}} />
-            </View>
-          </TouchableOpacity> */}
-        {/* </View>
-      </SafeAreaView> */}
 
       <RBSheet
           ref={refRBSheet}

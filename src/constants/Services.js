@@ -3,8 +3,8 @@
 //   };
 
 const BASEURL = "https://keyedin-nodejs.herokuapp.com/api/v1";
-const CometAppID = "2122744531932364"
-const CometAuthKey = "24a0b8569fd83f97a8b536f38fc448ea63f9463b"
+const CometAppID = "216054a6b86830d7"
+const CometAuthKey = "f2acd1e9002224ac4cb7c7d86331398e38f25104"
 // Heroku server url for example
   // Get the server from: https://github.com/ZEGOCLOUD/easy_example_call_server_nodejs
   // e.g. https://xxx.herokuapp.com

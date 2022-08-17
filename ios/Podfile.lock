@@ -1,6 +1,9 @@
 PODS:
   - boost (1.76.0)
   - CocoaAsyncSocket (7.6.5)
+  - CometChatCalls (2.2.0):
+    - CometChatWebRTC (= 1.100.0)
+  - CometChatWebRTC (1.100.0)
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.66.4)
   - FBReactNativeSpec (0.66.4):
@@ -442,6 +445,9 @@ PODS:
   - React-jsinspector (0.66.4)
   - React-logger (0.66.4):
     - glog
+  - react-native-cometchat-rtc (2.2.0):
+    - CometChatCalls (= 2.2.0)
+    - React
   - react-native-document-picker (7.1.3):
     - React-Core
   - react-native-google-maps (0.31.1):
@@ -669,6 +675,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - "react-native-cometchat-rtc (from `../node_modules/@cometchat-pro/react-native-calls`)"
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
@@ -711,6 +718,8 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - CocoaAsyncSocket
+    - CometChatCalls
+    - CometChatWebRTC
     - Firebase
     - FirebaseAnalytics
     - FirebaseCore
@@ -815,6 +824,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-cometchat-rtc:
+    :path: "../node_modules/@cometchat-pro/react-native-calls"
   react-native-document-picker:
     :path: "../node_modules/react-native-document-picker"
   react-native-google-maps:
@@ -895,6 +906,8 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
+  CometChatCalls: 59ea1af1f263daefa4090de9540e86013fa0962e
+  CometChatWebRTC: 0c1389cf9af791ae1c2842080134f09dd6336794
   DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
   FBLazyVector: e5569e42a1c79ca00521846c223173a57aca1fe1
   FBReactNativeSpec: fe08c1cd7e2e205718d77ad14b34957cce949b58
@@ -958,6 +971,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 94ce921e1d8ce7023366873ec371f3441383b396
   React-jsinspector: d0374f7509d407d2264168b6d0fad0b54e300b85
   React-logger: 933f80c97c633ee8965d609876848148e3fef438
+  react-native-cometchat-rtc: 145f0516e9be44ed36a507fb4f94efb497c88b4c
   react-native-document-picker: ec07866a30707f23660c0f3ae591d669d3e89096
   react-native-google-maps: 8231ffa015bf8b222c2e2661fa9163cdb609a224
   react-native-image-picker: 4e6008ad8c2321622affa2c85432a5ebd02d480c

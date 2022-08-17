@@ -50,6 +50,12 @@ const OngoingProjectDetail = props => {
   const [defaultImage, setDefaultImage] = useState(
     'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1222&q=80',
   );
+  const [cordinate, setCordinate] = useState({
+    longitude: 7.385256,
+    latitude: 9.1322927,
+    longitudeDelta: 0.05,
+    latitudeDelta: 0.05,
+  });
   const [value, setValue] = useState({...item});
   const { due_date = new Date(), bid_amount = '', cover_letter = '', attachment = '' } = value;
   var num = parseFloat(bid_amount);
@@ -64,8 +70,7 @@ const OngoingProjectDetail = props => {
     if (params) {
       console.log(params);
       setItem(params.data);
-    
-      
+  
     }
   }, [params]);
 
@@ -76,6 +81,12 @@ const OngoingProjectDetail = props => {
     const {proposal=[{}]} = item
     console.log("___PROP___LOL",proposal)
      setValue({...value, ...proposal[0]});
+     setCordinate({
+      latitude: item.location && item.location.coordinates[1],
+      longitude: item.location && item.location.coordinates[0],
+      longitudeDelta: 0.05,
+      latitudeDelta: 0.05,
+    })
   }, [item]);
 
     const documentPicker = async () => {
@@ -107,37 +118,6 @@ const OngoingProjectDetail = props => {
     
           
 }
-
-  const GetJobs = () => {
-    let uri = BASEURL + `/projects/${auth.userData.location.lat}`;
-    
-    let data = {
-      longitude: auth.userData.location.lng,
-      latitude: auth.userData.location.lat
-      
-      //distance: "1",
-    };
-    props.setLoading(true);
-    axios.get(uri, 
-      {
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8',
-        Authorization: 'Bearer' + ' ' + props.auth.token,
-      },
-      }).then(res => {
-          console.log("__Download___", res)
-          setisFetching(false);
-        props.setLoading(false);
-        
-      })
-      .catch(error => {
-        setisFetching(false);
-        props.setLoading(false);
-        console.log('Job Get Failed because', error.response);
-       
-      });
-  };
-
 
   const BackButton = () => {
     return (
@@ -401,26 +381,10 @@ const OngoingProjectDetail = props => {
         ref={mapRef}
         provider={PROVIDER_GOOGLE}
         style={{ flex: 1, height: hp('30%') }}
-        initialRegion={{
-          latitude: item.location && item.location.coordinates[1],
-          longitude: item.location && item.location.coordinates[0],
-          longitudeDelta: 0.05,
-         latitudeDelta: 0.05,
-        }}
-        region={{
-          latitude: item.location && item.location.coordinates[1],
-          longitude: item.location && item.location.coordinates[0],
-          longitudeDelta: 0.05,
-          latitudeDelta: 0.05,
-        }}
+        initialRegion={cordinate}
+        region={cordinate}
         zoomEnabled={true}
         showsUserLocation={true}
-        initialPosition={{
-          latitude: item.location && item.location.coordinates[1],
-          longitude: item.location && item.location.coordinates[0],
-          longitudeDelta: 0.05,
-          latitudeDelta: 0.05,
-        }}
         minZoomLevel={2}>
         
           <Marker
@@ -429,10 +393,7 @@ const OngoingProjectDetail = props => {
             identifier={item.id}
             id={item.id}
             draggable={false}
-            coordinate={{
-              latitude: item.location && item.location.coordinates[1],
-              longitude: item.location && item.location.coordinates[0],
-            }}
+            coordinate={cordinate}
           //   image={require('src/assets/marker.png')}
           >
            
@@ -669,9 +630,8 @@ flex: 0.25;
 `;
 
 const ContentContainer = styled.ScrollView`
-  padding-vertical: ${hp('1%')};
-  background-color: #ebf1f2;
   flex: 1;
+  background-color: #ebf1f2;
   padding-horizontal: ${wp('5%')};
 `;
 const InnerContentContainer = styled.View`

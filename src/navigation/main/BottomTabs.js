@@ -35,7 +35,7 @@ import Settings from 'src/screens/modules/Settings';
 import Proposals from 'src/screens/modules/Proposal';
 import ProposalDetail from 'src/screens/modules/Proposal/ProposalDetail';
 import Insight from 'src/screens/modules/Insight';
-import  ChatScreen  from "src/screens/modules/Messages/ChatScreen";
+import  {ChatScreen}  from "src/screens/modules/Messages/ChatScreen";
 import  CallPage  from "src/screens/modules/Messages/CallPage";
 import { MainCallScreen } from "src/screens/modules/Messages/MainCallScreen";
 import Profile from 'src/screens/modules/Profile/';
@@ -56,6 +56,7 @@ import { CallingScreen } from 'src/screens/modules/Messages/CallingScreen';
 import { VideoCallScreen } from 'src/screens/modules/Messages/VideoCallScreen';
 import { CometChat } from '@cometchat-pro/react-native-chat';
 import { getUser } from 'src/redux/actions/AuthActions';
+import { useDispatch } from 'react-redux';
 
 
 
@@ -83,19 +84,21 @@ function InsightScreen() {
 
 export function HomeTabs({navigation, route}) {
 
-  // useEffect(()=>{
-  //   addCallListner()
-  // },[])
+  const dispatch = useDispatch()
+
+  useEffect(()=>{
+    addCallListner()
+  },[])
 
   const addCallListner = () =>{
-    var listnerID = "CHAT_SCREEN_CALL_LISTNER";
+    var listnerID = "CHAT_SCREEN_CALL_LISTNER_11";
   
     CometChat.addCallListener(
       listnerID,
       new CometChat.CallListener({
         onIncomingCallReceived(call) {
           console.log("___CALL__HOME__LOG", call);
-          getUser(call.receiverId,({user = {}, expertise = {}, employment = {},education = {},comments = {}, rating=""})=>{
+          dispatch(getUser(call.receiverId,({user = {}, expertise = {}, employment = {},education = {},comments = {}, rating=""})=>{
 
             const defaultLayout = 1;
             const isOutgoing = false;
@@ -110,54 +113,42 @@ export function HomeTabs({navigation, route}) {
               userObject: user
             });
 
-          })
+          }))
          
         },
-      //   onOutgoingCallAccepted(call) {
-      //     console.log('Incoming Call Accepted__NAV_', call);
-      //   //   setCallObject(call)
-      //   // startCall();
-      //   getUser(call.receiverId,({user = {}, expertise = {}, employment = {},education = {},comments = {}, rating=""})=>{
+        onOutgoingCallAccepted(call) {
+          console.log('Incoming Call Accepted__NAV_', call);
+        //   setCallObject(call)
+        // startCall();
+        dispatch(getUser(call.receiverId,({user = {}, expertise = {}, employment = {},education = {},comments = {}, rating=""})=>{
 
-      //     const defaultLayout = 1;
-      //     const isOutgoing = true;
-      //   //  navigation.reset("CallingScreen", {
-      //   //     call: call,
-      //   //     enableDefaultLayout: defaultLayout,
-      //   //     isOutgoingCall: isOutgoing,
-      //   //     outgoingCallAccepted: true,
-      //   //     entity: call.getCallInitiator(),
-      //   //     entityType: "user",
-      //   //     acceptedFrom: "Chat",
-      //   //     callType: call.type,
-      //   //     userObject: user
-      //   //   });
+          const defaultLayout = 1;
+          const isOutgoing = true;
+        
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 1,
+              routes: [
+                {
+                  name: 'CallingScreen',
+                  params: {
+                    call: call,
+                    enableDefaultLayout: defaultLayout,
+                    isOutgoingCall: isOutgoing,
+                    outgoingCallAccepted: true,
+                    entity: call.getCallInitiator(),
+                    entityType: "user",
+                    acceptedFrom: "Chat",
+                    callType: call.type,
+                    userObject: user
+                  },
+                },
+              ],
+            })
+          );
 
-
-      //     navigation.dispatch(
-      //       CommonActions.reset({
-      //         index: 1,
-      //         routes: [
-      //           {
-      //             name: 'CallingScreen',
-      //             params: {
-      //               call: call,
-      //               enableDefaultLayout: defaultLayout,
-      //               isOutgoingCall: isOutgoing,
-      //               outgoingCallAccepted: true,
-      //               entity: call.getCallInitiator(),
-      //               entityType: "user",
-      //               acceptedFrom: "Chat",
-      //               callType: call.type,
-      //               userObject: user
-      //             },
-      //           },
-      //         ],
-      //       })
-      //     );
-
-      //   })
-      // },
+        }))
+      },
       })
     );
   }

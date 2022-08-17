@@ -10,14 +10,11 @@ import {useNavigation} from '@react-navigation/native';
 import styles from "./styles";
 import { wp,colors,hp, fonts } from 'src/config/variables';
 import Sound from 'react-native-sound';
-import { ZEGO_APPID, ZEGO_SERVER_URL } from 'src/constants/Services';
-import { useSelector } from 'react-redux';
 
 export const CallingScreen = (props) => {
-    const {params = {}} =  props.route
-
-    console.log("___CALL__PROPS__", params)
-    const {entity, callType, entityType,roomID, callingID, enableDefaultLayout,defaultLayout,acceptedFrom, isOutgoingCall, call = {}, userObject = {},outgoingCallAccepted = false, } = params
+    const {params} =  props.route
+    // console.log("___CALL__PROPS__", props)
+    const {entity, callType, entityType,enableDefaultLayout,defaultLayout,acceptedFrom, isOutgoingCall, call = {}, userObject = {},outgoingCallAccepted = false} = params
     const navigation = useNavigation();
     const [sessionID,setSessionID] = useState(call.sessionId)
     const [callingText, setCallingText] = useState("Calling...")
@@ -25,13 +22,6 @@ export const CallingScreen = (props) => {
     const [isSpeaker,setSpeaker] = useState(false)
     const [callObject,setCallObject] = useState(call)
     const [callAccepted, setCallAccepted] = useState(outgoingCallAccepted)
-    const {auth}  = useSelector(state => state)
-    const appData = {
-        appID: ZEGO_APPID,
-        serverUrl: ZEGO_SERVER_URL,
-        zegoToken: auth.zego_token,
-        userID: auth.userData.id
-    }
   
     // Sound.setCategory('Playback');
     var ding = new Sound('ringing_tone.mp3', Sound.MAIN_BUNDLE, (error) => {
@@ -42,7 +32,32 @@ export const CallingScreen = (props) => {
         // when loaded successfully
         console.log('duration in seconds: ' + ding.getDuration() + 'number of channels: ' + ding.getNumberOfChannels());
       });
+     
+    useEffect(()=>{
 
+        if (isOutgoingCall) {
+            initiateCall(callType);
+           
+        }else{
+
+            // const {call = {}} = params
+            // setCallObject(call)
+            // setSessionID(call.getSessionId())
+        }
+
+        return () => {
+            ding.release();
+          };
+       
+    },[])
+
+
+    useEffect(()=>{
+        addCallListner();
+
+        return  CometChat.removeCallListener('CALLING_SCREEN_CALL_LISTENER');
+
+    },[])
         // useEffect(()=>{
         //     ding.setVolume(isSpeaker?1:0.2);
         //     ding.play(success => {
@@ -54,24 +69,106 @@ export const CallingScreen = (props) => {
         //     });
         // },[isSpeaker])
 
-        // useEffect(()=>{
-
-        //     if (roomID && roomID !=="") {
-                
-        //         handleIncomingCall(roomID)
-               
-        //     }else{
-    
-                
-        //     }
-    
-        //     return () => {
-        //         ding.release();
-        //       };
+    const initiateCall = (type) => {
+        // var callType = CometChat.CALL_TYPE.VIDEO;
+        var receiverType = CometChat.RECEIVER_TYPE.USER;
+        var call = new CometChat.Call(entity.uid, type, receiverType);
+        CometChat.initiateCall(call).then((Call) => {
            
-        // },[])
-   
+
+            setCallObject(Call)
+          CometChat.getUser(entity.uid).then((user) => {
+          
+
+            // ding.play(success => {
+            //     if (success) {
+            //     console.log('successfully finished playing');
+            //     } else {
+            //     console.log('playback failed due to audio decoding errors');
+            //     }
+            // });
+          },
+          error => {
+            console.log("Call initialization failed with exception:", error);
+          });
+        });
+      };
     
+
+   
+  const addCallListner =()=>{
+        var listnerID = 'CALLING_SCREEN_CALL_LISTENER_22';
+       
+        CometChat.addCallListener(
+            listnerID,
+            new CometChat.CallListener({
+                // onIncomingCallReceived(call) {
+                //     console.log("___CALL__OBJECT___",call)
+                //     var session_id = call.getSessionId();
+                //     setSessionID(session_id)
+                //     setCallObject(call)
+                //     // acceptCall();
+                //     // var status = CometChat.CALL_STATUS.BUSY;
+                //     // CometChat.rejectCall(sessionID, status).then(
+                //     //     rejectedCall => {
+                //     //         console.log('Incoming Call rejected', rejectedCall);
+                //     //     },
+                //     //     error => {
+                //     //         console.log('Call rejection failed with error:', error);
+                //     //     }
+                //     // );
+                // },
+                onOutgoingCallAccepted(call) {
+                    console.log('Incoming Call Accepted___', call);
+                    setSessionID(call.getSessionId())
+                    setCallObject(call)
+                  startCall();
+                  
+                },
+                onOutgoingCallRejected(call) {
+                    console.log('OnOutgoing Call rejected', call);
+                    navigation.goBack()
+                    
+                //    gotoChat();
+                },
+                onIncomingCallCancelled(call) {
+                    console.log('Incoming Call Cancelled', call);
+                    navigation.goBack()
+                //    gotoChat();
+                },
+            })
+        );
+    }
+
+
+
+    const navigationOptions = () => {
+        return {
+           header: () => null,
+        };
+    }
+
+   const gotoChat = () =>{
+        if(acceptedFrom === 'Home'){
+           navigation.navigate('Home');
+        }else{
+            if(entityType === 'user'){
+               navigation.navigate('ChatScreen', {
+                    uid: entity.uid,
+                    username: entity.username,
+                    status: entity.status,
+                    avatar: entity.avatar ? entity.avatar : 'user',
+                });
+            }else{
+               navigation.navigate('ChatScreen', {
+                    uid: entity.uid,
+                    username: entity.username,
+                    avatar: entity.avatar ? entity.avatar : 'group',
+                });
+            }
+        }
+    }
+
     const renderVideoCallScreen = () => {
         // var receiver = this.Call.getCallReceiver();
         var receiver = entity;
@@ -145,7 +242,7 @@ export const CallingScreen = (props) => {
                     <View style={{ flexDirection: 'row',  marginBottom: hp('3%')}}>
 
                         {!isOutgoingCall &&  <TouchableOpacity style={styles.answerButton} onPress={()=>{
-                             handleIncomingCall(roomID)
+                            acceptCall()
                         
                             }}>
                             <MaterialCommunityIcons  name="phone" size={32} color="white"/>
@@ -199,20 +296,33 @@ export const CallingScreen = (props) => {
             </View>
         );
     }
-
-    const cancelOutgoingCall = () =>{
-
-        setCallingText("Disconnecting...")
-
-        navigation.goBack()
-    }
-
+useEffect(()=>{
+if (callingText ==="Disconnected") {
+    navigation.goBack()
+          gotoChat()
+}
+},[callingText])
+const cancelOutgoingCall = () =>{
+    setCallingText("Disconnecting...")
+    navigation.goBack()
+    CometChat.rejectCall(CometChat.CALL_STATUS.CANCELLED).then(
+        call => {
+          console.log("Call rejected successfully:", call);
+          setCallingText("Disconnected")
+          navigation.goBack()
+          gotoChat()
+        }
+       
+    ).catch( error => {
+        gotoChat();
+      console.log("Call rejection failed with error", error);
+    })
+}
    const renderOutgoingCallScreen = () =>{
         // var receiver = Call.getCallReceiver();
         var receiver = entity;
-        var avatar = receiver.callerUserIcon;
-        var name = receiver.callerUserName;
-
+        var avatar = receiver.avatar;
+        var name = receiver.username;
         if(avatar === '' || avatar === undefined || avatar === null){
             if(entityType === 'user'){
                 avatar = 'user';
@@ -220,7 +330,6 @@ export const CallingScreen = (props) => {
                 avatar = 'group';
             }
         }
-
         return(
             <View style={styles.callContainer}>
 
@@ -245,8 +354,7 @@ export const CallingScreen = (props) => {
                 <View style={{ flexDirection: 'row', marginVertical: hp('3%')}}>
 
                     {!isOutgoingCall &&  <TouchableOpacity style={styles.answerButton} onPress={()=>{
-                        // acceptCall()
-                        handleIncomingCall(roomID)
+                        acceptCall()
                       
                         }}>
                         <MaterialCommunityIcons  name="phone" size={32} color="white"/>
@@ -290,52 +398,98 @@ export const CallingScreen = (props) => {
         );
     }
 
-    // Call by Routes's instance which would be trigger in the APP component by user click the notification
-  const handleIncomingCall = (roomID) => {
-    jumpToCallPage(roomID);
-    console.log("Handle incoming call with room id: ",roomID)
-  }
-
-  // Post a request to backend service will the targetUserID
-  // Because every device(FCM token) has been binding with a specific user id at APP launched, 
-  // so the server can find out who you are trying to call
-  const sendCallInvite = async (roomID) => {
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        targetUserID: entity.uid,
-        callerUserID: auth.id,
-        callerUserName: auth.first_name,
-        callerIconUrl: auth.avatar,
-        roomID: roomID,
-        callType: callType // TODO For test only
-      })
-    };
-    const reps = await fetch(`${ZEGO_SERVER_URL}/call_invite`, requestOptions);
-    console.log('Send call invite reps: ', reps);
-  }
-
-  const jumpToCallPage = (roomID) => {
-    navigation.navigate('CallPage', { appData: appData, roomID: roomID, userName: auth.first_name, callType: callType});
-  }
-
-  // Start call by click the call button
-   const startCall = () => {
-    if (entity.uid == '') {
-      console.warn('Invalid user id');
-      return;
+  const rejectCall = (status) => {
+        // var sessionID = call.sessionId;
+      
+        CometChat.rejectCall(sessionID, status).then(
+            call => {
+              console.log("Call rejected successfully:", call);
+              navigation.goBack()
+            },
+            error => {
+                // gotoChat();
+              console.log("Call rejection failed with error", error);
+            }
+        );
     }
-    // TODO the caller use he/her own user id to join room, for test only
-    jumpToCallPage(auth.id);
-    sendCallInvite(auth.id);
-  }
+
+    const renderMainCallScreen = () => {
+       navigation.navigate('MainCallScreen',{
+            sessionId: sessionID,
+            type: callType,
+            enableDefaultLayout: defaultLayout,
+            entity: entity,
+            entityType: entityType,
+            acceptedFrom: acceptedFrom,
+        });
+    }
+
+  const  startCall = () => {
+    setCallAccepted(true)
+        // renderMainCallScreen();
+    }
+
+   const acceptCall = () => {
+       
+        CometChat.acceptCall(sessionID).then(
+            Call => {
+                console.log("____CALL__LOG__", Call)
+                startCall();
+            },
+            error => {
+                if (error.code === "ERR_CALL_TERMINATED") {
+                    navigation.goBack()
+                }
+                console.log("Call acceptance failed with error", error);
+                // handle exception
+            }
+        );
+    }
+
+    if (callAccepted) {
+        let callListener = new CometChat.OngoingCallListener({
+            onUserJoined: user => {
+                console.log('User joined call:', user);
+            },
+            onUserLeft: user => {
+                console.log('User left call:', user);
+                navigation.goBack();
+            },
+            onUserListUpdated: userList => {
+                    console.log("user list:", userList);
+            },
+            onAudioModesUpdated: (audioModes) => {
+                console.log("audio modes:", audioModes);
+            },
+            onCallEnded: call => {
+                console.log('Call ended listener', call);
+                navigation.goBack();
+            },
+            onError: error => {
+                console.log('Call Error: ', error);
+                navigation.goBack();
+            },
+        });
+       
+    
+    var callSettings = new CometChat.CallSettingsBuilder()
+    .setSessionID(sessionID)
+    .enableDefaultLayout(true)
+    .setIsAudioOnlyCall(callType == 'aduio' ? true : false)
+    .setCallEventListener(callListener)
+    .build();
+        return(
+        <View style={{flex: 1, background: '#000'}}>
+        <CometChat.CallingComponent callsettings= {callSettings} onFailure = {(e)=>{console.log('error', e);}} />
+       </View>
+        )
+    }
         return(
             
             <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.9)'}}>
 
                 {
-                    callType === "Audio" ? renderOutgoingCallScreen() : renderVideoCallScreen()
+                    callType === CometChat.CALL_TYPE.AUDIO ? renderOutgoingCallScreen() : renderVideoCallScreen()
                 }
             </View>
         );

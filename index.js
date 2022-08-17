@@ -16,7 +16,7 @@
 //  messaging().setBackgroundMessageHandler(async remoteMessage => {
 //    console.log('Message handled in the background!', remoteMessage);
 //  });
- RNPaystack.init({ publicKey: 'pk_test_1e34e9552967b1582c1a943f41473079a1ab7038' });
+ RNPaystack.init({ publicKey: 'pk_live_87326b671916bc0636f27f396f4f9789410bf1ef' });
 
 //  function HeadlessCheck({ isHeadless }) {
 //   if (isHeadless) {

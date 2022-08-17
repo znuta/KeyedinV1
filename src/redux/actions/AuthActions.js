@@ -738,9 +738,10 @@ export const getAllCategories = () => dispatch => {
 };
 
 
-export const getUser = async (id,callback) => {
+export const getUser =  (id,callback) => async dispatch => {
   let uri = BASEURL + `/users/profile/${id}`;
   const token = await getToken()
+  dispatch(setLoading(true));
   axios.get(uri, {
    
     headers: {
@@ -751,11 +752,12 @@ export const getUser = async (id,callback) => {
       //GetPortfolio();
       console.log("__USER__", res)
       const { data = {} } = res.data
+      dispatch(setLoading(false));
      callback(data)
      
     })
     .catch(error => {
-      //setLoading(false);
+      dispatch(setLoading(false));
       console.log('Profile__ERROR__', error);
      
     });

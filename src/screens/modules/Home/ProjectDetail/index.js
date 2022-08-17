@@ -83,6 +83,12 @@ const {params = {}} = props.route
     if (mapRef.current) {
       mapRef.current.fitToSuppliedMarkers([item.id]);
     }
+    setCordinate({
+      latitude: item.location && item.location.coordinates[1],
+      longitude: item.location && item.location.coordinates[0],
+      longitudeDelta: 0.05,
+      latitudeDelta: 0.05,
+    })
   }, [item]);
 
  
@@ -394,26 +400,10 @@ const {params = {}} = props.route
         ref={mapRef}
         provider={PROVIDER_GOOGLE}
         style={{ flex: 1, height: hp('30%') }}
-        initialRegion={{
-          latitude: item.location && item.location.coordinates[1],
-          longitude: item.location && item.location.coordinates[0],
-          longitudeDelta: 0.05,
-         latitudeDelta: 0.05,
-        }}
-        region={{
-          latitude: item.location && item.location.coordinates[1],
-          longitude: item.location && item.location.coordinates[0],
-          longitudeDelta: 0.05,
-          latitudeDelta: 0.05,
-        }}
+        initialRegion={cordinate}
+        region={cordinate}
         zoomEnabled={true}
         showsUserLocation={true}
-        initialPosition={{
-          latitude: item.location && item.location.coordinates[1],
-          longitude: item.location && item.location.coordinates[0],
-          longitudeDelta: 0.05,
-          latitudeDelta: 0.05,
-        }}
         minZoomLevel={2}>
         
           <Marker

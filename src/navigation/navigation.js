@@ -17,6 +17,7 @@ const Page = () =>{
   const {auth, intro} = useSelector(state => state);
   const {token = ""} = auth
   console.log("__AUTH__LOG___", auth)
+  
   // useEffect(() => {
   //   // Assume a message-notification contains a "type" property in the data payload of the screen to open
 
